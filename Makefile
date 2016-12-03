@@ -8,6 +8,7 @@ DIRS_TO_CHECK=$(shell ls -d */ | grep -vE "vendor|test")
 PKGS_TO_CHECK=$(shell go list ./... | grep -v "/vendor/")
 PKGS_TO_RELEASE=$(shell go list ./... | grep -vE "/vendor/|/test")
 FILES_TO_RELEASE=$(shell find . -name "*.go" | grep -vE "/vendor/|/test|.*_test.go")
+FILES_TO_RELEASE_WITH_VENDOR=$(shell find . -name "*.go" | grep -vE "/test|.*_test.go")
 
 help:
 	@echo "Please use \`make <target>\` where <target> is one of"
@@ -159,12 +160,18 @@ unit-runtime-go-1.5:
 	docker rmi "${PREFIX}:go-1.5"
 	@echo "ok"
 
-release: release-source release-headers release-binary
+release: release-source release-source-with-vendor release-headers release-binary
 
 release-source:
 	@echo "pack the source code"
 	mkdir -p "release"
 	zip -FS "release/${PREFIX}-source-v${VERSION}.zip" ${FILES_TO_RELEASE}
+	@echo "ok"
+
+release-source-with-vendor:
+	@echo "pack the source code"
+	mkdir -p "release"
+	zip -FS "release/${PREFIX}-source-with-vendor-v${VERSION}.zip" ${FILES_TO_RELEASE_WITH_VENDOR}
 	@echo "ok"
 
 release-headers: release-headers-go-1.7
