@@ -1,20 +1,21 @@
 SHELL := /bin/bash
 
-.PHONY: all check vet lint build unit release clean
+.PHONY: all check vet lint update generate test build unit release clean
 
 PREFIX=qingstor-sdk-go
 VERSION=$(shell cat version.go | grep "Version\ =" | sed -e s/^.*\ //g | sed -e s/\"//g)
-DIRS_WITHOUT_VENDOR=$(shell ls -d */ | grep -vE "vendor")
-PKGS_WITHOUT_VENDOR=$(shell go list ./... | grep -v "/vendor/")
-PKGS_TO_RELEASE=$(shell go list ./... | grep -vE "/vendor/")
-FILES_TO_RELEASE=$(shell find . -name "*.go" | grep -vE "/vendor/|.*_test.go")
-LINT_IGNORE_DOC="service\/.*\.go:.+(comment on exported|should have comment or be unexported)"
-LINT_IGNORE_CONFLICT="service\/.*\.go:.+(type name will be used as)"
+DIRS_TO_CHECK=$(shell ls -d */ | grep -vE "vendor|test")
+PKGS_TO_CHECK=$(shell go list ./... | grep -v "/vendor/")
+PKGS_TO_RELEASE=$(shell go list ./... | grep -vE "/vendor/|/test")
+FILES_TO_RELEASE=$(shell find . -name "*.go" | grep -vE "/vendor/|/test|.*_test.go")
 
 help:
 	@echo "Please use \`make <target>\` where <target> is one of"
 	@echo "  all               to check, build and test this SDK"
 	@echo "  check             to vet and lint the SDK"
+	@echo "  update            to update git submodules"
+	@echo "  generate          to generate service code"
+	@echo "  test              to run service test"
 	@echo "  build             to build the SDK"
 	@echo "  unit              to run all sort of unit tests except runtime"
 	@echo "  unit-test         to run unit test"
@@ -34,38 +35,56 @@ check: vet lint
 
 vet:
 	@echo "go tool vet, skipping vendor packages"
-	@go tool vet -all ${DIRS_WITHOUT_VENDOR}
+	@go tool vet -all ${DIRS_TO_CHECK}
 	@echo "ok"
 
 lint:
 	@echo "golint, skipping vendor packages"
-	@lint=$$(for pkg in ${PKGS_WITHOUT_VENDOR}; do golint $${pkg}; done)
-	@lint=$$(echo "$${lint}" | grep -E -v -e ${LINT_IGNORE_DOC} -e ${LINT_IGNORE_CONFLICT})
-	@if [[ -n $${lint} ]]; then echo "$${lint}"; exit 1; fi
+	@lint=$$(for pkg in ${PKGS_TO_CHECK}; do golint $${pkg}; done); \
+	 lint=$$(echo "$${lint}"); \
+	 if [[ -n $${lint} ]]; then echo "$${lint}"; exit 1; fi
+	@echo "ok"
+
+update:
+	git submodule update --init
+	@echo "ok"
+
+generate:
+	@if [[ ! -f "$$(which snips)" ]]; then \
+		echo "ERROR: Command \"snips\" not found."; \
+	fi
+	snips \
+		--service=qingstor --service-api-version=latest \
+		--spec="./specs" --template="./template" --output="./service"
+	gofmt -w .
+	@echo "ok"
+
+test:
+	pushd "./test"; go run *.go; popd
 	@echo "ok"
 
 build:
 	@echo "build the SDK"
-	GOOS=linux GOARCH=amd64 go build ${PKGS_WITHOUT_VENDOR}
-	GOOS=darwin GOARCH=amd64 go build ${PKGS_WITHOUT_VENDOR}
-	GOOS=windows GOARCH=amd64 go build ${PKGS_WITHOUT_VENDOR}
+	GOOS=linux GOARCH=amd64 go build ${PKGS_TO_CHECK}
+	GOOS=darwin GOARCH=amd64 go build ${PKGS_TO_CHECK}
+	GOOS=windows GOARCH=amd64 go build ${PKGS_TO_CHECK}
 	@echo "ok"
 
 unit: unit-test unit-benchmark unit-coverage unit-race
 
 unit-test:
 	@echo "run unit test"
-	go test -v ${PKGS_WITHOUT_VENDOR}
+	go test -v ${PKGS_TO_CHECK}
 	@echo "ok"
 
 unit-benchmark:
 	@echo "run unit test with benchmark"
-	go test -v -bench=. ${PKGS_WITHOUT_VENDOR}
+	go test -v -bench=. ${PKGS_TO_CHECK}
 	@echo "ok"
 
 unit-coverage:
 	@echo "run unit test with coverage"
-	for pkg in ${PKGS_WITHOUT_VENDOR}; do \
+	for pkg in ${PKGS_TO_CHECK}; do \
 		output="coverage$${pkg#github.com/yunify/qingstor-sdk-go}"; \
 		mkdir -p $${output}; \
 		go test -v -cover -coverprofile="$${output}/profile.out" $${pkg}; \
@@ -77,7 +96,7 @@ unit-coverage:
 
 unit-race:
 	@echo "run unit test with race"
-	go test -v -race -cpu=1,2,4 ${PKGS_WITHOUT_VENDOR}
+	go test -v -race -cpu=1,2,4 ${PKGS_TO_CHECK}
 	@echo "ok"
 
 unit-runtime: unit-runtime-go-1.7 unit-runtime-go-1.6 unit-runtime-go-1.5
