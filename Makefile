@@ -12,7 +12,7 @@ FILES_TO_RELEASE_WITH_VENDOR=$(shell find . -name "*.go" | grep -vE "/test|.*_te
 
 help:
 	@echo "Please use \`make <target>\` where <target> is one of"
-	@echo "  all               to check, build and test this SDK"
+	@echo "  all               to check, build, test and release this SDK"
 	@echo "  check             to vet and lint the SDK"
 	@echo "  update            to update git submodules"
 	@echo "  generate          to generate service code"
