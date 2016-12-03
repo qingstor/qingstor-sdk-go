@@ -1,6 +1,7 @@
 # QingStor SDK for Go
 
 <span style="display: inline-block">
+[![Build Status](https://travis-ci.org/yunify/qingstor-sdk-go.svg?branch=master)](https://travis-ci.org/yunify/qingstor-sdk-go)
 [![API Reference](http://img.shields.io/badge/api-reference-green.svg)](http://docs.qingcloud.com/qingstor/)
 [![License](http://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/yunify/qingstor-sdk-go/blob/master/LICENSE)
 </span>
