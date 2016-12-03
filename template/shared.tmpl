@@ -1,0 +1,377 @@
+{{define "Type"}}
+	{{- $typeName := . -}}
+
+	{{- if eq $typeName "string" -}}
+		string
+	{{- else if eq $typeName "boolean" -}}
+		bool
+	{{- else if eq $typeName "integer" -}}
+		int
+	{{- else if eq $typeName "timestamp" -}}
+		time.Time
+	{{- else if eq $typeName "binary" -}}
+		io.Reader
+	{{- else if eq $typeName "array" -}}
+		interface{}
+	{{- else if eq $typeName "object" -}}
+		interface{}
+	{{- else if eq $typeName "map" -}}
+		interface{}
+	{{- else if eq $typeName "any" -}}
+		interface{}
+	{{- else -}}
+		*{{$typeName | camelCase}}Type
+	{{- end -}}
+{{end}}
+
+{{define "PropertyType"}}
+	{{- $property := . -}}
+
+	{{- if eq $property.Type "object" -}}
+		{{template "Type" $property.ExtraType}}
+	{{- else if eq $property.Type "array" -}}
+		[]{{template "Type" $property.ExtraType}}
+	{{- else if eq $property.Type "map" -}}
+		map[string]{{template "Type" $property.ExtraType}}
+	{{- else if eq $property.Type "any" -}}
+		{{template "Type" $property.Type}}
+	{{- else -}}
+		{{template "Type" $property.Type}}
+	{{- end -}}
+{{end}}
+
+{{define "PropertyTags"}}
+	{{- $property := . -}}
+	{{- if $property.IsRequired -}}
+		{{- printf `json:"%s"` ($property.Name | normalized) -}}
+	{{- else -}}
+		{{- printf `json:"%s,omitempty"` ($property.Name | normalized) -}}
+	{{- end -}}
+	{{- printf ` name:"%s"` ($property.Name | normalized) -}}
+	{{- if $property.Format}}
+		{{- printf ` format:"%s"` $property.Format -}}
+	{{- end -}}
+	{{- if $property.Default -}}
+		{{- printf ` default:"%s"` $property.Default -}}
+	{{- end -}}
+{{end}}
+
+{{define "PropertyTagsDashConnected"}}
+	{{- $property := . -}}
+	{{- printf `json:"%s"` ($property.Name | dashConnected) -}}
+	{{- printf ` name:"%s"` ($property.Name | dashConnected) -}}
+{{end}}
+
+{{define "PropertyExtraTags"}}
+	{{- $PropertyExtraTags := . -}}
+	{{- if $PropertyExtraTags -}}
+		{{- printf " %s" $PropertyExtraTags -}}
+	{{- end -}}
+{{end}}
+
+{{define "RenderProperties"}}
+	{{- $customizedType := index . 0 -}}
+	{{- $PropertyExtraTags := index . 1 -}}
+
+	{{range $_, $property := $customizedType.Properties -}}
+		{{if $property.Description -}}
+			// {{$property.Description}}
+		{{end -}}
+		{{if $property.Enum -}}
+			// {{$property.ID | camelCase}}'s available values: {{$property.Enum | commaConnected}}
+		{{end -}}
+		{{$property.ID | camelCase | upperFirst}}{{" " -}}
+		{{template "PropertyType" $property}}{{" " -}}
+		`{{template "PropertyTags" $property}}{{template "PropertyExtraTags" $PropertyExtraTags}}`{{" " -}}
+		{{if $property.IsRequired -}}
+			// Required
+		{{- end}}
+	{{end}}
+{{end}}
+
+{{define "RenderOperation"}}
+	{{$service := index . 0}}
+	{{$operation := index . 1}}
+
+	{{$belongs := replace $service.Name "QingStor" "Service" -1}}
+	{{$belongs := replace $belongs "Object" "Bucket" -1}}
+	{{$opID := $operation.ID | camelCase}}
+
+	{{$isBucket := eq $service.Name "Bucket"}}
+	{{$isObject := eq $service.Name "Object"}}
+
+	{{$hasParams := gt (len $operation.Request.Params.Properties) 0}}
+	{{$hasHeaders := gt (len $operation.Request.Headers.Properties) 0}}
+	{{$hasElements := gt (len $operation.Request.Elements.Properties) 0}}
+	{{$hasStringBody := eq $operation.Request.Body.Type "string"}}
+	{{$hasBinaryBody := eq $operation.Request.Body.Type "binary"}}
+	{{$hasInput := or $hasParams $hasHeaders $hasElements $hasStringBody $hasBinaryBody}}
+
+	{{if $operation.Description -}}
+		{{if eq $belongs "Bucket" -}}
+			// {{replace $opID "Bucket" "" -1}} does {{$operation.Description}}
+		{{else -}}
+			// {{$opID}} does {{$operation.Description}}		
+		{{end -}}
+	{{end -}}
+	{{if $operation.DocumentationURL -}}
+		// Documentation URL: {{$operation.DocumentationURL}}
+	{{- end}}
+	{{if eq $belongs "Bucket" -}}
+		func (s *{{$belongs}}) {{replace $opID "Bucket" "" -1 -}}(
+			{{- if $isObject}}objectKey string,{{end -}}
+			{{- if $hasInput}}input *{{$opID}}Input{{end -}}
+		) (*{{$opID}}Output, error) {
+	{{else -}}
+		func (s *{{$belongs}}) {{$opID}}(
+			{{- if $hasInput}}input *{{$opID}}Input{{end -}}
+		) (*{{$opID}}Output, error) {
+	{{end -}}
+		{{if eq $belongs "Bucket" -}}
+			r, x, err := s.{{replace $opID "Bucket" "" -1}}Request(
+				{{- if $isObject}}objectKey,{{end -}}
+				{{- if $hasInput}}input{{end -}}
+			)
+		{{else -}}
+			r, x, err := s.{{$opID}}Request(
+				{{- if $hasInput}}input{{end -}}
+			)
+		{{end}}
+		if err != nil {
+			return x, err
+		}
+
+		err = r.Send()
+		if err != nil {
+			return nil, err
+		}
+
+		x.RequestID = r.HTTPResponse.Header.Get("X-Qs-Request-Id")
+
+		return x, err
+	}
+
+	{{if $operation.Description -}}
+		{{if eq $belongs "Bucket" -}}
+			// {{replace $opID "Bucket" "" -1}}Request creates request and output object of {{$opID}}.
+		{{else -}}
+			// {{$opID}}Request creates request and output object of {{$opID}}.
+		{{end -}}
+	{{end -}}
+	{{if eq $belongs "Bucket" -}}
+		func (s *{{$belongs}}) {{replace $opID "Bucket" "" -1 -}}Request(
+			{{- if $isObject}}objectKey string,{{end -}}
+			{{- if $hasInput}}input *{{$opID}}Input{{end -}}
+		) (*request.Request, *{{$opID}}Output, error) {
+	{{else -}}
+		func (s *{{$belongs}}) {{$opID}}Request(
+			{{- if $hasInput}}input *{{$opID}}Input{{end -}}
+		) (*request.Request, *{{$opID}}Output, error) {
+	{{end -}}
+		{{if $hasInput}}
+			if input == nil {
+				input = &{{$opID}}Input{}
+			}
+		{{end}}
+		o := &data.Operation{
+			Config:        s.Config,
+			{{- if ne $belongs "Service"}}
+				Properties:    s.Properties,
+			{{- end}}
+			APIName:       "{{$operation.Name}}",
+			RequestMethod: "{{$operation.Request.Method}}",
+			RequestURI:    "{{$operation.Request.URI}}",
+			{{if $operation.Response.StatusCodes -}}
+				StatusCodes:   []int{
+					{{range $statusCodeNumber, $statusCode := $operation.Response.StatusCodes -}}
+						{{$statusCodeNumber}},
+						{{- if $statusCode.Description -}}
+							// {{$statusCode.Description}}
+						{{- end}}
+					{{end -}}
+				},
+			{{else}}
+				StatusCodes:   []int{
+					200, // OK
+				},
+			{{end -}}
+		}
+
+		{{if eq $service.Name "Object"}}
+			s.Properties.ObjectKey = objectKey
+		{{end}}
+
+		x := &{{$opID}}Output{}
+		r, err := request.New(o, {{if $hasInput}}input{{else}}nil{{end}}, x)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		return r, x, nil
+	}
+
+	{{if $hasInput}}
+		// {{$opID}}Input presents input for {{$opID}}.
+		type {{$opID}}Input struct {
+			{{- if $operation.Request.Params.Properties | len}}
+				{{$data := $operation.Request.Params -}}
+				{{template "RenderProperties" passThrough $data `location:"params"`}}
+			{{end}}
+
+			{{- if $operation.Request.Headers.Properties | len}}
+				{{$data := $operation.Request.Headers -}}
+				{{template "RenderProperties" passThrough $data `location:"headers"`}}
+			{{end}}
+
+			{{- if $operation.Request.Elements.Properties | len}}
+				{{$data := $operation.Request.Elements -}}
+				{{template "RenderProperties" passThrough $data `location:"elements"`}}
+			{{end}}
+
+			{{- if eq $operation.Request.Body.Type "string"}}
+				{{if $operation.Request.Body.Description -}}
+					// {{$operation.Request.Body.Description}}
+				{{- end}}
+				Body string `location:"body"`
+			{{else if eq $operation.Request.Body.Type "binary"}}
+				{{if $operation.Request.Body.Description -}}
+					// {{$operation.Request.Body.Description}}
+				{{- end}}
+				Body io.Reader `location:"body"`
+			{{end}}
+		}
+
+		// Validate validates the input for {{$opID}}.
+		func (v *{{$opID}}Input) Validate() error {
+			{{template "ValidateCustomizedType" $operation.Request.Params}}
+			{{template "ValidateCustomizedType" $operation.Request.Headers}}
+			{{template "ValidateCustomizedType" $operation.Request.Elements}}
+
+			return nil
+		}
+	{{end}}
+
+	// {{$opID}}Output presents output for {{$opID}}.
+	type {{$opID}}Output struct {
+		StatusCode int `location:"statusCode"`
+
+		RequestID string `location:"requestID"`
+
+		{{if eq $operation.Response.Body.Type "string"}}
+			{{if $operation.Response.Body.Description -}}
+				// {{$operation.Response.Body.Description}}
+			{{- end}}
+			Body string `location:"body"`
+		{{else if eq $operation.Response.Body.Type "binary"}}
+			{{if $operation.Response.Body.Description -}}
+				// {{$operation.Response.Body.Description}}
+			{{- end}}
+			Body io.ReadCloser `location:"body"`
+		{{end}}
+
+		{{if $operation.Response.Elements.Properties | len}}
+			{{$data := $operation.Response.Elements}}
+			{{template "RenderProperties" passThrough $data `location:"elements"`}}
+		{{end}}
+
+		{{if $operation.Response.Headers.Properties | len}}
+			{{$data := $operation.Response.Headers}}
+			{{template "RenderProperties" passThrough $data `location:"headers"`}}
+		{{end}}
+	}
+{{end}}
+
+{{define "SubServiceInitParams"}}
+	{{- $customizedType := . -}}
+
+	{{- range $_, $property := $customizedType.Properties -}}
+		{{$property.ID | camelCase | lowerFirstWord}}{{" " -}}
+		{{template "PropertyType" $property}},
+	{{- end -}}
+{{end}}
+
+{{define "ValidateCustomizedType"}}
+	{{$customizedType := .}}
+
+	{{range $_, $property := $customizedType.Properties}}
+		{{$isNormalType := or (eq $property.Type "string") (eq $property.Type "integer")}}
+		{{$isContentLength := eq $property.ID "Content-Length"}}
+		{{if and $isNormalType (not $isContentLength) }}
+			{{if $property.IsRequired }}
+				if fmt.Sprint(v.{{$property.ID | camelCase}}) == "" {
+					return errs.ParameterRequiredError{
+						ParameterName: "{{$property.ID | camelCase}}",
+						ParentName: "{{$customizedType.ID | camelCase}}",
+					}
+				}
+			{{end}}
+			{{$parameterName := $property.ID | camelCase | lowerFirstWord}}
+			{{if gt ($property.Enum | len) 0}}
+				{{$parameterName}}ParameterValue := fmt.Sprint(v.{{$property.ID | camelCase}})
+				if {{$parameterName}}ParameterValue == "0" {
+					{{$parameterName}}ParameterValue = ""
+				}
+				if {{$parameterName}}ParameterValue != "" {
+					{{$parameterName}}ValidValues := []string{
+						{{- $property.Enum | commaConnectedWithQuote -}}
+					}
+					{{$parameterName}}ParameterValue := fmt.Sprint(v.{{$property.ID | camelCase}})
+
+					{{$parameterName}}IsValid := false
+					for _, value := range {{$parameterName}}ValidValues {
+						if value == {{$parameterName}}ParameterValue {
+							{{$parameterName}}IsValid = true
+						}
+					}
+
+					if !{{$parameterName}}IsValid {
+						return errs.ParameterValueNotAllowedError{
+							ParameterName: "{{$property.ID | camelCase}}",
+							ParameterValue: {{$parameterName}}ParameterValue,
+							AllowedValues: {{$parameterName}}ValidValues,
+						}
+					}
+				}
+			{{end}}
+		{{end}}
+
+		{{if eq $property.Type "object"}}
+			if v.{{$property.ID | camelCase}} != nil {
+				if err := v.{{$property.ID | camelCase}}.Validate(); err != nil {
+					return err
+				}
+			}
+			{{if $property.IsRequired }}
+				if v.{{$property.ID | camelCase}} == nil {
+					return errs.ParameterRequiredError{
+						ParameterName: "{{$property.ID | camelCase}}",
+						ParentName: "{{$customizedType.ID | camelCase}}",
+					}
+				}
+			{{end}}
+		{{end}}
+
+		{{if eq $property.Type "array"}}
+			{{if $property.IsRequired}}
+				if len(v.{{$property.ID | camelCase}}) == 0 {
+					return errs.ParameterRequiredError{
+						ParameterName: "{{$property.ID | camelCase}}",
+						ParentName: "{{$customizedType.ID | camelCase}}",
+					}
+				}
+			{{end}}
+			{{$isNotString := ne $property.ExtraType "string"}}
+			{{$isNotInteger := ne $property.ExtraType "integer"}}
+			{{$isNotTimestamp := ne $property.ExtraType "timestamp"}}
+			{{if and $isNotString $isNotInteger $isNotTimestamp}}
+				if len(v.{{$property.ID | camelCase}}) > 0 {
+					for _, property := range v.{{$property.ID | camelCase}} {
+						if err := property.Validate(); err != nil {
+							return err
+						}
+					}
+				}
+			{{end}}
+		{{end}}
+	{{end}}
+{{end}}
