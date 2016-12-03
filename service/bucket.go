@@ -32,11 +32,13 @@ var _ io.Reader
 var _ time.Time
 var _ config.Config
 
+// Bucket presents bucket.
 type Bucket struct {
 	Config     *config.Config
 	Properties *Properties
 }
 
+// Bucket initializes a new bucket.
 func (s *Service) Bucket(bucketName string, zone string) (*Bucket, error) {
 	properties := &Properties{
 		BucketName: bucketName,
@@ -46,7 +48,7 @@ func (s *Service) Bucket(bucketName string, zone string) (*Bucket, error) {
 	return &Bucket{Config: s.Config, Properties: properties}, nil
 }
 
-// Delete: Delete a bucket.
+// Delete does Delete a bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/delete.html
 func (s *Bucket) Delete() (*DeleteBucketOutput, error) {
 	r, x, err := s.DeleteRequest()
@@ -88,13 +90,14 @@ func (s *Bucket) DeleteRequest() (*request.Request, *DeleteBucketOutput, error) 
 	return r, x, nil
 }
 
+// DeleteBucketOutput presents output for DeleteBucket.
 type DeleteBucketOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// DeleteCORS: Delete CORS information of the bucket.
+// DeleteCORS does Delete CORS information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/delete_cors.html
 func (s *Bucket) DeleteCORS() (*DeleteBucketCORSOutput, error) {
 	r, x, err := s.DeleteCORSRequest()
@@ -136,13 +139,14 @@ func (s *Bucket) DeleteCORSRequest() (*request.Request, *DeleteBucketCORSOutput,
 	return r, x, nil
 }
 
+// DeleteBucketCORSOutput presents output for DeleteBucketCORS.
 type DeleteBucketCORSOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// DeleteExternalMirror: Delete external mirror of the bucket.
+// DeleteExternalMirror does Delete external mirror of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/external_mirror/delete_external_mirror.html
 func (s *Bucket) DeleteExternalMirror() (*DeleteBucketExternalMirrorOutput, error) {
 	r, x, err := s.DeleteExternalMirrorRequest()
@@ -184,13 +188,14 @@ func (s *Bucket) DeleteExternalMirrorRequest() (*request.Request, *DeleteBucketE
 	return r, x, nil
 }
 
+// DeleteBucketExternalMirrorOutput presents output for DeleteBucketExternalMirror.
 type DeleteBucketExternalMirrorOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// DeletePolicy: Delete policy information of the bucket.
+// DeletePolicy does Delete policy information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/policy/delete_policy.html
 func (s *Bucket) DeletePolicy() (*DeleteBucketPolicyOutput, error) {
 	r, x, err := s.DeletePolicyRequest()
@@ -232,13 +237,14 @@ func (s *Bucket) DeletePolicyRequest() (*request.Request, *DeleteBucketPolicyOut
 	return r, x, nil
 }
 
+// DeleteBucketPolicyOutput presents output for DeleteBucketPolicy.
 type DeleteBucketPolicyOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// DeleteMultipleObjects: Delete multiple objects from the bucket.
+// DeleteMultipleObjects does Delete multiple objects from the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/delete_multiple.html
 func (s *Bucket) DeleteMultipleObjects(input *DeleteMultipleObjectsInput) (*DeleteMultipleObjectsOutput, error) {
 	r, x, err := s.DeleteMultipleObjectsRequest(input)
@@ -284,6 +290,7 @@ func (s *Bucket) DeleteMultipleObjectsRequest(input *DeleteMultipleObjectsInput)
 	return r, x, nil
 }
 
+// DeleteMultipleObjectsInput presents input for DeleteMultipleObjects.
 type DeleteMultipleObjectsInput struct {
 	// Object MD5sum
 	ContentMD5 string `json:"Content-MD5" name:"Content-MD5" location:"headers"` // Required
@@ -294,6 +301,7 @@ type DeleteMultipleObjectsInput struct {
 	Quiet bool `json:"quiet,omitempty" name:"quiet" location:"elements"`
 }
 
+// Validate validates the input for DeleteMultipleObjects.
 func (v *DeleteMultipleObjectsInput) Validate() error {
 
 	if fmt.Sprint(v.ContentMD5) == "" {
@@ -321,6 +329,7 @@ func (v *DeleteMultipleObjectsInput) Validate() error {
 	return nil
 }
 
+// DeleteMultipleObjectsOutput presents output for DeleteMultipleObjects.
 type DeleteMultipleObjectsOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -332,7 +341,7 @@ type DeleteMultipleObjectsOutput struct {
 	Errors []*KeyDeleteErrorType `json:"errors,omitempty" name:"errors" location:"elements"`
 }
 
-// GetACL: Get ACL information of the bucket.
+// GetACL does Get ACL information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/get_acl.html
 func (s *Bucket) GetACL() (*GetBucketACLOutput, error) {
 	r, x, err := s.GetACLRequest()
@@ -374,6 +383,7 @@ func (s *Bucket) GetACLRequest() (*request.Request, *GetBucketACLOutput, error) 
 	return r, x, nil
 }
 
+// GetBucketACLOutput presents output for GetBucketACL.
 type GetBucketACLOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -385,7 +395,7 @@ type GetBucketACLOutput struct {
 	Owner *OwnerType `json:"owner,omitempty" name:"owner" location:"elements"`
 }
 
-// GetCORS: Get CORS information of the bucket.
+// GetCORS does Get CORS information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/get_cors.html
 func (s *Bucket) GetCORS() (*GetBucketCORSOutput, error) {
 	r, x, err := s.GetCORSRequest()
@@ -427,6 +437,7 @@ func (s *Bucket) GetCORSRequest() (*request.Request, *GetBucketCORSOutput, error
 	return r, x, nil
 }
 
+// GetBucketCORSOutput presents output for GetBucketCORS.
 type GetBucketCORSOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -436,7 +447,7 @@ type GetBucketCORSOutput struct {
 	CORSRules []*CORSRuleType `json:"cors_rules,omitempty" name:"cors_rules" location:"elements"`
 }
 
-// GetExternalMirror: Get external mirror of the bucket.
+// GetExternalMirror does Get external mirror of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/external_mirror/get_external_mirror.html
 func (s *Bucket) GetExternalMirror() (*GetBucketExternalMirrorOutput, error) {
 	r, x, err := s.GetExternalMirrorRequest()
@@ -478,6 +489,7 @@ func (s *Bucket) GetExternalMirrorRequest() (*request.Request, *GetBucketExterna
 	return r, x, nil
 }
 
+// GetBucketExternalMirrorOutput presents output for GetBucketExternalMirror.
 type GetBucketExternalMirrorOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -487,7 +499,7 @@ type GetBucketExternalMirrorOutput struct {
 	SourceSite string `json:"source_site,omitempty" name:"source_site" location:"elements"`
 }
 
-// GetPolicy: Get policy information of the bucket.
+// GetPolicy does Get policy information of the bucket.
 // Documentation URL: https://https://docs.qingcloud.com/qingstor/api/bucket/policy/get_policy.html
 func (s *Bucket) GetPolicy() (*GetBucketPolicyOutput, error) {
 	r, x, err := s.GetPolicyRequest()
@@ -529,6 +541,7 @@ func (s *Bucket) GetPolicyRequest() (*request.Request, *GetBucketPolicyOutput, e
 	return r, x, nil
 }
 
+// GetBucketPolicyOutput presents output for GetBucketPolicy.
 type GetBucketPolicyOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -538,7 +551,7 @@ type GetBucketPolicyOutput struct {
 	Statement []*StatementType `json:"statement,omitempty" name:"statement" location:"elements"`
 }
 
-// GetStatistics: Get statistics information of the bucket.
+// GetStatistics does Get statistics information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/get_stats.html
 func (s *Bucket) GetStatistics() (*GetBucketStatisticsOutput, error) {
 	r, x, err := s.GetStatisticsRequest()
@@ -580,6 +593,7 @@ func (s *Bucket) GetStatisticsRequest() (*request.Request, *GetBucketStatisticsO
 	return r, x, nil
 }
 
+// GetBucketStatisticsOutput presents output for GetBucketStatistics.
 type GetBucketStatisticsOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -602,7 +616,7 @@ type GetBucketStatisticsOutput struct {
 	URL string `json:"url,omitempty" name:"url" location:"elements"`
 }
 
-// Head: Check whether the bucket exists and available.
+// Head does Check whether the bucket exists and available.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/head.html
 func (s *Bucket) Head() (*HeadBucketOutput, error) {
 	r, x, err := s.HeadRequest()
@@ -644,13 +658,14 @@ func (s *Bucket) HeadRequest() (*request.Request, *HeadBucketOutput, error) {
 	return r, x, nil
 }
 
+// HeadBucketOutput presents output for HeadBucket.
 type HeadBucketOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// ListObjects: Retrieve the object list in a bucket.
+// ListObjects does Retrieve the object list in a bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/get.html
 func (s *Bucket) ListObjects(input *ListObjectsInput) (*ListObjectsOutput, error) {
 	r, x, err := s.ListObjectsRequest(input)
@@ -696,6 +711,7 @@ func (s *Bucket) ListObjectsRequest(input *ListObjectsInput) (*request.Request, 
 	return r, x, nil
 }
 
+// ListObjectsInput presents input for ListObjects.
 type ListObjectsInput struct {
 	// Put all keys that share a common prefix into a list
 	Delimiter string `json:"delimiter,omitempty" name:"delimiter" location:"params"`
@@ -707,11 +723,13 @@ type ListObjectsInput struct {
 	Prefix string `json:"prefix,omitempty" name:"prefix" location:"params"`
 }
 
+// Validate validates the input for ListObjects.
 func (v *ListObjectsInput) Validate() error {
 
 	return nil
 }
 
+// ListObjectsOutput presents output for ListObjects.
 type ListObjectsOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -737,7 +755,7 @@ type ListObjectsOutput struct {
 	Prefix string `json:"prefix,omitempty" name:"prefix" location:"elements"`
 }
 
-// Put: Create a new bucket.
+// Put does Create a new bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/put.html
 func (s *Bucket) Put() (*PutBucketOutput, error) {
 	r, x, err := s.PutRequest()
@@ -779,13 +797,14 @@ func (s *Bucket) PutRequest() (*request.Request, *PutBucketOutput, error) {
 	return r, x, nil
 }
 
+// PutBucketOutput presents output for PutBucket.
 type PutBucketOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// PutACL: Set ACL information of the bucket.
+// PutACL does Set ACL information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/put_acl.html
 func (s *Bucket) PutACL(input *PutBucketACLInput) (*PutBucketACLOutput, error) {
 	r, x, err := s.PutACLRequest(input)
@@ -831,12 +850,14 @@ func (s *Bucket) PutACLRequest(input *PutBucketACLInput) (*request.Request, *Put
 	return r, x, nil
 }
 
+// PutBucketACLInput presents input for PutBucketACL.
 type PutBucketACLInput struct {
 	// Bucket ACL rules
 	ACL []*ACLType `json:"acl" name:"acl" location:"elements"` // Required
 
 }
 
+// Validate validates the input for PutBucketACL.
 func (v *PutBucketACLInput) Validate() error {
 
 	if len(v.ACL) == 0 {
@@ -857,13 +878,14 @@ func (v *PutBucketACLInput) Validate() error {
 	return nil
 }
 
+// PutBucketACLOutput presents output for PutBucketACL.
 type PutBucketACLOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// PutCORS: Set CORS information of the bucket.
+// PutCORS does Set CORS information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/put_cors.html
 func (s *Bucket) PutCORS(input *PutBucketCORSInput) (*PutBucketCORSOutput, error) {
 	r, x, err := s.PutCORSRequest(input)
@@ -909,12 +931,14 @@ func (s *Bucket) PutCORSRequest(input *PutBucketCORSInput) (*request.Request, *P
 	return r, x, nil
 }
 
+// PutBucketCORSInput presents input for PutBucketCORS.
 type PutBucketCORSInput struct {
 	// Bucket CORS rules
 	CORSRules []*CORSRuleType `json:"cors_rules" name:"cors_rules" location:"elements"` // Required
 
 }
 
+// Validate validates the input for PutBucketCORS.
 func (v *PutBucketCORSInput) Validate() error {
 
 	if len(v.CORSRules) == 0 {
@@ -935,13 +959,14 @@ func (v *PutBucketCORSInput) Validate() error {
 	return nil
 }
 
+// PutBucketCORSOutput presents output for PutBucketCORS.
 type PutBucketCORSOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// PutExternalMirror: Set external mirror of the bucket.
+// PutExternalMirror does Set external mirror of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/external_mirror/put_external_mirror.html
 func (s *Bucket) PutExternalMirror(input *PutBucketExternalMirrorInput) (*PutBucketExternalMirrorOutput, error) {
 	r, x, err := s.PutExternalMirrorRequest(input)
@@ -987,12 +1012,14 @@ func (s *Bucket) PutExternalMirrorRequest(input *PutBucketExternalMirrorInput) (
 	return r, x, nil
 }
 
+// PutBucketExternalMirrorInput presents input for PutBucketExternalMirror.
 type PutBucketExternalMirrorInput struct {
 	// Source site url
 	SourceSite string `json:"source_site" name:"source_site" location:"elements"` // Required
 
 }
 
+// Validate validates the input for PutBucketExternalMirror.
 func (v *PutBucketExternalMirrorInput) Validate() error {
 
 	if fmt.Sprint(v.SourceSite) == "" {
@@ -1005,13 +1032,14 @@ func (v *PutBucketExternalMirrorInput) Validate() error {
 	return nil
 }
 
+// PutBucketExternalMirrorOutput presents output for PutBucketExternalMirror.
 type PutBucketExternalMirrorOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// PutPolicy: Set policy information of the bucket.
+// PutPolicy does Set policy information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/policy/put_policy.html
 func (s *Bucket) PutPolicy(input *PutBucketPolicyInput) (*PutBucketPolicyOutput, error) {
 	r, x, err := s.PutPolicyRequest(input)
@@ -1057,12 +1085,14 @@ func (s *Bucket) PutPolicyRequest(input *PutBucketPolicyInput) (*request.Request
 	return r, x, nil
 }
 
+// PutBucketPolicyInput presents input for PutBucketPolicy.
 type PutBucketPolicyInput struct {
 	// Bucket policy statement
 	Statement []*StatementType `json:"statement" name:"statement" location:"elements"` // Required
 
 }
 
+// Validate validates the input for PutBucketPolicy.
 func (v *PutBucketPolicyInput) Validate() error {
 
 	if len(v.Statement) == 0 {
@@ -1083,6 +1113,7 @@ func (v *PutBucketPolicyInput) Validate() error {
 	return nil
 }
 
+// PutBucketPolicyOutput presents output for PutBucketPolicy.
 type PutBucketPolicyOutput struct {
 	StatusCode int `location:"statusCode"`
 

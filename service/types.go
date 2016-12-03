@@ -23,6 +23,7 @@ import (
 	"github.com/yunify/qingstor-sdk-go/request/errs"
 )
 
+// Properties presents the service properties.
 type Properties struct {
 	// Bucket name
 	BucketName string `json:"bucket-name" name:"bucket-name"` // Required
@@ -32,6 +33,7 @@ type Properties struct {
 	Zone string `json:"zone" name:"zone"`
 }
 
+// ACLType presents ACL.
 type ACLType struct {
 	Grantee *GranteeType `json:"grantee" name:"grantee"` // Required
 	// Permission for this grantee
@@ -40,6 +42,7 @@ type ACLType struct {
 
 }
 
+// Validate validates the ACL.
 func (v *ACLType) Validate() error {
 
 	if v.Grantee != nil {
@@ -89,6 +92,7 @@ func (v *ACLType) Validate() error {
 	return nil
 }
 
+// BucketType presents Bucket.
 type BucketType struct {
 	// Created time of the bucket
 	Created time.Time `json:"created,omitempty" name:"created" format:"ISO 8601"`
@@ -100,17 +104,20 @@ type BucketType struct {
 	URL string `json:"url,omitempty" name:"url"`
 }
 
+// Validate validates the Bucket.
 func (v *BucketType) Validate() error {
 
 	return nil
 }
 
+// ConditionType presents Condition.
 type ConditionType struct {
 	IsNull        *IsNullType        `json:"is_null,omitempty" name:"is_null"`
 	StringLike    *StringLikeType    `json:"string_like,omitempty" name:"string_like"`
 	StringNotLike *StringNotLikeType `json:"string_not_like,omitempty" name:"string_not_like"`
 }
 
+// Validate validates the Condition.
 func (v *ConditionType) Validate() error {
 
 	if v.IsNull != nil {
@@ -134,6 +141,7 @@ func (v *ConditionType) Validate() error {
 	return nil
 }
 
+// CORSRuleType presents CORSRule.
 type CORSRuleType struct {
 	// Allowed headers
 	AllowedHeaders []string `json:"allowed_headers,omitempty" name:"allowed_headers"`
@@ -147,6 +155,7 @@ type CORSRuleType struct {
 	MaxAgeSeconds int `json:"max_age_seconds,omitempty" name:"max_age_seconds"`
 }
 
+// Validate validates the CORSRule.
 func (v *CORSRuleType) Validate() error {
 
 	if len(v.AllowedMethods) == 0 {
@@ -166,6 +175,7 @@ func (v *CORSRuleType) Validate() error {
 	return nil
 }
 
+// GranteeType presents Grantee.
 type GranteeType struct {
 	// Grantee user ID
 	ID string `json:"id,omitempty" name:"id"`
@@ -177,6 +187,7 @@ type GranteeType struct {
 
 }
 
+// Validate validates the Grantee.
 func (v *GranteeType) Validate() error {
 
 	if fmt.Sprint(v.Type) == "" {
@@ -213,16 +224,19 @@ func (v *GranteeType) Validate() error {
 	return nil
 }
 
+// IsNullType presents IsNull.
 type IsNullType struct {
 	// Refer url
 	Referer bool `json:"Referer,omitempty" name:"Referer"`
 }
 
+// Validate validates the IsNull.
 func (v *IsNullType) Validate() error {
 
 	return nil
 }
 
+// KeyType presents Key.
 type KeyType struct {
 	// Object created time
 	Created time.Time `json:"created,omitempty" name:"created" format:"ISO 8601"`
@@ -238,11 +252,13 @@ type KeyType struct {
 	Size int `json:"size,omitempty" name:"size"`
 }
 
+// Validate validates the Key.
 func (v *KeyType) Validate() error {
 
 	return nil
 }
 
+// KeyDeleteErrorType presents KeyDeleteError.
 type KeyDeleteErrorType struct {
 	// Error code
 	Code string `json:"code,omitempty" name:"code"`
@@ -252,11 +268,13 @@ type KeyDeleteErrorType struct {
 	Message string `json:"message,omitempty" name:"message"`
 }
 
+// Validate validates the KeyDeleteError.
 func (v *KeyDeleteErrorType) Validate() error {
 
 	return nil
 }
 
+// ObjectPartType presents ObjectPart.
 type ObjectPartType struct {
 	// Object part created time
 	Created time.Time `json:"created,omitempty" name:"created" format:"ISO 8601"`
@@ -268,6 +286,7 @@ type ObjectPartType struct {
 	Size int `json:"size,omitempty" name:"size"`
 }
 
+// Validate validates the ObjectPart.
 func (v *ObjectPartType) Validate() error {
 
 	if fmt.Sprint(v.PartNumber) == "" {
@@ -280,6 +299,7 @@ func (v *ObjectPartType) Validate() error {
 	return nil
 }
 
+// OwnerType presents Owner.
 type OwnerType struct {
 	// User ID
 	ID string `json:"id,omitempty" name:"id"`
@@ -287,11 +307,13 @@ type OwnerType struct {
 	Name string `json:"name,omitempty" name:"name"`
 }
 
+// Validate validates the Owner.
 func (v *OwnerType) Validate() error {
 
 	return nil
 }
 
+// StatementType presents Statement.
 type StatementType struct {
 	// QingStor API methods
 	Action    []string       `json:"action" name:"action"` // Required
@@ -308,6 +330,7 @@ type StatementType struct {
 
 }
 
+// Validate validates the Statement.
 func (v *StatementType) Validate() error {
 
 	if len(v.Action) == 0 {
@@ -378,21 +401,25 @@ func (v *StatementType) Validate() error {
 	return nil
 }
 
+// StringLikeType presents StringLike.
 type StringLikeType struct {
 	// Refer url
 	Referer []string `json:"Referer,omitempty" name:"Referer"`
 }
 
+// Validate validates the StringLike.
 func (v *StringLikeType) Validate() error {
 
 	return nil
 }
 
+// StringNotLikeType presents StringNotLike.
 type StringNotLikeType struct {
 	// Refer url
 	Referer []string `json:"Referer,omitempty" name:"Referer"`
 }
 
+// Validate validates the StringNotLike.
 func (v *StringNotLikeType) Validate() error {
 
 	return nil

@@ -32,7 +32,7 @@ var _ io.Reader
 var _ time.Time
 var _ config.Config
 
-// AbortMultipartUpload: Abort multipart upload.
+// AbortMultipartUpload does Abort multipart upload.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/abort_multipart_upload.html
 func (s *Bucket) AbortMultipartUpload(objectKey string, input *AbortMultipartUploadInput) (*AbortMultipartUploadOutput, error) {
 	r, x, err := s.AbortMultipartUploadRequest(objectKey, input)
@@ -80,12 +80,14 @@ func (s *Bucket) AbortMultipartUploadRequest(objectKey string, input *AbortMulti
 	return r, x, nil
 }
 
+// AbortMultipartUploadInput presents input for AbortMultipartUpload.
 type AbortMultipartUploadInput struct {
 	// Object multipart upload ID
 	UploadID string `json:"upload_id" name:"upload_id" location:"params"` // Required
 
 }
 
+// Validate validates the input for AbortMultipartUpload.
 func (v *AbortMultipartUploadInput) Validate() error {
 
 	if fmt.Sprint(v.UploadID) == "" {
@@ -98,13 +100,14 @@ func (v *AbortMultipartUploadInput) Validate() error {
 	return nil
 }
 
+// AbortMultipartUploadOutput presents output for AbortMultipartUpload.
 type AbortMultipartUploadOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// CompleteMultipartUpload: Complete multipart upload.
+// CompleteMultipartUpload does Complete multipart upload.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/complete_multipart_upload.html
 func (s *Bucket) CompleteMultipartUpload(objectKey string, input *CompleteMultipartUploadInput) (*CompleteMultipartUploadOutput, error) {
 	r, x, err := s.CompleteMultipartUploadRequest(objectKey, input)
@@ -152,6 +155,7 @@ func (s *Bucket) CompleteMultipartUploadRequest(objectKey string, input *Complet
 	return r, x, nil
 }
 
+// CompleteMultipartUploadInput presents input for CompleteMultipartUpload.
 type CompleteMultipartUploadInput struct {
 	// Object multipart upload ID
 	UploadID string `json:"upload_id" name:"upload_id" location:"params"` // Required
@@ -169,6 +173,7 @@ type CompleteMultipartUploadInput struct {
 	ObjectParts []*ObjectPartType `json:"object_parts,omitempty" name:"object_parts" location:"elements"`
 }
 
+// Validate validates the input for CompleteMultipartUpload.
 func (v *CompleteMultipartUploadInput) Validate() error {
 
 	if fmt.Sprint(v.UploadID) == "" {
@@ -189,13 +194,14 @@ func (v *CompleteMultipartUploadInput) Validate() error {
 	return nil
 }
 
+// CompleteMultipartUploadOutput presents output for CompleteMultipartUpload.
 type CompleteMultipartUploadOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// DeleteObject: Delete the object.
+// DeleteObject does Delete the object.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/delete.html
 func (s *Bucket) DeleteObject(objectKey string) (*DeleteObjectOutput, error) {
 	r, x, err := s.DeleteObjectRequest(objectKey)
@@ -239,13 +245,14 @@ func (s *Bucket) DeleteObjectRequest(objectKey string) (*request.Request, *Delet
 	return r, x, nil
 }
 
+// DeleteObjectOutput presents output for DeleteObject.
 type DeleteObjectOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// GetObject: Retrieve the object.
+// GetObject does Retrieve the object.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/get.html
 func (s *Bucket) GetObject(objectKey string, input *GetObjectInput) (*GetObjectOutput, error) {
 	r, x, err := s.GetObjectRequest(objectKey, input)
@@ -296,6 +303,7 @@ func (s *Bucket) GetObjectRequest(objectKey string, input *GetObjectInput) (*req
 	return r, x, nil
 }
 
+// GetObjectInput presents input for GetObject.
 type GetObjectInput struct {
 	// Check whether the ETag matches
 	IfMatch string `json:"If-Match,omitempty" name:"If-Match" location:"headers"`
@@ -315,11 +323,13 @@ type GetObjectInput struct {
 	XQSEncryptionCustomerKeyMD5 string `json:"X-QS-Encryption-Customer-Key-MD5,omitempty" name:"X-QS-Encryption-Customer-Key-MD5" location:"headers"`
 }
 
+// Validate validates the input for GetObject.
 func (v *GetObjectInput) Validate() error {
 
 	return nil
 }
 
+// GetObjectOutput presents output for GetObject.
 type GetObjectOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -336,7 +346,7 @@ type GetObjectOutput struct {
 	XQSEncryptionCustomerAlgorithm string `json:"X-QS-Encryption-Customer-Algorithm,omitempty" name:"X-QS-Encryption-Customer-Algorithm" location:"headers"`
 }
 
-// HeadObject: Check whether the object exists and available.
+// HeadObject does Check whether the object exists and available.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/head.html
 func (s *Bucket) HeadObject(objectKey string, input *HeadObjectInput) (*HeadObjectOutput, error) {
 	r, x, err := s.HeadObjectRequest(objectKey, input)
@@ -384,6 +394,7 @@ func (s *Bucket) HeadObjectRequest(objectKey string, input *HeadObjectInput) (*r
 	return r, x, nil
 }
 
+// HeadObjectInput presents input for HeadObject.
 type HeadObjectInput struct {
 	// Check whether the ETag matches
 	IfMatch string `json:"If-Match,omitempty" name:"If-Match" location:"headers"`
@@ -401,11 +412,13 @@ type HeadObjectInput struct {
 	XQSEncryptionCustomerKeyMD5 string `json:"X-QS-Encryption-Customer-Key-MD5,omitempty" name:"X-QS-Encryption-Customer-Key-MD5" location:"headers"`
 }
 
+// Validate validates the input for HeadObject.
 func (v *HeadObjectInput) Validate() error {
 
 	return nil
 }
 
+// HeadObjectOutput presents output for HeadObject.
 type HeadObjectOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -422,7 +435,7 @@ type HeadObjectOutput struct {
 	XQSEncryptionCustomerAlgorithm string `json:"X-QS-Encryption-Customer-Algorithm,omitempty" name:"X-QS-Encryption-Customer-Algorithm" location:"headers"`
 }
 
-// InitiateMultipartUpload: Initial multipart upload on the object.
+// InitiateMultipartUpload does Initial multipart upload on the object.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/initiate_multipart_upload.html
 func (s *Bucket) InitiateMultipartUpload(objectKey string, input *InitiateMultipartUploadInput) (*InitiateMultipartUploadOutput, error) {
 	r, x, err := s.InitiateMultipartUploadRequest(objectKey, input)
@@ -470,6 +483,7 @@ func (s *Bucket) InitiateMultipartUploadRequest(objectKey string, input *Initiat
 	return r, x, nil
 }
 
+// InitiateMultipartUploadInput presents input for InitiateMultipartUpload.
 type InitiateMultipartUploadInput struct {
 	// Object content type
 	ContentType string `json:"Content-Type,omitempty" name:"Content-Type" location:"headers"`
@@ -481,11 +495,13 @@ type InitiateMultipartUploadInput struct {
 	XQSEncryptionCustomerKeyMD5 string `json:"X-QS-Encryption-Customer-Key-MD5,omitempty" name:"X-QS-Encryption-Customer-Key-MD5" location:"headers"`
 }
 
+// Validate validates the input for InitiateMultipartUpload.
 func (v *InitiateMultipartUploadInput) Validate() error {
 
 	return nil
 }
 
+// InitiateMultipartUploadOutput presents output for InitiateMultipartUpload.
 type InitiateMultipartUploadOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -502,7 +518,7 @@ type InitiateMultipartUploadOutput struct {
 	XQSEncryptionCustomerAlgorithm string `json:"X-QS-Encryption-Customer-Algorithm,omitempty" name:"X-QS-Encryption-Customer-Algorithm" location:"headers"`
 }
 
-// ListMultipart: List object parts.
+// ListMultipart does List object parts.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/list_multipart.html
 func (s *Bucket) ListMultipart(objectKey string, input *ListMultipartInput) (*ListMultipartOutput, error) {
 	r, x, err := s.ListMultipartRequest(objectKey, input)
@@ -550,6 +566,7 @@ func (s *Bucket) ListMultipartRequest(objectKey string, input *ListMultipartInpu
 	return r, x, nil
 }
 
+// ListMultipartInput presents input for ListMultipart.
 type ListMultipartInput struct {
 	// Limit results count
 	Limit int `json:"limit,omitempty" name:"limit" location:"params"`
@@ -560,6 +577,7 @@ type ListMultipartInput struct {
 
 }
 
+// Validate validates the input for ListMultipart.
 func (v *ListMultipartInput) Validate() error {
 
 	if fmt.Sprint(v.UploadID) == "" {
@@ -572,6 +590,7 @@ func (v *ListMultipartInput) Validate() error {
 	return nil
 }
 
+// ListMultipartOutput presents output for ListMultipart.
 type ListMultipartOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -583,7 +602,7 @@ type ListMultipartOutput struct {
 	ObjectParts []*ObjectPartType `json:"object_parts,omitempty" name:"object_parts" location:"elements"`
 }
 
-// OptionsObject: Check whether the object accepts a origin with method and header.
+// OptionsObject does Check whether the object accepts a origin with method and header.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/options.html
 func (s *Bucket) OptionsObject(objectKey string, input *OptionsObjectInput) (*OptionsObjectOutput, error) {
 	r, x, err := s.OptionsObjectRequest(objectKey, input)
@@ -631,6 +650,7 @@ func (s *Bucket) OptionsObjectRequest(objectKey string, input *OptionsObjectInpu
 	return r, x, nil
 }
 
+// OptionsObjectInput presents input for OptionsObject.
 type OptionsObjectInput struct {
 	// Request headers
 	AccessControlRequestHeaders string `json:"Access-Control-Request-Headers,omitempty" name:"Access-Control-Request-Headers" location:"headers"`
@@ -641,6 +661,7 @@ type OptionsObjectInput struct {
 
 }
 
+// Validate validates the input for OptionsObject.
 func (v *OptionsObjectInput) Validate() error {
 
 	if fmt.Sprint(v.AccessControlRequestMethod) == "" {
@@ -660,6 +681,7 @@ func (v *OptionsObjectInput) Validate() error {
 	return nil
 }
 
+// OptionsObjectOutput presents output for OptionsObject.
 type OptionsObjectOutput struct {
 	StatusCode int `location:"statusCode"`
 
@@ -677,7 +699,7 @@ type OptionsObjectOutput struct {
 	AccessControlMaxAge string `json:"Access-Control-Max-Age,omitempty" name:"Access-Control-Max-Age" location:"headers"`
 }
 
-// PutObject: Upload the object.
+// PutObject does Upload the object.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/put.html
 func (s *Bucket) PutObject(objectKey string, input *PutObjectInput) (*PutObjectOutput, error) {
 	r, x, err := s.PutObjectRequest(objectKey, input)
@@ -725,6 +747,7 @@ func (s *Bucket) PutObjectRequest(objectKey string, input *PutObjectInput) (*req
 	return r, x, nil
 }
 
+// PutObjectInput presents input for PutObject.
 type PutObjectInput struct {
 	// Object content size
 	ContentLength int `json:"Content-Length" name:"Content-Length" location:"headers"` // Required
@@ -765,18 +788,20 @@ type PutObjectInput struct {
 	Body io.Reader `location:"body"`
 }
 
+// Validate validates the input for PutObject.
 func (v *PutObjectInput) Validate() error {
 
 	return nil
 }
 
+// PutObjectOutput presents output for PutObject.
 type PutObjectOutput struct {
 	StatusCode int `location:"statusCode"`
 
 	RequestID string `location:"requestID"`
 }
 
-// UploadMultipart: Upload object multipart.
+// UploadMultipart does Upload object multipart.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/multipart/upload_multipart.html
 func (s *Bucket) UploadMultipart(objectKey string, input *UploadMultipartInput) (*UploadMultipartOutput, error) {
 	r, x, err := s.UploadMultipartRequest(objectKey, input)
@@ -824,6 +849,7 @@ func (s *Bucket) UploadMultipartRequest(objectKey string, input *UploadMultipart
 	return r, x, nil
 }
 
+// UploadMultipartInput presents input for UploadMultipart.
 type UploadMultipartInput struct {
 	// Object multipart upload part number
 	PartNumber int `json:"part_number" name:"part_number" default:"0" location:"params"` // Required
@@ -845,6 +871,7 @@ type UploadMultipartInput struct {
 	Body io.Reader `location:"body"`
 }
 
+// Validate validates the input for UploadMultipart.
 func (v *UploadMultipartInput) Validate() error {
 
 	if fmt.Sprint(v.PartNumber) == "" {
@@ -864,6 +891,7 @@ func (v *UploadMultipartInput) Validate() error {
 	return nil
 }
 
+// UploadMultipartOutput presents output for UploadMultipart.
 type UploadMultipartOutput struct {
 	StatusCode int `location:"statusCode"`
 

@@ -91,7 +91,7 @@ func tearDown() {
 				}
 			}
 		}
-		retries += 1
+		retries++
 		time.Sleep(time.Second * time.Duration(tc.RetryWaitTime))
 	}
 }

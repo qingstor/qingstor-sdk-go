@@ -32,7 +32,7 @@ func BucketExternalMirrorFeatureContext(s *godog.Suite) {
 
 	s.Step(`^get bucket external mirror$`, getBucketExternalMirror)
 	s.Step(`^get bucket external mirror status code is (\d+)$`, getBucketExternalMirrorStatusCodeIs)
-	s.Step(`^get bucket external mirror should have source_site "([^"]*)"$`, getBucketExternalMirrorShouldHaveSource_site)
+	s.Step(`^get bucket external mirror should have source_site "([^"]*)"$`, getBucketExternalMirrorShouldHaveSourceSite)
 
 	s.Step(`^delete bucket external mirror$`, deleteBucketExternalMirror)
 	s.Step(`^delete bucket external mirror status code is (\d+)$`, deleteBucketExternalMirrorStatusCodeIs)
@@ -76,7 +76,7 @@ func getBucketExternalMirrorStatusCodeIs(statusCode int) error {
 	return err
 }
 
-func getBucketExternalMirrorShouldHaveSource_site(sourceSite string) error {
+func getBucketExternalMirrorShouldHaveSourceSite(sourceSite string) error {
 	if getBucketExternalMirrorOutput != nil {
 		return checkEqual(getBucketExternalMirrorOutput.SourceSite, sourceSite)
 	}

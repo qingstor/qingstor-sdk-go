@@ -183,7 +183,7 @@ func listMultipart() error {
 	listMultipartOutput, err = bucket.ListMultipart(
 		theMultipartObjectKey,
 		&qs.ListMultipartInput{
-			UploadID:  initiateMultipartUploadOutput.UploadID,
+			UploadID: initiateMultipartUploadOutput.UploadID,
 		},
 	)
 	return err
@@ -232,7 +232,7 @@ func abortMultipartUpload() error {
 	_, err = bucket.AbortMultipartUpload(
 		theMultipartObjectKey,
 		&qs.AbortMultipartUploadInput{
-			UploadID:  initiateMultipartUploadOutput.UploadID,
+			UploadID: initiateMultipartUploadOutput.UploadID,
 		},
 	)
 	return nil

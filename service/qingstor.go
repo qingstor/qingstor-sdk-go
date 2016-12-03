@@ -23,16 +23,17 @@ import (
 	"github.com/yunify/qingstor-sdk-go/request/data"
 )
 
-// QingStorService: QingStor provides low-cost and reliable online storage service with unlimited storage space, high read and write performance, high reliability and data safety, fine-grained access control, and easy to use API.
+// Service QingStor provides low-cost and reliable online storage service with unlimited storage space, high read and write performance, high reliability and data safety, fine-grained access control, and easy to use API.
 type Service struct {
 	Config *config.Config
 }
 
+// Init initializes a new service.
 func Init(c *config.Config) (*Service, error) {
 	return &Service{Config: c}, nil
 }
 
-// ListBuckets: Retrieve the bucket list.
+// ListBuckets does Retrieve the bucket list.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/service/get.html
 func (s *Service) ListBuckets(input *ListBucketsInput) (*ListBucketsOutput, error) {
 	r, x, err := s.ListBucketsRequest(input)
@@ -77,16 +78,19 @@ func (s *Service) ListBucketsRequest(input *ListBucketsInput) (*request.Request,
 	return r, x, nil
 }
 
+// ListBucketsInput presents input for ListBuckets.
 type ListBucketsInput struct {
 	// Limits results to buckets that in the location
 	Location string `json:"Location,omitempty" name:"Location" location:"headers"`
 }
 
+// Validate validates the input for ListBuckets.
 func (v *ListBucketsInput) Validate() error {
 
 	return nil
 }
 
+// ListBucketsOutput presents output for ListBuckets.
 type ListBucketsOutput struct {
 	StatusCode int `location:"statusCode"`
 
