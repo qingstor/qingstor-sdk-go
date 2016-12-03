@@ -1,0 +1,3 @@
+[submodule "specs/qingstor"]
+	path = specs/qingstor
+	url = git@github.com:yunify/qingstor-api-specs.git
