@@ -1,6 +1,6 @@
 [submodule "specs/qingstor"]
 	path = specs/qingstor
-	url = git@github.com:yunify/qingstor-api-specs.git
+	url = https://github.com/yunify/qingstor-api-specs.git
 [submodule "test/features"]
 	path = test/features
-	url = git@github.com:yunify/qingstor-sdk-test-scenarios.git
+	url = https://github.com/yunify/qingstor-sdk-test-scenarios.git
