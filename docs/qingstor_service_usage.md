@@ -110,7 +110,7 @@ fmt.Println(oOutput.StatusCode)
 Delete object
 
 ``` go
-oOutput, _ := bucket.DeleteObject("Screenshot.jpg", nil)
+oOutput, _ := bucket.DeleteObject("Screenshot.jpg")
 
 // Print the upload ID.
 // Example: 204
@@ -207,18 +207,14 @@ fmt.Println(aOutput.StatusCode)
 Abort Multipart Upload
 
 ``` go
-aOutput, _ := bucket.AbortMultipartUpload(
+aOutput, err := bucket.AbortMultipartUpload(
 	"QingCloudInsight.mov"
 	&qingstor.AbortMultipartUploadInput{
 		UploadID:  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 	},
 )
 
-// Print HTTP status code.
-// Example: 400
-fmt.Println(aOutput.StatusCode)
-
-// Print error code and error message.
-// Example: Code (invalid_object_status...
-fmt.Println(aOutput.Error)
+// Print error message.
+// Example: QingStor Error: StatusCode 400, Code...
+fmt.Println(err)
 ```
