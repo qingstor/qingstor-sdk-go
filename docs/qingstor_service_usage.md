@@ -27,15 +27,15 @@ List buckets
 ``` go
 qsOutput, _ := qsService.ListBuckets(nil)
 
-// Print the upload ID.
+// Print the HTTP status code.
 // Example: 200
 fmt.Println(qsOutput.StatusCode)
 
-// Print the upload ID.
+// Print the bucket count.
 // Example: 5
 fmt.Println(qsOutput.Count)
 
-// Print the upload ID.
+// Print the name of first bucket.
 // Example: "test-bucket"
 fmt.Println(qsOutput.Buckets[0].Name)
 ```
@@ -51,11 +51,11 @@ List objects in the bucket
 ``` go
 bOutput, _ := bucket.ListObjects(nil)
 
-// Print the upload ID.
+// Print the HTTP status code.
 // Example: 200
 fmt.Println(bOutput.StatusCode)
 
-// Print the upload ID.
+// Print the key count.
 // Example: 7
 fmt.Println(len(bOutput.Keys))
 ```
@@ -73,7 +73,7 @@ bACLOutput, _ := bucket.PutACL(&qingstor.PutBucketACLInput{
 	}},
 })
 
-// Print the upload ID.
+// Print the HTTP status code.
 // Example: 200
 fmt.Println(bACLOutput.StatusCode)
 ```
@@ -102,7 +102,7 @@ oOutput, _ := bucket.PutObject(
 	},
 )
 
-// Print the upload ID.
+// Print the HTTP status code.
 // Example: 201
 fmt.Println(oOutput.StatusCode)
 ```
@@ -112,7 +112,7 @@ Delete object
 ``` go
 oOutput, _ := bucket.DeleteObject("Screenshot.jpg")
 
-// Print the upload ID.
+// Print the HTTP status code.
 // Example: 204
 fmt.Println(oOutput.StatusCode)
 ```
@@ -127,7 +127,7 @@ aOutput, _ := bucket.InitiateMultipartUpload(
 	},
 )
 
-// Print HTTP status code.
+// Print the HTTP status code.
 // Example: 200
 fmt.Println(aOutput.StatusCode)
 
@@ -149,7 +149,7 @@ aOutput, _ := bucket.UploadMultipart(
 	},
 )
 
-// Print HTTP status code.
+// Print the HTTP status code.
 // Example: 201
 fmt.Println(aOutput.StatusCode)
 
@@ -163,7 +163,7 @@ aOutput, _ = bucket.UploadMultipart(
 	},
 )
 
-// Print HTTP status code.
+// Print the HTTP status code.
 // Example: 201
 fmt.Println(aOutput.StatusCode)
 
@@ -177,7 +177,7 @@ aOutput, _ = bucket.UploadMultipart(
 	},
 )
 
-// Print HTTP status code.
+// Print the HTTP status code.
 // Example: 201
 fmt.Println(aOutput.StatusCode)
 ```
@@ -199,7 +199,7 @@ aOutput, _ := bucket.CompleteMultipartUpload(
 	},
 )
 
-// Print HTTP status code.
+// Print the HTTP status code.
 // Example: 200
 fmt.Println(aOutput.StatusCode)
 ```
@@ -214,7 +214,7 @@ aOutput, err := bucket.AbortMultipartUpload(
 	},
 )
 
-// Print error message.
+// Print the error message.
 // Example: QingStor Error: StatusCode 400, Code...
 fmt.Println(err)
 ```
