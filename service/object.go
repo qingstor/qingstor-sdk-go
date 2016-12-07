@@ -779,6 +779,8 @@ type PutObjectInput struct {
 	XQSEncryptionCustomerKey string `json:"X-QS-Encryption-Customer-Key,omitempty" name:"X-QS-Encryption-Customer-Key" location:"headers"`
 	// MD5sum of encryption key
 	XQSEncryptionCustomerKeyMD5 string `json:"X-QS-Encryption-Customer-Key-MD5,omitempty" name:"X-QS-Encryption-Customer-Key-MD5" location:"headers"`
+	// Check whether fetch target object has not been modified
+	XQSFetchIfUnmodifiedSince time.Time `json:"X-QS-Fetch-If-Unmodified-Since,omitempty" name:"X-QS-Fetch-If-Unmodified-Since" format:"RFC 822" location:"headers"`
 	// Fetch source, should be a valid url
 	XQSFetchSource string `json:"X-QS-Fetch-Source,omitempty" name:"X-QS-Fetch-Source" location:"headers"`
 	// Move source, format (/<bucket-name>/<object-key>)
