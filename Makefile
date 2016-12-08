@@ -47,7 +47,7 @@ lint:
 	@echo "ok"
 
 update:
-	git submodule update --init
+	git submodule update --remote
 	@echo "ok"
 
 generate:
