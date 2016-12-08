@@ -10,7 +10,7 @@ You can use a specified version of a service by import a service package with a 
 ``` go
 import (
 	// Import the latest version API
-	"github.com/yunify/qingstor-sdk-go/qingstor"
+	"github.com/yunify/qingstor-sdk-go/service"
 )
 ```
 
@@ -19,7 +19,7 @@ import (
 Initialize the QingStor service with a configuration
 
 ``` go
-qsService, _ := qingstor.Init(configuration)
+qsService, _ := service.Init(configuration)
 ```
 
 List buckets
@@ -63,9 +63,9 @@ fmt.Println(len(bOutput.Keys))
 Set ACL of the bucket
 
 ``` go
-bACLOutput, _ := bucket.PutACL(&qingstor.PutBucketACLInput{
-	ACL: []*qingstor.ACLType{{
-		Grantee: &qingstor.GranteeType{
+bACLOutput, _ := bucket.PutACL(&service.PutBucketACLInput{
+	ACL: []*service.ACLType{{
+		Grantee: &service.GranteeType{
 			Type: "user",
 			ID:   "usr-xxxxxxxx",
 		},
@@ -94,7 +94,7 @@ md5String := hex.EncodeToString(hashInBytes)
 // Put object
 oOutput, _ := bucket.PutObject(
 	"Screenshot.jpg",
-	&qingstor.PutObjectInput{
+	&service.PutObjectInput{
 		ContentLength: 102475,       // Obtain automatically if empty
 		ContentType:   "image/jpeg", // Detect automatically if empty
 		ContentMD5:    md5String,
@@ -122,7 +122,7 @@ Initialize Multipart Upload
 ``` go
 aOutput, _ := bucket.InitiateMultipartUpload(
 	"QingCloudInsight.mov",
-	&qingstor.InitiateMultipartUploadInput{
+	&service.InitiateMultipartUploadInput{
 		ContentType: "video/quicktime",
 	},
 )
@@ -141,7 +141,7 @@ Upload Multipart
 ``` go
 aOutput, _ := bucket.UploadMultipart(
 	"QingCloudInsight.mov",
-	&qingstor.UploadMultipartInput{
+	&service.UploadMultipartInput{
 		UploadID:   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		PartNumber: 0,
 		ContentMD5: md5String0,
@@ -155,7 +155,7 @@ fmt.Println(aOutput.StatusCode)
 
 aOutput, _ = bucket.UploadMultipart(
 	"QingCloudInsight.mov",
-	&qingstor.UploadMultipartInput{
+	&service.UploadMultipartInput{
 		UploadID:   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		PartNumber: 1,
 		ContentMD5: md5String1,
@@ -169,7 +169,7 @@ fmt.Println(aOutput.StatusCode)
 
 aOutput, _ = bucket.UploadMultipart(
 	"QingCloudInsight.mov"
-	&qingstor.UploadMultipartInput{
+	&service.UploadMultipartInput{
 		UploadID:   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		PartNumber: 2,
 		ContentMD5: md5String2,
@@ -187,9 +187,9 @@ Complete Multipart Upload
 ``` go
 aOutput, _ := bucket.CompleteMultipartUpload(
 	"QingCloudInsight.mov",
-	&qingstor.CompleteMultipartUploadInput{
+	&service.CompleteMultipartUploadInput{
 		UploadID:    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-		ObjectParts: []*qingstor.ObjectPart{{
+		ObjectParts: []*service.ObjectPart{{
 			PartNumber: 0,
 		}, {
 			PartNumber: 1,
@@ -209,7 +209,7 @@ Abort Multipart Upload
 ``` go
 aOutput, err := bucket.AbortMultipartUpload(
 	"QingCloudInsight.mov"
-	&qingstor.AbortMultipartUploadInput{
+	&service.AbortMultipartUploadInput{
 		UploadID:  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 	},
 )

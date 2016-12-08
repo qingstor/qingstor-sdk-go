@@ -14,7 +14,7 @@
 // | limitations under the License.
 // +-------------------------------------------------------------------------
 
-package qingstor
+package service
 
 import (
 	"fmt"

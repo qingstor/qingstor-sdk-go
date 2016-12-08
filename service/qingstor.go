@@ -15,7 +15,7 @@
 // +-------------------------------------------------------------------------
 
 // Package qingstor provides QingStor Service API (API Version 2016-01-06)
-package qingstor
+package service
 
 import (
 	"github.com/yunify/qingstor-sdk-go/config"

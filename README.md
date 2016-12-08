@@ -50,10 +50,10 @@ func main() {
 	conf, _ := config.New("ACCESS_KEY_ID", "SECRET_ACCESS_KEY")
 
 	// Initialize service object for QingStor.
-	qsService, _ := qingstor.Init(conf)
+	qsService, _ := service.Init(conf)
 
 	// List all buckets.
-	qsOutput, _ := qsService.ListBuckets(&qingstor.ListBucketsInput{})
+	qsOutput, _ := qsService.ListBuckets(&service.ListBucketsInput{})
 
 	// Print HTTP status code.
 	fmt.Println(qsOutput.StatusCode)
