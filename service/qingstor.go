@@ -14,7 +14,7 @@
 // | limitations under the License.
 // +-------------------------------------------------------------------------
 
-// Package qingstor provides QingStor Service API (API Version 2016-01-06)
+// Package service provides QingStor Service API (API Version 2016-01-06)
 package service
 
 import (
