@@ -292,8 +292,6 @@ func (s *Bucket) DeleteMultipleObjectsRequest(input *DeleteMultipleObjectsInput)
 
 // DeleteMultipleObjectsInput presents input for DeleteMultipleObjects.
 type DeleteMultipleObjectsInput struct {
-	// Object MD5sum
-	ContentMD5 string `json:"Content-MD5" name:"Content-MD5" location:"headers"` // Required
 
 	// A list of keys to delete
 	Objects []*KeyType `json:"objects" name:"objects" location:"elements"` // Required
@@ -303,13 +301,6 @@ type DeleteMultipleObjectsInput struct {
 
 // Validate validates the input for DeleteMultipleObjects.
 func (v *DeleteMultipleObjectsInput) Validate() error {
-
-	if fmt.Sprint(v.ContentMD5) == "" {
-		return errs.ParameterRequiredError{
-			ParameterName: "ContentMD5",
-			ParentName:    "DeleteMultipleObjectsInput",
-		}
-	}
 
 	if len(v.Objects) == 0 {
 		return errs.ParameterRequiredError{

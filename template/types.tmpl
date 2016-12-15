@@ -29,7 +29,7 @@ import (
 
 // Properties presents the service properties.
 type Properties struct {
-	{{- template "RenderProperties" passThrough $service.Properties "" -}}
+	{{- template "RenderProperties" passThrough $service.Properties "" "" -}}
 
 	{{range $_, $p := $objectSubService.Properties.Properties -}}
 		{{- if $p.Description -}}
@@ -50,12 +50,12 @@ type Properties struct {
 {{range $_, $customizedType := $customizedTypes}}
 	// {{$customizedType.ID | camelCase}}Type presents {{$customizedType.ID | camelCase}}.
 	type {{$customizedType.ID | camelCase}}Type struct {
-		{{template "RenderProperties" passThrough $customizedType ""}}
+		{{template "RenderProperties" passThrough $customizedType "" ""}}
 	}
 
 	// Validate validates the {{$customizedType.ID | camelCase}}.
 	func (v *{{$customizedType.ID | camelCase}}Type) Validate() error {
-		{{template "ValidateCustomizedType" $customizedType}}
+		{{template "ValidateCustomizedType" passThrough $customizedType ""}}
 
 		return nil
 	}

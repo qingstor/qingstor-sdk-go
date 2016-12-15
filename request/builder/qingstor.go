@@ -17,7 +17,11 @@
 package builder
 
 import (
+	"bytes"
+	"crypto/md5"
+	"encoding/base64"
 	"fmt"
+	"io/ioutil"
 	"mime"
 	"net/http"
 	"path"
@@ -139,6 +143,15 @@ func (qb *QingStorBuilder) setupHeaders(httpRequest *http.Request) error {
 		system := runtime.GOOS + "_" + runtime.GOARCH + "_" + runtime.Compiler
 		ua := "qingstor-sdk-go/" + sdk.Version + " (" + version + "; " + system + ")"
 		httpRequest.Header.Set("User-Agent", ua)
+	}
+
+	if qb.baseBuilder.operation.APIName == "Delete Multiple Objects" {
+		buffer := &bytes.Buffer{}
+		buffer.ReadFrom(httpRequest.Body)
+		httpRequest.Body = ioutil.NopCloser(bytes.NewReader(buffer.Bytes()))
+
+		md5Value := md5.Sum(buffer.Bytes())
+		httpRequest.Header.Set("Content-MD5", base64.StdEncoding.EncodeToString(md5Value[:]))
 	}
 
 	return nil
