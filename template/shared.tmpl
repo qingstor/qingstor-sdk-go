@@ -63,28 +63,31 @@
 {{end}}
 
 {{define "PropertyExtraTags"}}
-	{{- $PropertyExtraTags := . -}}
-	{{- if $PropertyExtraTags -}}
-		{{- printf " %s" $PropertyExtraTags -}}
+	{{- $propertyExtraTags := . -}}
+	{{- if $propertyExtraTags -}}
+		{{- printf " %s" $propertyExtraTags -}}
 	{{- end -}}
 {{end}}
 
 {{define "RenderProperties"}}
 	{{- $customizedType := index . 0 -}}
-	{{- $PropertyExtraTags := index . 1 -}}
+	{{- $propertyExtraTags := index . 1 -}}
+	{{- $operationName := index . 2 -}}
 
 	{{range $_, $property := $customizedType.Properties -}}
-		{{if $property.Description -}}
-			// {{$property.Description}}
-		{{end -}}
-		{{if $property.Enum -}}
-			// {{$property.ID | camelCase}}'s available values: {{$property.Enum | commaConnected}}
-		{{end -}}
-		{{$property.ID | camelCase | upperFirst}}{{" " -}}
-		{{template "PropertyType" $property}}{{" " -}}
-		`{{template "PropertyTags" $property}}{{template "PropertyExtraTags" $PropertyExtraTags}}`{{" " -}}
-		{{if $property.IsRequired -}}
-			// Required
+		{{if or (ne $operationName "Delete Multiple Objects") (ne $property.ID "Content-MD5") -}}
+			{{if $property.Description -}}
+				// {{$property.Description}}
+			{{end -}}
+			{{if $property.Enum -}}
+				// {{$property.ID | camelCase}}'s available values: {{$property.Enum | commaConnected}}
+			{{end -}}
+			{{$property.ID | camelCase | upperFirst}}{{" " -}}
+			{{template "PropertyType" $property}}{{" " -}}
+			`{{template "PropertyTags" $property}}{{template "PropertyExtraTags" $propertyExtraTags}}`{{" " -}}
+			{{if $property.IsRequired -}}
+				// Required
+			{{- end}}
 		{{- end}}
 	{{end}}
 {{end}}
@@ -215,17 +218,17 @@
 		type {{$opID}}Input struct {
 			{{- if $operation.Request.Params.Properties | len}}
 				{{$data := $operation.Request.Params -}}
-				{{template "RenderProperties" passThrough $data `location:"params"`}}
+				{{template "RenderProperties" passThrough $data `location:"params"` $operation.Name}}
 			{{end}}
 
 			{{- if $operation.Request.Headers.Properties | len}}
 				{{$data := $operation.Request.Headers -}}
-				{{template "RenderProperties" passThrough $data `location:"headers"`}}
+				{{template "RenderProperties" passThrough $data `location:"headers"` $operation.Name}}
 			{{end}}
 
 			{{- if $operation.Request.Elements.Properties | len}}
 				{{$data := $operation.Request.Elements -}}
-				{{template "RenderProperties" passThrough $data `location:"elements"`}}
+				{{template "RenderProperties" passThrough $data `location:"elements"` $operation.Name}}
 			{{end}}
 
 			{{- if eq $operation.Request.Body.Type "string"}}
@@ -243,9 +246,9 @@
 
 		// Validate validates the input for {{$opID}}.
 		func (v *{{$opID}}Input) Validate() error {
-			{{template "ValidateCustomizedType" $operation.Request.Params}}
-			{{template "ValidateCustomizedType" $operation.Request.Headers}}
-			{{template "ValidateCustomizedType" $operation.Request.Elements}}
+			{{template "ValidateCustomizedType" passThrough $operation.Request.Params $operation.Name}}
+			{{template "ValidateCustomizedType" passThrough $operation.Request.Headers $operation.Name}}
+			{{template "ValidateCustomizedType" passThrough $operation.Request.Elements $operation.Name}}
 
 			return nil
 		}
@@ -271,12 +274,12 @@
 
 		{{if $operation.Response.Elements.Properties | len}}
 			{{$data := $operation.Response.Elements}}
-			{{template "RenderProperties" passThrough $data `location:"elements"`}}
+			{{template "RenderProperties" passThrough $data `location:"elements"` $operation.Name}}
 		{{end}}
 
 		{{if $operation.Response.Headers.Properties | len}}
 			{{$data := $operation.Response.Headers}}
-			{{template "RenderProperties" passThrough $data `location:"headers"`}}
+			{{template "RenderProperties" passThrough $data `location:"headers"` $operation.Name}}
 		{{end}}
 	}
 {{end}}
@@ -291,86 +294,89 @@
 {{end}}
 
 {{define "ValidateCustomizedType"}}
-	{{$customizedType := .}}
+	{{$customizedType := index . 0}}
+	{{$operationName := index . 1}}
 
 	{{range $_, $property := $customizedType.Properties}}
-		{{$isNormalType := or (eq $property.Type "string") (eq $property.Type "integer")}}
-		{{$isContentLength := eq $property.ID "Content-Length"}}
-		{{if and $isNormalType (not $isContentLength) }}
-			{{if $property.IsRequired }}
-				if fmt.Sprint(v.{{$property.ID | camelCase}}) == "" {
-					return errs.ParameterRequiredError{
-						ParameterName: "{{$property.ID | camelCase}}",
-						ParentName: "{{$customizedType.ID | camelCase}}",
-					}
-				}
-			{{end}}
-			{{$parameterName := $property.ID | camelCase | lowerFirstWord}}
-			{{if gt ($property.Enum | len) 0}}
-				{{$parameterName}}ParameterValue := fmt.Sprint(v.{{$property.ID | camelCase}})
-				if {{$parameterName}}ParameterValue == "0" {
-					{{$parameterName}}ParameterValue = ""
-				}
-				if {{$parameterName}}ParameterValue != "" {
-					{{$parameterName}}ValidValues := []string{
-						{{- $property.Enum | commaConnectedWithQuote -}}
-					}
-					{{$parameterName}}ParameterValue := fmt.Sprint(v.{{$property.ID | camelCase}})
-
-					{{$parameterName}}IsValid := false
-					for _, value := range {{$parameterName}}ValidValues {
-						if value == {{$parameterName}}ParameterValue {
-							{{$parameterName}}IsValid = true
-						}
-					}
-
-					if !{{$parameterName}}IsValid {
-						return errs.ParameterValueNotAllowedError{
+		{{if or (ne $operationName "Delete Multiple Objects") (ne $property.ID "Content-MD5") -}}
+			{{$isNormalType := or (eq $property.Type "string") (eq $property.Type "integer")}}
+			{{$isContentLength := eq $property.ID "Content-Length"}}
+			{{if and $isNormalType (not $isContentLength) }}
+				{{if $property.IsRequired }}
+					if fmt.Sprint(v.{{$property.ID | camelCase}}) == "" {
+						return errs.ParameterRequiredError{
 							ParameterName: "{{$property.ID | camelCase}}",
-							ParameterValue: {{$parameterName}}ParameterValue,
-							AllowedValues: {{$parameterName}}ValidValues,
+							ParentName: "{{$customizedType.ID | camelCase}}",
 						}
 					}
-				}
-			{{end}}
-		{{end}}
-
-		{{if eq $property.Type "object"}}
-			if v.{{$property.ID | camelCase}} != nil {
-				if err := v.{{$property.ID | camelCase}}.Validate(); err != nil {
-					return err
-				}
-			}
-			{{if $property.IsRequired }}
-				if v.{{$property.ID | camelCase}} == nil {
-					return errs.ParameterRequiredError{
-						ParameterName: "{{$property.ID | camelCase}}",
-						ParentName: "{{$customizedType.ID | camelCase}}",
+				{{end}}
+				{{$parameterName := $property.ID | camelCase | lowerFirstWord}}
+				{{if gt ($property.Enum | len) 0}}
+					{{$parameterName}}ParameterValue := fmt.Sprint(v.{{$property.ID | camelCase}})
+					if {{$parameterName}}ParameterValue == "0" {
+						{{$parameterName}}ParameterValue = ""
 					}
-				}
-			{{end}}
-		{{end}}
+					if {{$parameterName}}ParameterValue != "" {
+						{{$parameterName}}ValidValues := []string{
+							{{- $property.Enum | commaConnectedWithQuote -}}
+						}
+						{{$parameterName}}ParameterValue := fmt.Sprint(v.{{$property.ID | camelCase}})
 
-		{{if eq $property.Type "array"}}
-			{{if $property.IsRequired}}
-				if len(v.{{$property.ID | camelCase}}) == 0 {
-					return errs.ParameterRequiredError{
-						ParameterName: "{{$property.ID | camelCase}}",
-						ParentName: "{{$customizedType.ID | camelCase}}",
-					}
-				}
-			{{end}}
-			{{$isNotString := ne $property.ExtraType "string"}}
-			{{$isNotInteger := ne $property.ExtraType "integer"}}
-			{{$isNotTimestamp := ne $property.ExtraType "timestamp"}}
-			{{if and $isNotString $isNotInteger $isNotTimestamp}}
-				if len(v.{{$property.ID | camelCase}}) > 0 {
-					for _, property := range v.{{$property.ID | camelCase}} {
-						if err := property.Validate(); err != nil {
-							return err
+						{{$parameterName}}IsValid := false
+						for _, value := range {{$parameterName}}ValidValues {
+							if value == {{$parameterName}}ParameterValue {
+								{{$parameterName}}IsValid = true
+							}
+						}
+
+						if !{{$parameterName}}IsValid {
+							return errs.ParameterValueNotAllowedError{
+								ParameterName: "{{$property.ID | camelCase}}",
+								ParameterValue: {{$parameterName}}ParameterValue,
+								AllowedValues: {{$parameterName}}ValidValues,
+							}
 						}
 					}
+				{{end}}
+			{{end}}
+
+			{{if eq $property.Type "object"}}
+				if v.{{$property.ID | camelCase}} != nil {
+					if err := v.{{$property.ID | camelCase}}.Validate(); err != nil {
+						return err
+					}
 				}
+				{{if $property.IsRequired }}
+					if v.{{$property.ID | camelCase}} == nil {
+						return errs.ParameterRequiredError{
+							ParameterName: "{{$property.ID | camelCase}}",
+							ParentName: "{{$customizedType.ID | camelCase}}",
+						}
+					}
+				{{end}}
+			{{end}}
+
+			{{if eq $property.Type "array"}}
+				{{if $property.IsRequired}}
+					if len(v.{{$property.ID | camelCase}}) == 0 {
+						return errs.ParameterRequiredError{
+							ParameterName: "{{$property.ID | camelCase}}",
+							ParentName: "{{$customizedType.ID | camelCase}}",
+						}
+					}
+				{{end}}
+				{{$isNotString := ne $property.ExtraType "string"}}
+				{{$isNotInteger := ne $property.ExtraType "integer"}}
+				{{$isNotTimestamp := ne $property.ExtraType "timestamp"}}
+				{{if and $isNotString $isNotInteger $isNotTimestamp}}
+					if len(v.{{$property.ID | camelCase}}) > 0 {
+						for _, property := range v.{{$property.ID | camelCase}} {
+							if err := property.Validate(); err != nil {
+								return err
+							}
+						}
+					}
+				{{end}}
 			{{end}}
 		{{end}}
 	{{end}}

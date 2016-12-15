@@ -17,8 +17,6 @@
 package main
 
 import (
-	"crypto/md5"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -203,21 +201,10 @@ func deleteMultipleObjects(requestJSON *gherkin.DocString) error {
 		return err
 	}
 
-	requestData := map[string]interface{}{
-		"objects": deleteMultipleObjectsInput.Objects,
-		"quiet":   deleteMultipleObjectsInput.Quiet,
-	}
-	jsonBytes, err := json.Marshal(requestData)
-	if err != nil {
-		return err
-	}
-	md5Value := md5.Sum(jsonBytes)
-
 	deleteMultipleObjectsOutput, err = bucket.DeleteMultipleObjects(
 		&qs.DeleteMultipleObjectsInput{
-			Objects:    deleteMultipleObjectsInput.Objects,
-			Quiet:      deleteMultipleObjectsInput.Quiet,
-			ContentMD5: base64.StdEncoding.EncodeToString(md5Value[:]),
+			Objects: deleteMultipleObjectsInput.Objects,
+			Quiet:   deleteMultipleObjectsInput.Quiet,
 		},
 	)
 	return err
