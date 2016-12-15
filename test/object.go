@@ -255,7 +255,7 @@ func deleteObjectStatusCodeIs(statusCode int) error {
 }
 
 func deleteTheMoveObject() error {
-	deleteTheMoveObjectOutput, err = bucket.DeleteObject(theObjectKey)
+	deleteTheMoveObjectOutput, err = bucket.DeleteObject(theMoveObjectKey)
 	return err
 }
 
