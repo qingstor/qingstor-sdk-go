@@ -82,7 +82,7 @@ Put object
 
 ``` go
 // Open file
-file, _ := os.Open("~/Desktop/Screenshot.jpg")
+file, _ := os.Open("/tmp/Screenshot.jpg")
 defer file.Close()
 
 // Calculate MD5
