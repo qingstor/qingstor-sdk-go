@@ -4,12 +4,12 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 ## [v2.1.0] - 2016-12-23
 
 ### Changed
-- Fix signer bug
-- Add more parameters to sign
+- Fix signer bug.
+- Add more parameters to sign.
 
 ### Added
-- Add request parameters for GET Object
-- Add IP address conditions for bucket policy
+- Add request parameters for GET Object.
+- Add IP address conditions for bucket policy.
 
 ## [v2.0.1] - 2016-12-15
 
