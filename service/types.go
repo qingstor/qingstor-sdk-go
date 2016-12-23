@@ -112,7 +112,9 @@ func (v *BucketType) Validate() error {
 
 // ConditionType presents Condition.
 type ConditionType struct {
+	IPAddress     *IPAddressType     `json:"ip_address,omitempty" name:"ip_address"`
 	IsNull        *IsNullType        `json:"is_null,omitempty" name:"is_null"`
+	NotIPAddress  *NotIPAddressType  `json:"not_ip_address,omitempty" name:"not_ip_address"`
 	StringLike    *StringLikeType    `json:"string_like,omitempty" name:"string_like"`
 	StringNotLike *StringNotLikeType `json:"string_not_like,omitempty" name:"string_not_like"`
 }
@@ -120,8 +122,20 @@ type ConditionType struct {
 // Validate validates the Condition.
 func (v *ConditionType) Validate() error {
 
+	if v.IPAddress != nil {
+		if err := v.IPAddress.Validate(); err != nil {
+			return err
+		}
+	}
+
 	if v.IsNull != nil {
 		if err := v.IsNull.Validate(); err != nil {
+			return err
+		}
+	}
+
+	if v.NotIPAddress != nil {
+		if err := v.NotIPAddress.Validate(); err != nil {
 			return err
 		}
 	}
@@ -224,6 +238,18 @@ func (v *GranteeType) Validate() error {
 	return nil
 }
 
+// IPAddressType presents IPAddress.
+type IPAddressType struct {
+	// Source IP
+	SourceIP []string `json:"source_ip,omitempty" name:"source_ip"`
+}
+
+// Validate validates the IPAddress.
+func (v *IPAddressType) Validate() error {
+
+	return nil
+}
+
 // IsNullType presents IsNull.
 type IsNullType struct {
 	// Refer url
@@ -270,6 +296,18 @@ type KeyDeleteErrorType struct {
 
 // Validate validates the KeyDeleteError.
 func (v *KeyDeleteErrorType) Validate() error {
+
+	return nil
+}
+
+// NotIPAddressType presents NotIPAddress.
+type NotIPAddressType struct {
+	// Source IP
+	SourceIP []string `json:"source_ip,omitempty" name:"source_ip"`
+}
+
+// Validate validates the NotIPAddress.
+func (v *NotIPAddressType) Validate() error {
 
 	return nil
 }
