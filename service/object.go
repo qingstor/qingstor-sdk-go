@@ -305,6 +305,19 @@ func (s *Bucket) GetObjectRequest(objectKey string, input *GetObjectInput) (*req
 
 // GetObjectInput presents input for GetObject.
 type GetObjectInput struct {
+	// Specified the Cache-Control response header
+	ResponseCacheControl string `json:"response-cache-control,omitempty" name:"response-cache-control" location:"params"`
+	// Specified the Content-Disposition response header
+	ResponseContentDisposition string `json:"response-content-disposition,omitempty" name:"response-content-disposition" location:"params"`
+	// Specified the Content-Encoding response header
+	ResponseContentEncoding string `json:"response-content-encoding,omitempty" name:"response-content-encoding" location:"params"`
+	// Specified the Content-Language response header
+	ResponseContentLanguage string `json:"response-content-language,omitempty" name:"response-content-language" location:"params"`
+	// Specified the Content-Type response header
+	ResponseContentType string `json:"response-content-type,omitempty" name:"response-content-type" location:"params"`
+	// Specified the Expires response header
+	ResponseExpires string `json:"response-expires,omitempty" name:"response-expires" location:"params"`
+
 	// Check whether the ETag matches
 	IfMatch string `json:"If-Match,omitempty" name:"If-Match" location:"headers"`
 	// Check whether the object has been modified
