@@ -28,6 +28,7 @@ import (
 
 	"github.com/DATA-DOG/godog"
 
+	"github.com/yunify/qingstor-sdk-go/request"
 	qs "github.com/yunify/qingstor-sdk-go/service"
 )
 
@@ -45,6 +46,8 @@ func ObjectFeatureContext(s *godog.Suite) {
 	s.Step(`^get object$`, getObject)
 	s.Step(`^get object status code is (\d+)$`, getObjectStatusCodeIs)
 	s.Step(`^get object content length is (\d+)$`, getObjectContentLengthIs)
+	s.Step(`^get object with content type "([^"]*)"$`, getObjectWithContentType)
+	s.Step(`^get object content type is "([^"]*)"$`, getObjectContentTypeIs)
 	s.Step(`^get object with query signature$`, getObjectWithQuerySignature)
 	s.Step(`^get object with query signature content length is (\d+)$`, getObjectWithQuerySignatureContentLengthIs)
 
@@ -162,6 +165,31 @@ func getObjectContentLengthIs(length int) error {
 	defer os.Remove("/tmp/sdk_bin")
 
 	return checkEqual(len(buffer.Bytes()), length)
+}
+
+// --------------------------------------------------------------------------
+
+var getObjectWithContentTypeRequest *request.Request
+
+func getObjectWithContentType(contentType string) error {
+	getObjectWithContentTypeRequest, _, err = bucket.GetObjectRequest(
+		theObjectKey,
+		&qs.GetObjectInput{
+			ResponseContentType: contentType,
+		},
+	)
+	if err != nil {
+		return err
+	}
+	err = getObjectWithContentTypeRequest.Send()
+	return err
+}
+
+func getObjectContentTypeIs(contentType string) error {
+	return checkEqual(
+		getObjectWithContentTypeRequest.HTTPResponse.Header.Get("Content-Type"),
+		contentType,
+	)
 }
 
 // --------------------------------------------------------------------------
