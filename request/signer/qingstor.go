@@ -126,7 +126,11 @@ func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, err
 	)
 
 	stringToSign += qss.buildCanonicalizedHeaders(request)
-	stringToSign += qss.buildCanonicalizedResource(request)
+	canonicalizedResource, err := qss.buildCanonicalizedResource(request)
+	if err != nil {
+		return "", err
+	}
+	stringToSign += canonicalizedResource
 
 	logger.Debug(fmt.Sprintf(
 		"QingStor string to sign: [%d] %s",
@@ -146,7 +150,11 @@ func (qss *QingStorSigner) BuildQueryStringToSign(request *http.Request, expires
 	)
 
 	stringToSign += qss.buildCanonicalizedHeaders(request)
-	stringToSign += qss.buildCanonicalizedResource(request)
+	canonicalizedResource, err := qss.buildCanonicalizedResource(request)
+	if err != nil {
+		return "", err
+	}
+	stringToSign += canonicalizedResource
 
 	logger.Debug(fmt.Sprintf(
 		"QingStor query string to sign: [%d] %s",
@@ -173,8 +181,8 @@ func (qss *QingStorSigner) buildCanonicalizedHeaders(request *http.Request) stri
 	return canonicalizedHeaders
 }
 
-func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) string {
-	path := qss.escape(request.URL.Path)
+func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (string, error) {
+	path := request.URL.Path
 	query := request.URL.Query()
 
 	keys := []string{}
@@ -187,11 +195,15 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) str
 	parts := []string{}
 	for _, key := range keys {
 		values := query[key]
-		if qss.isSubResource(key) {
+		if qss.paramsToSign(key) {
 			if len(values) > 0 {
 				if values[0] != "" {
 					value := strings.TrimSpace(strings.Join(values, ""))
-					parts = append(parts, key+"="+qss.escape(value))
+					value, err := url.QueryUnescape(value)
+					if err != nil {
+						return "", err
+					}
+					parts = append(parts, key+"="+value)
 				} else {
 					parts = append(parts, key)
 				}
@@ -210,29 +222,26 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) str
 		"QingStor canonicalized resource: [%d] %s",
 		utils.StringToUnixInt(request.Header.Get("Date"), "RFC 822"), path))
 
-	return path
+	return path, nil
 }
 
-func (qss *QingStorSigner) escape(original string) string {
-	original = url.QueryEscape(original)
-	original = strings.Replace(original, "%2F", "/", -1)
-	original = strings.Replace(original, "+", "%20", -1)
-	original = strings.Replace(original, "%2B", "+", -1)
-
-	return original
-}
-
-func (qss *QingStorSigner) isSubResource(key string) bool {
+func (qss *QingStorSigner) paramsToSign(key string) bool {
 	keysMap := map[string]bool{
-		"acl":         true,
-		"cors":        true,
-		"delete":      true,
-		"mirror":      true,
-		"part_number": true,
-		"policy":      true,
-		"stats":       true,
-		"upload_id":   true,
-		"uploads":     true,
+		"acl":                          true,
+		"cors":                         true,
+		"delete":                       true,
+		"mirror":                       true,
+		"part_number":                  true,
+		"policy":                       true,
+		"stats":                        true,
+		"upload_id":                    true,
+		"uploads":                      true,
+		"response-expires":             true,
+		"response-cache-control":       true,
+		"response-content-type":        true,
+		"response-content-language":    true,
+		"response-content-encoding":    true,
+		"response-content-disposition": true,
 	}
 
 	return keysMap[key]

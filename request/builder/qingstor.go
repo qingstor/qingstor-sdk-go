@@ -24,6 +24,7 @@ import (
 	"io/ioutil"
 	"mime"
 	"net/http"
+	"net/url"
 	"path"
 	"reflect"
 	"regexp"
@@ -114,7 +115,7 @@ func (qb *QingStorBuilder) parseURL() error {
 	if qb.baseBuilder.parsedParams != nil {
 		paramsParts := []string{}
 		for key, value := range *qb.baseBuilder.parsedParams {
-			paramsParts = append(paramsParts, key+"="+value)
+			paramsParts = append(paramsParts, key+"="+url.QueryEscape(value))
 
 		}
 
