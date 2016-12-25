@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: all check vet lint update generate test build unit release clean
+.PHONY: all check vet lint update generate build unit test release clean
 
 PREFIX=qingstor-sdk-go
 VERSION=$(shell cat version.go | grep "Version\ =" | sed -e s/^.*\ //g | sed -e s/\"//g)
@@ -16,7 +16,6 @@ help:
 	@echo "  check             to vet and lint the SDK"
 	@echo "  update            to update git submodules"
 	@echo "  generate          to generate service code"
-	@echo "  test              to run service test"
 	@echo "  build             to build the SDK"
 	@echo "  unit              to run all sort of unit tests except runtime"
 	@echo "  unit-test         to run unit test"
@@ -24,6 +23,7 @@ help:
 	@echo "  unit-coverage     to run unit test with coverage"
 	@echo "  unit-race         to run unit test with race"
 	@echo "  unit-runtime      to run test with go1.7, go1.6, go 1.5 in docker"
+	@echo "  test              to run service test"
 	@echo "  release           to build and release current version"
 	@echo "  release-source    to pack the source code"
 	@echo "  release-headers   to build and pack the headers source code for go 1.7"
@@ -58,10 +58,6 @@ generate:
 		--service=qingstor --service-api-version=latest \
 		--spec="./specs" --template="./template" --output="./service"
 	gofmt -w .
-	@echo "ok"
-
-test:
-	pushd "./test"; go run *.go; popd
 	@echo "ok"
 
 build:
@@ -158,6 +154,10 @@ unit-runtime-go-1.5:
 	docker run --name "${PREFIX}-go-1.5-unit" -t "${PREFIX}:go-1.5"
 	docker rm "${PREFIX}-go-1.5-unit"
 	docker rmi "${PREFIX}:go-1.5"
+	@echo "ok"
+
+test:
+	pushd "./test"; go run *.go; popd
 	@echo "ok"
 
 release: release-source release-source-with-vendor release-headers release-binary
