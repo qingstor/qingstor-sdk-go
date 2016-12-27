@@ -76,7 +76,7 @@ var moveObjectOutput *qs.PutObjectOutput
 func putObjectWithKey(objectKey string) error {
 	theObjectKey = objectKey
 
-	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin", "bs=1m", "count=1").Output()
+	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin", "bs=1048576", "count=1").Output()
 	if err != nil {
 		return err
 	}
