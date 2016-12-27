@@ -83,7 +83,7 @@ var uploadTheSecondPartOutput *qs.UploadMultipartOutput
 var uploadTheThirdPartOutput *qs.UploadMultipartOutput
 
 func uploadTheFirstPart() error {
-	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin_part_0", "bs=1m", "count=5").Output()
+	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin_part_0", "bs=1048576", "count=5").Output()
 	if err != nil {
 		return err
 	}
@@ -114,7 +114,7 @@ func uploadTheFirstPartStatusCodeIs(statusCode int) error {
 }
 
 func uploadTheSecondPart() error {
-	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin_part_1", "bs=1m", "count=4").Output()
+	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin_part_1", "bs=1048576", "count=4").Output()
 	if err != nil {
 		return err
 	}
@@ -145,7 +145,7 @@ func uploadTheSecondPartStatusCodeIs(statusCode int) error {
 }
 
 func uploadTheThirdPart() error {
-	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin_part_2", "bs=1m", "count=3").Output()
+	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin_part_2", "bs=1048576", "count=3").Output()
 	if err != nil {
 		return err
 	}
