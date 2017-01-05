@@ -27,17 +27,17 @@ import (
 )
 
 type ObjectSubServiceProperties struct {
-	BucketName string `json:"bucket-name" name:"bucket-name"`
-	ObjectKey  string `json:"object-key" name:"object-key"`
-	Zone       string `json:"zone" name:"zone"`
+	BucketName *string `json:"bucket-name" name:"bucket-name"`
+	ObjectKey  *string `json:"object-key" name:"object-key"`
+	Zone       *string `json:"zone" name:"zone"`
 }
 type GetObjectInput struct {
-	IfMatch           string    `json:"If-Match" name:"If-Match" location:"headers"`
-	IfModifiedSince   time.Time `json:"If-Modified-Since" name:"If-Modified-Since" format:"RFC 822" location:"headers"`
-	IfNoneMatch       string    `json:"If-None-Match" name:"If-None-Match" location:"headers"`
-	IfUnmodifiedSince time.Time `json:"If-Unmodified-Since" name:"If-Unmodified-Since" format:"RFC 822" location:"headers"`
+	IfMatch           *string    `json:"If-Match" name:"If-Match" location:"headers"`
+	IfModifiedSince   *time.Time `json:"If-Modified-Since" name:"If-Modified-Since" format:"RFC 822" location:"headers"`
+	IfNoneMatch       *string    `json:"If-None-Match" name:"If-None-Match" location:"headers"`
+	IfUnmodifiedSince time.Time  `json:"If-Unmodified-Since" name:"If-Unmodified-Since" format:"RFC 822" location:"headers"`
 	// Specified range of the Object
-	Range string `json:"Range" name:"Range" location:"headers"`
+	Range *string `json:"Range" name:"Range" location:"headers"`
 }
 
 func (i *GetObjectInput) Validate() error {
@@ -58,9 +58,9 @@ func TestQingStorBuilder_BuildHTTPRequest(t *testing.T) {
 		APIName:     "GET Object",
 		ServiceName: "QingStor",
 		Properties: &ObjectSubServiceProperties{
-			BucketName: "test",
-			ObjectKey:  "path/to/key.txt",
-			Zone:       "beta",
+			BucketName: String("test"),
+			ObjectKey:  String("path/to/key.txt"),
+			Zone:       String("beta"),
 		},
 		RequestMethod: "GET",
 		RequestURI:    "/<bucket-name>/<object-key>",
@@ -69,9 +69,8 @@ func TestQingStorBuilder_BuildHTTPRequest(t *testing.T) {
 		},
 	}
 	inputValue := reflect.ValueOf(&GetObjectInput{
-		IfMatch:         "",
-		IfModifiedSince: time.Date(2016, 9, 1, 15, 30, 0, 0, tz),
-		Range:           "100-",
+		IfModifiedSince: Time(time.Date(2016, 9, 1, 15, 30, 0, 0, tz)),
+		Range:           String("100-"),
 	})
 	httpRequest, err := qsBuilder.BuildHTTPRequest(operation, &inputValue)
 	assert.Nil(t, err)

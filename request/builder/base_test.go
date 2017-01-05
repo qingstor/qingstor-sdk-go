@@ -28,25 +28,37 @@ import (
 )
 
 type FakeProperties struct {
-	A  string `name:"a"`
-	B  string `name:"b"`
-	CD int    `name:"c-d"`
+	A  *string `name:"a"`
+	B  *string `name:"b"`
+	CD *int    `name:"c-d"`
 }
 type FakeInput struct {
-	ParamA    string    `location:"params" name:"a"`
-	ParamB    string    `location:"params" name:"b"`
-	ParamCD   int       `location:"params" name:"c_d" default:"1024"`
-	HeaderA   string    `location:"headers" name:"A"`
-	HeaderB   time.Time `location:"headers" name:"B" format:"RFC 822"`
-	HeaderCD  int       `location:"headers" name:"C-D"`
-	ElementA  string    `location:"elements" name:"a"`
-	ElementB  string    `location:"elements" name:"b"`
-	ElementCD int       `location:"elements" name:"cd"`
-	Body      string    `localtion:"body"`
+	ParamA    *string    `location:"params" name:"a"`
+	ParamB    *string    `location:"params" name:"b"`
+	ParamCD   *int       `location:"params" name:"c_d" default:"1024"`
+	HeaderA   *string    `location:"headers" name:"A"`
+	HeaderB   *time.Time `location:"headers" name:"B" format:"RFC 822"`
+	HeaderCD  *int       `location:"headers" name:"C-D"`
+	ElementA  *string    `location:"elements" name:"a"`
+	ElementB  *string    `location:"elements" name:"b"`
+	ElementCD *int       `location:"elements" name:"cd"`
+	Body      *string    `localtion:"body"`
 }
 
 func (i *FakeInput) Validate() error {
 	return nil
+}
+
+func String(v string) *string {
+	return &v
+}
+
+func Int(v int) *int {
+	return &v
+}
+
+func Time(v time.Time) *time.Time {
+	return &v
 }
 
 func TestBaseBuilder_BuildHTTPRequest(t *testing.T) {
@@ -62,9 +74,9 @@ func TestBaseBuilder_BuildHTTPRequest(t *testing.T) {
 		APIName:     "This is API name",
 		ServiceName: "Base",
 		Properties: &FakeProperties{
-			A:  "property_a",
-			B:  "property_b",
-			CD: 0,
+			A:  String("property_a"),
+			B:  String("property_b"),
+			CD: Int(0),
 		},
 		RequestMethod: "GET",
 		RequestURI:    "/hello/<a>/<c-d>/<b>/world",
@@ -74,16 +86,14 @@ func TestBaseBuilder_BuildHTTPRequest(t *testing.T) {
 		},
 	}
 	inputValue := reflect.ValueOf(&FakeInput{
-		ParamA:    "param_a",
-		ParamB:    "param_b",
-		ParamCD:   0,
-		HeaderA:   "header_a",
-		HeaderB:   time.Date(2016, 9, 1, 15, 30, 0, 0, tz),
-		HeaderCD:  0,
-		ElementA:  "element_a",
-		ElementB:  "element_b",
-		ElementCD: 0,
-		Body:      "This is body string",
+		ParamA:    String("param_a"),
+		ParamCD:   Int(1024),
+		HeaderA:   String("header_a"),
+		HeaderB:   Time(time.Date(2016, 9, 1, 15, 30, 0, 0, tz)),
+		ElementA:  String("element_a"),
+		ElementB:  String("element_b"),
+		ElementCD: Int(0),
+		Body:      String("This is body string"),
 	})
 	httpRequest, err := builder.BuildHTTPRequest(operation, &inputValue)
 	assert.Nil(t, err)
@@ -94,7 +104,6 @@ func TestBaseBuilder_BuildHTTPRequest(t *testing.T) {
 	}, builder.parsedProperties)
 	assert.Equal(t, &map[string]string{
 		"a":   "param_a",
-		"b":   "param_b",
 		"c_d": "1024",
 	}, builder.parsedParams)
 	assert.Equal(t, &map[string]string{
