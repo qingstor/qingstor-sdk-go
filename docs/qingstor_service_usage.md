@@ -10,7 +10,7 @@ You can use a specified version of a service by import a service package with a 
 ``` go
 import (
 	// Import the latest version API
-	"github.com/yunify/qingstor-sdk-go/service"
+	qs "github.com/yunify/qingstor-sdk-go/service"
 )
 ```
 
@@ -19,7 +19,7 @@ import (
 Initialize the QingStor service with a configuration
 
 ``` go
-qsService, _ := service.Init(configuration)
+qsService, _ := qs.Init(configuration)
 ```
 
 List buckets
@@ -29,15 +29,15 @@ qsOutput, _ := qsService.ListBuckets(nil)
 
 // Print the HTTP status code.
 // Example: 200
-fmt.Println(qsOutput.StatusCode)
+fmt.Println(qs.IntValue(qsOutput.StatusCode))
 
 // Print the bucket count.
 // Example: 5
-fmt.Println(qsOutput.Count)
+fmt.Println(qs.IntValue(qsOutput.Count))
 
 // Print the name of first bucket.
 // Example: "test-bucket"
-fmt.Println(qsOutput.Buckets[0].Name)
+fmt.Println(qs.String(qsOutput.Buckets[0].Name))
 ```
 
 Initialize a QingStor bucket
@@ -53,7 +53,7 @@ bOutput, _ := bucket.ListObjects(nil)
 
 // Print the HTTP status code.
 // Example: 200
-fmt.Println(bOutput.StatusCode)
+fmt.Println(qs.IntValue(bOutput.StatusCode))
 
 // Print the key count.
 // Example: 7
@@ -63,19 +63,19 @@ fmt.Println(len(bOutput.Keys))
 Set ACL of the bucket
 
 ``` go
-bACLOutput, _ := bucket.PutACL(&service.PutBucketACLInput{
+bACLOutput, _ := bucket.PutACL(&qs.PutBucketACLInput{
 	ACL: []*service.ACLType{{
 		Grantee: &service.GranteeType{
-			Type: "user",
-			ID:   "usr-xxxxxxxx",
+			Type: qs.String("user"),
+			ID:   qs.String("usr-xxxxxxxx"),
 		},
-		Permission: "FULL_CONTROL",
+		Permission: qs.String("FULL_CONTROL"),
 	}},
 })
 
 // Print the HTTP status code.
 // Example: 200
-fmt.Println(bACLOutput.StatusCode)
+fmt.Println(qs.IntValue(bACLOutput.StatusCode))
 ```
 
 Put object
@@ -95,16 +95,16 @@ md5String := hex.EncodeToString(hashInBytes)
 oOutput, _ := bucket.PutObject(
 	"Screenshot.jpg",
 	&service.PutObjectInput{
-		ContentLength: 102475,       // Obtain automatically if empty
-		ContentType:   "image/jpeg", // Detect automatically if empty
-		ContentMD5:    md5String,
+		ContentLength: qs.Int(102475),          // Obtain automatically if empty
+		ContentType:   qs.String("image/jpeg"), // Detect automatically if empty
+		ContentMD5:    qs.String(md5String),
 		Body:          file,
 	},
 )
 
 // Print the HTTP status code.
 // Example: 201
-fmt.Println(oOutput.StatusCode)
+fmt.Println(qs.IntValue(oOutput.StatusCode))
 ```
 
 Delete object
@@ -114,7 +114,7 @@ oOutput, _ := bucket.DeleteObject("Screenshot.jpg")
 
 // Print the HTTP status code.
 // Example: 204
-fmt.Println(oOutput.StatusCode)
+fmt.Println(qs.IntValue(oOutput.StatusCode))
 ```
 
 Initialize Multipart Upload
@@ -123,17 +123,17 @@ Initialize Multipart Upload
 aOutput, _ := bucket.InitiateMultipartUpload(
 	"QingCloudInsight.mov",
 	&service.InitiateMultipartUploadInput{
-		ContentType: "video/quicktime",
+		ContentType: qs.String("video/quicktime"),
 	},
 )
 
 // Print the HTTP status code.
 // Example: 200
-fmt.Println(aOutput.StatusCode)
+fmt.Println(qs.IntValue(aOutput.StatusCode))
 
 // Print the upload ID.
 // Example: "9d37dd6ccee643075ca4e597ad65655c"
-fmt.Println(aOutput.UploadID)
+fmt.Println(qs.StringValue(aOutput.UploadID))
 ```
 
 Upload Multipart
@@ -142,44 +142,44 @@ Upload Multipart
 aOutput, _ := bucket.UploadMultipart(
 	"QingCloudInsight.mov",
 	&service.UploadMultipartInput{
-		UploadID:   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-		PartNumber: 0,
-		ContentMD5: md5String0,
+		UploadID:   qs.String("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+		PartNumber: qs.Int(0),
+		ContentMD5: qs.String(md5String0),
 		Body:       file0,
 	},
 )
 
 // Print the HTTP status code.
 // Example: 201
-fmt.Println(aOutput.StatusCode)
+fmt.Println(qs.IntValue(aOutput.StatusCode))
 
 aOutput, _ = bucket.UploadMultipart(
 	"QingCloudInsight.mov",
 	&service.UploadMultipartInput{
-		UploadID:   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-		PartNumber: 1,
-		ContentMD5: md5String1,
+		UploadID:   qs.String("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+		PartNumber: qs.Int(1),
+		ContentMD5: qs.String(md5String1),
 		Body:       file1,
 	},
 )
 
 // Print the HTTP status code.
 // Example: 201
-fmt.Println(aOutput.StatusCode)
+fmt.Println(qs.IntValue(aOutput.StatusCode))
 
 aOutput, _ = bucket.UploadMultipart(
 	"QingCloudInsight.mov"
 	&service.UploadMultipartInput{
-		UploadID:   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-		PartNumber: 2,
-		ContentMD5: md5String2,
+		UploadID:   qs.String("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+		PartNumber: qs.Int(2),
+		ContentMD5: qs.String(md5String2),
 		Body:       file2,
 	},
 )
 
 // Print the HTTP status code.
 // Example: 201
-fmt.Println(aOutput.StatusCode)
+fmt.Println(qs.IntValue(aOutput.StatusCode))
 ```
 
 Complete Multipart Upload
@@ -188,20 +188,20 @@ Complete Multipart Upload
 aOutput, _ := bucket.CompleteMultipartUpload(
 	"QingCloudInsight.mov",
 	&service.CompleteMultipartUploadInput{
-		UploadID:    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		UploadID:    qs.String("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
 		ObjectParts: []*service.ObjectPart{{
-			PartNumber: 0,
+			PartNumber: qs.Int(0),
 		}, {
-			PartNumber: 1,
+			PartNumber: qs.Int(1),
 		}, {
-			PartNumber: 2,
+			PartNumber: qs.Int(2),
 		}},
 	},
 )
 
 // Print the HTTP status code.
 // Example: 200
-fmt.Println(aOutput.StatusCode)
+fmt.Println(qs.IntValue(aOutput.StatusCode))
 ```
 
 Abort Multipart Upload
@@ -210,7 +210,7 @@ Abort Multipart Upload
 aOutput, err := bucket.AbortMultipartUpload(
 	"QingCloudInsight.mov"
 	&service.AbortMultipartUploadInput{
-		UploadID:  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		UploadID:  qs.String("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
 	},
 )
 
