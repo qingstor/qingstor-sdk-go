@@ -32,17 +32,17 @@ import (
 )
 
 type SomeActionProperties struct {
-	A  string `json:"a" name:"a"`
-	B  string `json:"b" name:"b"`
-	CD string `json:"c-d" name:"c-d"`
+	A  *string `json:"a" name:"a"`
+	B  *string `json:"b" name:"b"`
+	CD *string `json:"c-d" name:"c-d"`
 }
 
 type SomeActionInput struct {
-	Date            time.Time `json:"Date" name:"Date" format:"RFC 822" location:"headers"`
-	IfModifiedSince time.Time `json:"If-Modified-Since" name:"If-Modified-Since" format:"RFC 822" location:"headers"`
-	Range           string    `json:"Range" name:"Range" location:"headers"`
-	UploadID        string    `json:"upload_id" name:"upload_id" location:"params"`
-	Count           int       `json:"count" name:"count" location:"elements"`
+	Date            *time.Time `json:"Date" name:"Date" format:"RFC 822" location:"headers"`
+	IfModifiedSince *time.Time `json:"If-Modified-Since" name:"If-Modified-Since" format:"RFC 822" location:"headers"`
+	Range           *string    `json:"Range" name:"Range" location:"headers"`
+	UploadID        *string    `json:"upload_id" name:"upload_id" location:"params"`
+	Count           *int       `json:"count" name:"count" location:"elements"`
 }
 
 func (s *SomeActionInput) Validate() error {
@@ -50,9 +50,21 @@ func (s *SomeActionInput) Validate() error {
 }
 
 type SomeActionOutput struct {
-	StatusCode int `location:"statusCode"`
+	StatusCode *int `location:"statusCode"`
 	Error      *errors.QingStorError
-	RequestID  string `location:"requestID"`
+	RequestID  *string `location:"requestID"`
+}
+
+func String(v string) *string {
+	return &v
+}
+
+func Int(v int) *int {
+	return &v
+}
+
+func Time(v time.Time) *time.Time {
+	return &v
 }
 
 func TestRequest_Send(t *testing.T) {
@@ -63,9 +75,9 @@ func TestRequest_Send(t *testing.T) {
 	operation := &data.Operation{
 		Config: conf,
 		Properties: &SomeActionProperties{
-			A:  "aaa",
-			B:  "bbb",
-			CD: "ccc-ddd",
+			A:  String("aaa"),
+			B:  String("bbb"),
+			CD: String("ccc-ddd"),
 		},
 		APIName:       "Some Action",
 		RequestMethod: "GET",
@@ -80,11 +92,11 @@ func TestRequest_Send(t *testing.T) {
 
 	output := &SomeActionOutput{}
 	r, err := New(operation, &SomeActionInput{
-		Date:            time.Date(2016, 9, 1, 15, 30, 0, 0, time.UTC),
-		IfModifiedSince: time.Date(2016, 9, 1, 15, 30, 0, 0, time.UTC),
-		Range:           "100-",
-		UploadID:        "0",
-		Count:           23,
+		Date:            Time(time.Date(2016, 9, 1, 15, 30, 0, 0, time.UTC)),
+		IfModifiedSince: Time(time.Date(2016, 9, 1, 15, 30, 0, 0, time.UTC)),
+		Range:           String("100-"),
+		UploadID:        String("0"),
+		Count:           Int(23),
 	}, output)
 	assert.Nil(t, err)
 

@@ -113,34 +113,24 @@ func (b *BaseBuilder) parseRequestParamsAndHeaders() error {
 	for i := 0; i < fields.NumField(); i++ {
 		tagName := fields.Type().Field(i).Tag.Get("name")
 		tagLocation := fields.Type().Field(i).Tag.Get("location")
-		tagDefault := fields.Type().Field(i).Tag.Get("default")
+		if tagDefault := fields.Type().Field(i).Tag.Get("default"); tagDefault != "" {
+			maps[tagLocation][tagName] = tagDefault
+		}
 		if tagName != "" && tagLocation != "" && maps[tagLocation] != nil {
 			switch value := fields.Field(i).Interface().(type) {
-			case string:
-				if value != "" {
-					maps[tagLocation][tagName] = value
+			case *string:
+				if value != nil {
+					maps[tagLocation][tagName] = *value
 				}
-			case int:
-				numberString := strconv.Itoa(int(value))
-				if numberString == "0" {
-					numberString = ""
-					if tagDefault != "" {
-						numberString = tagDefault
-					}
+			case *int:
+				if value != nil {
+					maps[tagLocation][tagName] = strconv.Itoa(int(*value))
 				}
-				if numberString != "" {
-					maps[tagLocation][tagName] = numberString
-				}
-			case bool:
-			case time.Time:
-				zero := time.Time{}
-				if value != zero {
-					var timeString string
+			case *bool:
+			case *time.Time:
+				if value != nil {
 					format := fields.Type().Field(i).Tag.Get("format")
-					timeString = utils.TimeToString(value, format)
-					if timeString != "" {
-						maps[tagLocation][tagName] = timeString
-					}
+					maps[tagLocation][tagName] = utils.TimeToString(*value, format)
 				}
 			}
 		}
@@ -207,11 +197,15 @@ func (b *BaseBuilder) parseRequestProperties() error {
 		if fields.IsValid() {
 			for i := 0; i < fields.NumField(); i++ {
 				switch value := fields.Field(i).Interface().(type) {
-				case string:
-					propertiesMap[fields.Type().Field(i).Tag.Get("name")] = value
-				case int:
-					numberString := strconv.Itoa(int(value))
-					propertiesMap[fields.Type().Field(i).Tag.Get("name")] = numberString
+				case *string:
+					if value != nil {
+						propertiesMap[fields.Type().Field(i).Tag.Get("name")] = *value
+					}
+				case *int:
+					if value != nil {
+						numberString := strconv.Itoa(int(*value))
+						propertiesMap[fields.Type().Field(i).Tag.Get("name")] = numberString
+					}
 				}
 			}
 		}

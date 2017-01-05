@@ -20,20 +20,42 @@ import (
 	"bytes"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/yunify/qingstor-sdk-go/request/data"
-	"reflect"
 )
+
+func StringValue(v *string) string {
+	if v != nil {
+		return *v
+	}
+	return ""
+}
+
+func IntValue(v *int) int {
+	if v != nil {
+		return *v
+	}
+	return 0
+}
+
+func TimeValue(v *time.Time) time.Time {
+	if v != nil {
+		return *v
+	}
+	return time.Time{}
+}
 
 func TestBaseUnpacker_UnpackHTTPRequest(t *testing.T) {
 	type FakeOutput struct {
-		StatusCode int
+		StatusCode *int
 
-		A  string `location:"data" json:"a" name:"a"`
-		B  string `location:"data" json:"b" name:"b"`
-		CD int    `location:"data" json:"cd" name:"cd"`
+		A  *string `location:"elements" json:"a" name:"a"`
+		B  *string `location:"elements" json:"b" name:"b"`
+		CD *int    `location:"elements" json:"cd" name:"cd"`
 	}
 
 	httpResponse := &http.Response{Header: http.Header{}}
@@ -47,7 +69,8 @@ func TestBaseUnpacker_UnpackHTTPRequest(t *testing.T) {
 	unpacker := BaseUnpacker{}
 	err := unpacker.UnpackHTTPRequest(&data.Operation{}, httpResponse, &outputValue)
 	assert.Nil(t, err)
-	assert.Equal(t, "el_a", output.A)
-	assert.Equal(t, "el_b", output.B)
-	assert.Equal(t, 1024, output.CD)
+	assert.Equal(t, 200, IntValue(output.StatusCode))
+	assert.Equal(t, "el_a", StringValue(output.A))
+	assert.Equal(t, "el_b", StringValue(output.B))
+	assert.Equal(t, 1024, IntValue(output.CD))
 }

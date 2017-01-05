@@ -66,12 +66,12 @@ func (b *BaseUnpacker) exposeStatusCode() error {
 	value := b.output.Elem().FieldByName("StatusCode")
 	if value.IsValid() {
 		switch value.Interface().(type) {
-		case int:
+		case *int:
 			logger.Info(fmt.Sprintf(
 				"QingStor response status code: [%d] %d",
 				utils.StringToUnixInt(b.httpResponse.Header.Get("Date"), "RFC 822"),
 				b.httpResponse.StatusCode))
-			value.SetInt(int64(b.httpResponse.StatusCode))
+			value.Set(reflect.ValueOf(&b.httpResponse.StatusCode))
 		}
 	}
 
@@ -94,22 +94,22 @@ func (b *BaseUnpacker) parseResponseHeaders() error {
 
 			if fieldTagName != "" && fieldTagLocation == "headers" {
 				switch field.Interface().(type) {
-				case string:
-					field.Set(reflect.ValueOf(fieldStringValue))
-				case int:
+				case *string:
+					field.Set(reflect.ValueOf(&fieldStringValue))
+				case *int:
 					intValue, err := strconv.Atoi(fieldStringValue)
 					if err != nil {
 						return err
 					}
-					field.Set(reflect.ValueOf(intValue))
-				case bool:
-				case time.Time:
+					field.Set(reflect.ValueOf(&intValue))
+				case *bool:
+				case *time.Time:
 					format := fields.Type().Field(i).Tag.Get("format")
 					timeValue, err := utils.StringToTime(fieldStringValue, format)
 					if err != nil {
 						return err
 					}
-					field.Set(reflect.ValueOf(timeValue))
+					field.Set(reflect.ValueOf(&timeValue))
 				}
 			}
 		}

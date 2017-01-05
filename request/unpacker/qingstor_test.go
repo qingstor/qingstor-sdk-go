@@ -32,27 +32,27 @@ import (
 func TestQingStorUnpacker_UnpackHTTPRequest(t *testing.T) {
 	type Bucket struct {
 		// Created time of the Bucket
-		Created time.Time `json:"created" name:"created" format:"RFC 822"`
+		Created *time.Time `json:"created" name:"created" format:"RFC 822"`
 		// QingCloud Zone ID
-		Location string `json:"location" name:"location"`
+		Location *string `json:"location" name:"location"`
 		// Bucket name
-		Name string `json:"name" name:"name"`
+		Name *string `json:"name" name:"name"`
 		// URL to access the Bucket
-		URL string `json:"url" name:"url"`
+		URL *string `json:"url" name:"url"`
 	}
 
 	type ListBucketsOutput struct {
-		StatusCode int `location:"statusCode"`
+		StatusCode *int `location:"statusCode"`
 		Error      *errors.QingStorError
-		RequestID  string `location:"requestID"`
+		RequestID  *string `location:"requestID"`
 
-		XTestHeader string    `json:"X-Test-Header" name:"X-Test-Header" location:"headers"`
-		XTestTime   time.Time `json:"X-Test-Time" name:"X-Test-Time" format:"RFC 822" location:"headers"`
+		XTestHeader *string    `json:"X-Test-Header" name:"X-Test-Header" location:"headers"`
+		XTestTime   *time.Time `json:"X-Test-Time" name:"X-Test-Time" format:"RFC 822" location:"headers"`
 
 		// Buckets information
 		Buckets []*Bucket `json:"buckets" name:"buckets"`
 		// Bucket count
-		Count int `json:"count" name:"count"`
+		Count *int `json:"count" name:"count"`
 	}
 
 	httpResponse := &http.Response{Header: http.Header{
@@ -85,19 +85,19 @@ func TestQingStorUnpacker_UnpackHTTPRequest(t *testing.T) {
 	unpacker := QingStorUnpacker{}
 	err := unpacker.UnpackHTTPRequest(&data.Operation{}, httpResponse, &outputValue)
 	assert.Nil(t, err)
-	assert.Equal(t, "test-header", output.XTestHeader)
-	assert.Equal(t, time.Date(2016, 9, 1, 7, 30, 0, 0, time.UTC), output.XTestTime)
-	assert.Equal(t, 2, output.Count)
-	assert.Equal(t, "test-bucket", output.Buckets[0].Name)
-	assert.Equal(t, "pek3a", output.Buckets[0].Location)
-	assert.Equal(t, time.Date(2015, 7, 12, 9, 40, 32, 0, time.UTC), output.Buckets[1].Created)
+	assert.Equal(t, "test-header", StringValue(output.XTestHeader))
+	assert.Equal(t, time.Date(2016, 9, 1, 7, 30, 0, 0, time.UTC), TimeValue(output.XTestTime))
+	assert.Equal(t, 2, IntValue(output.Count))
+	assert.Equal(t, "test-bucket", StringValue(output.Buckets[0].Name))
+	assert.Equal(t, "pek3a", StringValue(output.Buckets[0].Location))
+	assert.Equal(t, time.Date(2015, 7, 12, 9, 40, 32, 0, time.UTC), TimeValue(output.Buckets[1].Created))
 }
 
 func TestQingStorUnpacker_UnpackHTTPRequestWithError(t *testing.T) {
 	type ListBucketsOutput struct {
-		StatusCode int `location:"statusCode"`
+		StatusCode *int `location:"statusCode"`
 		Error      *errors.QingStorError
-		RequestID  string `location:"requestID"`
+		RequestID  *string `location:"requestID"`
 	}
 
 	httpResponse := &http.Response{Header: http.Header{}}
