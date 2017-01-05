@@ -28,7 +28,7 @@ import (
 	"github.com/yunify/qingstor-sdk-go/config"
 	"github.com/yunify/qingstor-sdk-go/logger"
 	"github.com/yunify/qingstor-sdk-go/request/data"
-	"github.com/yunify/qingstor-sdk-go/request/errs"
+	"github.com/yunify/qingstor-sdk-go/request/errors"
 )
 
 type SomeActionProperties struct {
@@ -51,7 +51,7 @@ func (s *SomeActionInput) Validate() error {
 
 type SomeActionOutput struct {
 	StatusCode int `location:"statusCode"`
-	Error      *errs.QingStorError
+	Error      *errors.QingStorError
 	RequestID  string `location:"requestID"`
 }
 
@@ -117,7 +117,7 @@ func TestRequest_Send(t *testing.T) {
 	assert.NotNil(t, err)
 
 	switch e := err.(type) {
-	case *errs.QingStorError:
+	case *errors.QingStorError:
 		assert.Equal(t, "bad_request", e.Code)
 		assert.Equal(t, "1e588695254aa08cf7a43f612e6ce14b", e.RequestID)
 	}
