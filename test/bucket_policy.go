@@ -51,7 +51,7 @@ func putBucketPolicy(PolicyJSONText *gherkin.DocString) error {
 	}
 
 	if len(putBucketPolicyInput.Statement) == 1 {
-		putBucketPolicyInput.Statement[0].Resource = []string{tc.BucketName + "/*"}
+		putBucketPolicyInput.Statement[0].Resource = qs.StringSlice([]string{tc.BucketName + "/*"})
 	}
 
 	putBucketPolicyOutput, err = bucket.PutPolicy(putBucketPolicyInput)
@@ -60,7 +60,7 @@ func putBucketPolicy(PolicyJSONText *gherkin.DocString) error {
 
 func putBucketPolicyStatusCodeIs(statusCode int) error {
 	if putBucketPolicyOutput != nil {
-		return checkEqual(putBucketPolicyOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(putBucketPolicyOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -76,7 +76,7 @@ func getBucketPolicy() error {
 
 func getBucketPolicyStatusCodeIs(statusCode int) error {
 	if getBucketPolicyOutput != nil {
-		return checkEqual(getBucketPolicyOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(getBucketPolicyOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -87,7 +87,7 @@ func getBucketPolicyShouldHaveReferer(compare string) error {
 			statement.Condition.StringLike != nil {
 
 			for _, referer := range statement.Condition.StringLike.Referer {
-				if referer == compare {
+				if qs.StringValue(referer) == compare {
 					return nil
 				}
 			}
@@ -108,7 +108,7 @@ func deleteBucketPolicy() error {
 
 func deleteBucketPolicyStatusCodeIs(statusCode int) error {
 	if deleteBucketPolicyOutput != nil {
-		return checkEqual(deleteBucketPolicyOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(deleteBucketPolicyOutput.StatusCode), statusCode)
 	}
 	return err
 }

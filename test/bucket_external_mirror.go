@@ -55,7 +55,7 @@ func putBucketExternalMirror(ExternalMirrorJSONText *gherkin.DocString) error {
 
 func putBucketExternalMirrorStatusCodeIs(statusCode int) error {
 	if putBucketExternalMirrorOutput != nil {
-		return checkEqual(putBucketExternalMirrorOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(putBucketExternalMirrorOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -71,14 +71,14 @@ func getBucketExternalMirror() error {
 
 func getBucketExternalMirrorStatusCodeIs(statusCode int) error {
 	if getBucketExternalMirrorOutput != nil {
-		return checkEqual(getBucketExternalMirrorOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(getBucketExternalMirrorOutput.StatusCode), statusCode)
 	}
 	return err
 }
 
 func getBucketExternalMirrorShouldHaveSourceSite(sourceSite string) error {
 	if getBucketExternalMirrorOutput != nil {
-		return checkEqual(getBucketExternalMirrorOutput.SourceSite, sourceSite)
+		return checkEqual(qs.StringValue(getBucketExternalMirrorOutput.SourceSite), sourceSite)
 	}
 	return err
 }
@@ -94,7 +94,7 @@ func deleteBucketExternalMirror() error {
 
 func deleteBucketExternalMirrorStatusCodeIs(statusCode int) error {
 	if deleteBucketExternalMirrorOutput != nil {
-		return checkEqual(deleteBucketExternalMirrorOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(deleteBucketExternalMirrorOutput.StatusCode), statusCode)
 	}
 	return err
 }

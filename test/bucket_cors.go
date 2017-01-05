@@ -56,7 +56,7 @@ func putBucketCORS(CORSJSONText *gherkin.DocString) error {
 
 func putBucketCORSStatusCodeIs(statusCode int) error {
 	if putBucketCORSOutput != nil {
-		return checkEqual(putBucketCORSOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(putBucketCORSOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -72,14 +72,14 @@ func getBucketCORS() error {
 
 func getBucketCORSStatusCodeIs(statusCode int) error {
 	if getBucketCORSOutput != nil {
-		return checkEqual(getBucketCORSOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(getBucketCORSOutput.StatusCode), statusCode)
 	}
 	return err
 }
 
 func getBucketCORSShouldHaveAllowedOrigin(origin string) error {
 	for _, CORSRule := range getBucketCORSOutput.CORSRules {
-		if CORSRule.AllowedOrigin == origin {
+		if qs.StringValue(CORSRule.AllowedOrigin) == origin {
 			return nil
 		}
 	}
@@ -98,7 +98,7 @@ func deleteBucketCORS() error {
 
 func deleteBucketCORSStatusCodeIs(statusCode int) error {
 	if deleteBucketCORSOutput != nil {
-		return checkEqual(deleteBucketCORSOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(deleteBucketCORSOutput.StatusCode), statusCode)
 	}
 	return err
 }

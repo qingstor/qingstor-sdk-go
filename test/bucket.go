@@ -24,7 +24,7 @@ import (
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 
-	"github.com/yunify/qingstor-sdk-go/request/errs"
+	qsErrors "github.com/yunify/qingstor-sdk-go/request/errors"
 	qs "github.com/yunify/qingstor-sdk-go/service"
 )
 
@@ -87,7 +87,7 @@ func putBucketFake() error {
 
 func putBucketStatusCodeIs(statusCode int) error {
 	if putBucketOutput != nil {
-		return checkEqual(putBucketOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(putBucketOutput.StatusCode), statusCode)
 	}
 	return nil
 }
@@ -105,7 +105,7 @@ func putSameBucketAgain() error {
 
 func putSameBucketAgainStatusCodeIs(statusCode int) error {
 	switch e := err.(type) {
-	case *errs.QingStorError:
+	case *qsErrors.QingStorError:
 		return checkEqual(e.StatusCode, statusCode)
 	}
 
@@ -118,17 +118,17 @@ var listObjectsOutput *qs.ListObjectsOutput
 
 func listObjects() error {
 	listObjectsOutput, err = bucket.ListObjects(&qs.ListObjectsInput{
-		Delimiter: "/",
-		Limit:     1000,
-		Prefix:    "Test/",
-		Marker:    "Next",
+		Delimiter: qs.String("/"),
+		Limit:     qs.Int(1000),
+		Prefix:    qs.String("Test/"),
+		Marker:    qs.String("Next"),
 	})
 	return err
 }
 
 func listObjectsStatusCodeIs(statusCode int) error {
 	if listObjectsOutput != nil {
-		return checkEqual(listObjectsOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(listObjectsOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -148,7 +148,7 @@ func headBucket() error {
 
 func headBucketStatusCodeIs(statusCode int) error {
 	if headBucketOutput != nil {
-		return checkEqual(headBucketOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(headBucketOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -168,7 +168,7 @@ func deleteBucketFake() error {
 
 func deleteBucketStatusCodeIs(statusCode int) error {
 	if deleteBucketOutput != nil {
-		return checkEqual(deleteBucketOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(deleteBucketOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -212,7 +212,7 @@ func deleteMultipleObjects(requestJSON *gherkin.DocString) error {
 
 func deleteMultipleObjectsCodeIs(statusCode int) error {
 	if deleteMultipleObjectsOutput != nil {
-		return checkEqual(deleteMultipleObjectsOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(deleteMultipleObjectsOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -228,14 +228,14 @@ func getBucketStatistics() error {
 
 func getBucketStatisticsStatusCodeIs(statusCode int) error {
 	if getBucketStatisticsOutput != nil {
-		return checkEqual(getBucketStatisticsOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(getBucketStatisticsOutput.StatusCode), statusCode)
 	}
 	return err
 }
 
 func getBucketStatisticsStatusIs(status string) error {
 	if getBucketStatisticsOutput != nil {
-		return checkEqual(getBucketStatisticsOutput.Status, status)
+		return checkEqual(qs.StringValue(getBucketStatisticsOutput.Status), status)
 	}
 	return err
 }
