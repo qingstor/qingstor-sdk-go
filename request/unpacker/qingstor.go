@@ -22,7 +22,7 @@ import (
 	"reflect"
 
 	"github.com/yunify/qingstor-sdk-go/request/data"
-	"github.com/yunify/qingstor-sdk-go/request/errs"
+	"github.com/yunify/qingstor-sdk-go/request/errors"
 	"github.com/yunify/qingstor-sdk-go/utils"
 )
 
@@ -54,7 +54,7 @@ func (qu *QingStorUnpacker) parseError() error {
 			buffer.ReadFrom(qu.baseUnpacker.httpResponse.Body)
 			qu.baseUnpacker.httpResponse.Body.Close()
 
-			qsError := &errs.QingStorError{}
+			qsError := &errors.QingStorError{}
 			if buffer.Len() > 0 {
 				_, err := utils.JSONDecode(buffer.Bytes(), qsError)
 				if err != nil {

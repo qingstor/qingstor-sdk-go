@@ -26,7 +26,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/yunify/qingstor-sdk-go/request/data"
-	"github.com/yunify/qingstor-sdk-go/request/errs"
+	"github.com/yunify/qingstor-sdk-go/request/errors"
 )
 
 func TestQingStorUnpacker_UnpackHTTPRequest(t *testing.T) {
@@ -43,7 +43,7 @@ func TestQingStorUnpacker_UnpackHTTPRequest(t *testing.T) {
 
 	type ListBucketsOutput struct {
 		StatusCode int `location:"statusCode"`
-		Error      *errs.QingStorError
+		Error      *errors.QingStorError
 		RequestID  string `location:"requestID"`
 
 		XTestHeader string    `json:"X-Test-Header" name:"X-Test-Header" location:"headers"`
@@ -96,7 +96,7 @@ func TestQingStorUnpacker_UnpackHTTPRequest(t *testing.T) {
 func TestQingStorUnpacker_UnpackHTTPRequestWithError(t *testing.T) {
 	type ListBucketsOutput struct {
 		StatusCode int `location:"statusCode"`
-		Error      *errs.QingStorError
+		Error      *errors.QingStorError
 		RequestID  string `location:"requestID"`
 	}
 
@@ -117,7 +117,7 @@ func TestQingStorUnpacker_UnpackHTTPRequestWithError(t *testing.T) {
 	err := unpacker.UnpackHTTPRequest(&data.Operation{}, httpResponse, &outputValue)
 	assert.NotNil(t, err)
 	switch e := err.(type) {
-	case *errs.QingStorError:
+	case *errors.QingStorError:
 		assert.Equal(t, "bad_request", e.Code)
 		assert.Equal(t, "aa08cf7a43f611e5886952542e6ce14b", e.RequestID)
 	}
