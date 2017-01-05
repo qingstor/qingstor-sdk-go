@@ -57,7 +57,7 @@ func listBuckets() error {
 
 func listBucketsStatusCodeIs(statusCode int) error {
 	if listBucketsOutput != nil {
-		return checkEqual(listBucketsOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(listBucketsOutput.StatusCode), statusCode)
 	}
 	return err
 }

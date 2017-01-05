@@ -25,7 +25,7 @@ import (
 	"github.com/DATA-DOG/godog"
 
 	"github.com/yunify/qingstor-sdk-go/config"
-	"github.com/yunify/qingstor-sdk-go/request/errs"
+	qsErrors "github.com/yunify/qingstor-sdk-go/request/errors"
 	qs "github.com/yunify/qingstor-sdk-go/service"
 )
 
@@ -85,7 +85,7 @@ func tearDown() {
 		checkError(err)
 		if err != nil {
 			switch e := err.(type) {
-			case *errs.QingStorError:
+			case *qsErrors.QingStorError:
 				if e.Code == "bucket_not_exists" {
 					return
 				}

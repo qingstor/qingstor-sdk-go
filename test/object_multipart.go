@@ -23,7 +23,7 @@ import (
 	"github.com/DATA-DOG/godog"
 
 	"fmt"
-	"github.com/yunify/qingstor-sdk-go/request/errs"
+	"github.com/yunify/qingstor-sdk-go/request/errors"
 	qs "github.com/yunify/qingstor-sdk-go/service"
 )
 
@@ -63,7 +63,7 @@ func initiateMultipartUploadWithKey(objectKey string) error {
 	initiateMultipartUploadOutput, err = bucket.InitiateMultipartUpload(
 		theMultipartObjectKey,
 		&qs.InitiateMultipartUploadInput{
-			ContentType: "text/plain",
+			ContentType: qs.String("text/plain"),
 		},
 	)
 	return err
@@ -71,7 +71,7 @@ func initiateMultipartUploadWithKey(objectKey string) error {
 
 func initiateMultipartUploadStatusCodeIs(statusCode int) error {
 	if initiateMultipartUploadOutput != nil {
-		return checkEqual(initiateMultipartUploadOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(initiateMultipartUploadOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -99,7 +99,7 @@ func uploadTheFirstPart() error {
 		theMultipartObjectKey,
 		&qs.UploadMultipartInput{
 			UploadID:   initiateMultipartUploadOutput.UploadID,
-			PartNumber: 0,
+			PartNumber: qs.Int(0),
 			Body:       file,
 		},
 	)
@@ -108,7 +108,7 @@ func uploadTheFirstPart() error {
 
 func uploadTheFirstPartStatusCodeIs(statusCode int) error {
 	if uploadTheFirstPartOutput != nil {
-		return checkEqual(uploadTheFirstPartOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(uploadTheFirstPartOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -130,7 +130,7 @@ func uploadTheSecondPart() error {
 		theMultipartObjectKey,
 		&qs.UploadMultipartInput{
 			UploadID:   initiateMultipartUploadOutput.UploadID,
-			PartNumber: 1,
+			PartNumber: qs.Int(1),
 			Body:       file,
 		},
 	)
@@ -139,7 +139,7 @@ func uploadTheSecondPart() error {
 
 func uploadTheSecondPartStatusCodeIs(statusCode int) error {
 	if uploadTheSecondPartOutput != nil {
-		return checkEqual(uploadTheSecondPartOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(uploadTheSecondPartOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -161,7 +161,7 @@ func uploadTheThirdPart() error {
 		theMultipartObjectKey,
 		&qs.UploadMultipartInput{
 			UploadID:   initiateMultipartUploadOutput.UploadID,
-			PartNumber: 2,
+			PartNumber: qs.Int(2),
 			Body:       file,
 		},
 	)
@@ -170,7 +170,7 @@ func uploadTheThirdPart() error {
 
 func uploadTheThirdPartStatusCodeIs(statusCode int) error {
 	if uploadTheThirdPartOutput != nil {
-		return checkEqual(uploadTheThirdPartOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(uploadTheThirdPartOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -191,7 +191,7 @@ func listMultipart() error {
 
 func listMultipartStatusCodeIs(statusCode int) error {
 	if listMultipartOutput != nil {
-		return checkEqual(listMultipartOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(listMultipartOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -212,7 +212,7 @@ func completeMultipartUpload() error {
 		theMultipartObjectKey,
 		&qs.CompleteMultipartUploadInput{
 			UploadID:    initiateMultipartUploadOutput.UploadID,
-			ETag:        `"4072783b8efb99a9e5817067d68f61c6"`,
+			ETag:        qs.String(`"4072783b8efb99a9e5817067d68f61c6"`),
 			ObjectParts: listMultipartOutput.ObjectParts,
 		},
 	)
@@ -221,7 +221,7 @@ func completeMultipartUpload() error {
 
 func completeMultipartUploadStatusCodeIs(statusCode int) error {
 	if completeMultipartUploadOutput != nil {
-		return checkEqual(completeMultipartUploadOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(completeMultipartUploadOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -240,7 +240,7 @@ func abortMultipartUpload() error {
 
 func abortMultipartUploadStatusCodeIs(statusCode int) error {
 	switch e := err.(type) {
-	case *errs.QingStorError:
+	case *errors.QingStorError:
 		return checkEqual(e.StatusCode, statusCode)
 	}
 
@@ -258,7 +258,7 @@ func deleteTheMultipartObject() error {
 
 func deleteTheMultipartObjectStatusCodeIs(statusCode int) error {
 	if deleteTheMultipartObjectOutput != nil {
-		return checkEqual(deleteTheMultipartObjectOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(deleteTheMultipartObjectOutput.StatusCode), statusCode)
 	}
 	return err
 }

@@ -96,8 +96,8 @@ func putObjectWithKey(objectKey string) error {
 	//file.Seek(0, io.SeekStart)
 	file.Seek(0, 0)
 	putObjectOutput, err = bucket.PutObject(theObjectKey, &qs.PutObjectInput{
-		ContentType: "text/plain",
-		ContentMD5:  md5String,
+		ContentType: qs.String("text/plain"),
+		ContentMD5:  qs.String(md5String),
 		Body:        file,
 	})
 	return err
@@ -105,7 +105,7 @@ func putObjectWithKey(objectKey string) error {
 
 func putObjectStatusCodeIs(statusCode int) error {
 	if putObjectOutput != nil {
-		return checkEqual(putObjectOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(putObjectOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -113,14 +113,14 @@ func putObjectStatusCodeIs(statusCode int) error {
 func copyObjectWithKey(objectKey string) error {
 	theCopyObjectKey = objectKey
 	copyObjectOutput, err = bucket.PutObject(theCopyObjectKey, &qs.PutObjectInput{
-		XQSCopySource: "/" + tc.BucketName + "/" + theObjectKey,
+		XQSCopySource: qs.String("/" + tc.BucketName + "/" + theObjectKey),
 	})
 	return err
 }
 
 func copyObjectStatusCodeIs(statusCode int) error {
 	if copyObjectOutput != nil {
-		return checkEqual(copyObjectOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(copyObjectOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -128,14 +128,14 @@ func copyObjectStatusCodeIs(statusCode int) error {
 func moveObjectWithKey(objectKey string) error {
 	theMoveObjectKey = objectKey
 	moveObjectOutput, err = bucket.PutObject(theMoveObjectKey, &qs.PutObjectInput{
-		XQSMoveSource: "/" + tc.BucketName + "/" + theCopyObjectKey,
+		XQSMoveSource: qs.String("/" + tc.BucketName + "/" + theCopyObjectKey),
 	})
 	return err
 }
 
 func moveObjectStatusCodeIs(statusCode int) error {
 	if moveObjectOutput != nil {
-		return checkEqual(moveObjectOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(moveObjectOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -151,7 +151,7 @@ func getObject() error {
 
 func getObjectStatusCodeIs(statusCode int) error {
 	if getObjectOutput != nil {
-		return checkEqual(getObjectOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(getObjectOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -175,7 +175,7 @@ func getObjectWithContentType(contentType string) error {
 	getObjectWithContentTypeRequest, _, err = bucket.GetObjectRequest(
 		theObjectKey,
 		&qs.GetObjectInput{
-			ResponseContentType: contentType,
+			ResponseContentType: qs.String(contentType),
 		},
 	)
 	if err != nil {
@@ -238,7 +238,7 @@ func headObject() error {
 
 func headObjectStatusCodeIs(statusCode int) error {
 	if headObjectOutput != nil {
-		return checkEqual(headObjectOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(headObjectOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -251,8 +251,8 @@ func optionsObjectWithMethodAndOrigin(method, origin string) error {
 	optionsObjectOutput, err = bucket.OptionsObject(
 		theObjectKey,
 		&qs.OptionsObjectInput{
-			AccessControlRequestMethod: method,
-			Origin: origin,
+			AccessControlRequestMethod: qs.String(method),
+			Origin: qs.String(origin),
 		},
 	)
 	return err
@@ -260,7 +260,7 @@ func optionsObjectWithMethodAndOrigin(method, origin string) error {
 
 func optionsObjectStatusCodeIs(statusCode int) error {
 	if optionsObjectOutput != nil {
-		return checkEqual(optionsObjectOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(optionsObjectOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -277,7 +277,7 @@ func deleteObject() error {
 
 func deleteObjectStatusCodeIs(statusCode int) error {
 	if deleteObjectOutput != nil {
-		return checkEqual(deleteObjectOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(deleteObjectOutput.StatusCode), statusCode)
 	}
 	return err
 }
@@ -289,7 +289,7 @@ func deleteTheMoveObject() error {
 
 func deleteTheMoveObjectStatusCodeIs(statusCode int) error {
 	if deleteTheMoveObjectOutput != nil {
-		return checkEqual(deleteTheMoveObjectOutput.StatusCode, statusCode)
+		return checkEqual(qs.IntValue(deleteTheMoveObjectOutput.StatusCode), statusCode)
 	}
 	return err
 }
