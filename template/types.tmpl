@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/yunify/qingstor-sdk-go/request/errs"
+	"github.com/yunify/qingstor-sdk-go/request/errors"
 )
 
 // Properties presents the service properties.
@@ -39,7 +39,7 @@ type Properties struct {
 			// {{camelCase $p.ID}}'s available values: {{commaConnected $p.Enum}}
 		{{end -}}
 		{{$p.ID | camelCase | upperFirst}}{{" " -}}
-		{{template "PropertyType" $p}}{{" " -}}
+		{{template "PropertyType" passThrough $p false}}{{" " -}}
 		`{{template "PropertyTagsDashConnected" $p}}`{{" " -}}
 		{{if $p.IsRequired -}}
 			// Required
