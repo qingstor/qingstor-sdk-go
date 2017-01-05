@@ -27,7 +27,7 @@ import (
 	"github.com/yunify/qingstor-sdk-go/config"
 	"github.com/yunify/qingstor-sdk-go/request"
 	"github.com/yunify/qingstor-sdk-go/request/data"
-	"github.com/yunify/qingstor-sdk-go/request/errs"
+	"github.com/yunify/qingstor-sdk-go/request/errors"
 )
 
 var _ fmt.State
@@ -44,11 +44,11 @@ var _ config.Config
 
 	// {{$subService.ID | camelCase}} initializes a new {{$subService.ID | snakeCase}}.
 	func (s *Service) {{$subService.ID | camelCase}}(
-		{{- template "SubServiceInitParams" $subService.Properties -}}
+		{{- template "SubServiceInitParams" passThrough $subService.Properties true -}}
 		) (*{{$subService.ID | camelCase}}, error) {
 		properties := &Properties{
 			{{range $_, $property := $subService.Properties.Properties -}}
-				{{$property.ID | upperFirst}}: {{$property.ID}},
+				{{$property.ID | upperFirst}}: &{{$property.ID}},
 			{{end -}}
 		}
 
