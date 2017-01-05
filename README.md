@@ -48,26 +48,26 @@ import (
 	"fmt"
 
 	"github.com/yunify/qingstor-sdk-go/config"
-	"github.com/yunify/qingstor-sdk-go/service"
+	qs "github.com/yunify/qingstor-sdk-go/service"
 )
 
 func main() {
 	conf, _ := config.New("ACCESS_KEY_ID", "SECRET_ACCESS_KEY")
 
 	// Initialize service object for QingStor.
-	qsService, _ := service.Init(conf)
+	qsService, _ := qs.Init(conf)
 
 	// List all buckets.
-	qsOutput, _ := qsService.ListBuckets(&service.ListBucketsInput{})
+	qsOutput, _ := qsService.ListBuckets(&qs.ListBucketsInput{})
 
 	// Print HTTP status code.
-	fmt.Println(qsOutput.StatusCode)
+	fmt.Println(qs.IntValue(qsOutput.StatusCode))
 
 	// Print the count of buckets.
-	fmt.Println(qsOutput.Count)
+	fmt.Println(qs.IntValue(qsOutput.Count))
 
 	// Print the first bucket name.
-	fmt.Println(qsOutput.Buckets[0].Name)
+	fmt.Println(qs.StringValue(qsOutput.Buckets[0].Name))
 }
 ```
 
