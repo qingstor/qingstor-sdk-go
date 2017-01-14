@@ -116,7 +116,7 @@
 		{{if eq $belongs "Bucket" -}}
 			// {{replace $opID "Bucket" "" -1}} does {{$operation.Description}}
 		{{else -}}
-			// {{$opID}} does {{$operation.Description}}		
+			// {{$opID}} does {{$operation.Description}}
 		{{end -}}
 	{{end -}}
 	{{if $operation.DocumentationURL -}}
@@ -179,6 +179,11 @@
 				input = &{{$opID}}Input{}
 			}
 		{{end}}
+		{{$uri := $operation.Request.URI}}
+		{{$uri := replace $uri "{" "<" -1}}
+		{{$uri := replace $uri "}" ">" -1}}
+		{{$uri := dashConnected $uri}}
+
 		o := &data.Operation{
 			Config:        s.Config,
 			{{- if ne $belongs "Service"}}
@@ -186,7 +191,7 @@
 			{{- end}}
 			APIName:       "{{$operation.Name}}",
 			RequestMethod: "{{$operation.Request.Method}}",
-			RequestURI:    "{{$operation.Request.URI}}",
+			RequestURI:    "{{$uri}}",
 			{{if $operation.Response.StatusCodes -}}
 				StatusCodes:   []int{
 					{{range $statusCodeNumber, $statusCode := $operation.Response.StatusCodes -}}
