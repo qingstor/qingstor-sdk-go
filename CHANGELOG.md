@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v2.1.2] - 2017-01-16
+
+### Fixed
+
+- Fix request signer.
+
 ## [v2.1.1] - 2017-01-05
 
 ### Changed
@@ -40,6 +46,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v2.1.2]: https://github.com/yunify/qingstor-sdk-go/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/yunify/qingstor-sdk-go/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.0.1...v2.1.0
 [v2.0.1]: https://github.com/yunify/qingstor-sdk-go/compare/v2.0.0...v2.0.1
