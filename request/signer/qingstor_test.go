@@ -25,7 +25,7 @@ import (
 	"github.com/yunify/qingstor-sdk-go/utils"
 )
 
-func TestQingStorSigner_WriteSignature(t *testing.T) {
+func TestQingStorSignerWriteSignature(t *testing.T) {
 	url := "https://qingstor.com/?acl&upload_id=fde133b5f6d932cd9c79bac3c7318da1&part_number=0&other=abc"
 	httpRequest, err := http.NewRequest("GET", url, nil)
 	httpRequest.Header.Set("Date", utils.TimeToString(time.Time{}, "RFC 822"))
@@ -45,7 +45,25 @@ func TestQingStorSigner_WriteSignature(t *testing.T) {
 	assert.Equal(t, signature, httpRequest.Header.Get("Authorization"))
 }
 
-func TestQingStorSigner_WriteQuerySignature(t *testing.T) {
+func TestQingStorSignerWriteSignatureChinese(t *testing.T) {
+	url := "https://zone.qingstor.com/bucket-name/中文"
+	httpRequest, err := http.NewRequest("GET", url, nil)
+	httpRequest.Header.Set("Date", utils.TimeToString(time.Time{}, "RFC 822"))
+	assert.Nil(t, err)
+
+	s := QingStorSigner{
+		AccessKeyID:     "ENV_ACCESS_KEY_ID",
+		SecretAccessKey: "ENV_SECRET_ACCESS_KEY",
+	}
+
+	err = s.WriteSignature(httpRequest)
+	assert.Nil(t, err)
+
+	signature := "QS ENV_ACCESS_KEY_ID:XsTXX50kzqBf92zLG1aIUIJmZ0hqIHoaHgkumwnV3fs="
+	assert.Equal(t, signature, httpRequest.Header.Get("Authorization"))
+}
+
+func TestQingStorSignerWriteQuerySignature(t *testing.T) {
 	url := "https://qingstor.com/?acl&upload_id=fde133b5f6d932cd9c79bac3c7318da1&part_number=0"
 	httpRequest, err := http.NewRequest("GET", url, nil)
 	httpRequest.Header.Set("Date", utils.TimeToString(time.Time{}, "RFC 822"))

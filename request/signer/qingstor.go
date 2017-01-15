@@ -182,7 +182,9 @@ func (qss *QingStorSigner) buildCanonicalizedHeaders(request *http.Request) stri
 }
 
 func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (string, error) {
-	path := request.URL.Path
+	path := url.QueryEscape(request.URL.Path)
+	path = strings.Replace(path, "%2F", "/", -1)
+	path = strings.Replace(path, "+", "%20", -1)
 	query := request.URL.Query()
 
 	keys := []string{}
