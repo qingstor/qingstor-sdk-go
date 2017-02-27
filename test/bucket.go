@@ -54,6 +54,10 @@ func BucketFeatureContext(s *godog.Suite) {
 	s.Step(`^get bucket statistics$`, getBucketStatistics)
 	s.Step(`^get bucket statistics status code is (\d+)$`, getBucketStatisticsStatusCodeIs)
 	s.Step(`^get bucket statistics status is "([^"]*)"$`, getBucketStatisticsStatusIs)
+
+	s.Step(`^an object created by initiate multipart upload$`, anObjectCreatedByInitiateMultipartUpload)
+	s.Step(`^list multipart uploads$`, listMultipartUploads)
+	s.Step(`^list multipart uploads count is (\d+)$`, listMultipartUploadsCountIs)
 }
 
 // --------------------------------------------------------------------------
@@ -238,4 +242,42 @@ func getBucketStatisticsStatusIs(status string) error {
 		return checkEqual(qs.StringValue(getBucketStatisticsOutput.Status), status)
 	}
 	return err
+}
+
+// --------------------------------------------------------------------------
+var listMultipartUploadsOutputObjectKey = "list_multipart_uploads_object_key"
+var listMultipartUploadsInitiateOutput *qs.InitiateMultipartUploadOutput
+var listMultipartUploadsOutput *qs.ListMultipartUploadsOutput
+
+func anObjectCreatedByInitiateMultipartUpload() error {
+	listMultipartUploadsInitiateOutput, err = bucket.InitiateMultipartUpload(
+		listMultipartUploadsOutputObjectKey, nil,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func listMultipartUploads() error {
+	listMultipartUploadsOutput, err = bucket.ListMultipartUploads(nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func listMultipartUploadsCountIs(count int) error {
+	_, err = bucket.AbortMultipartUpload(
+		listMultipartUploadsOutputObjectKey, &qs.AbortMultipartUploadInput{
+			UploadID: listMultipartUploadsInitiateOutput.UploadID,
+		},
+	)
+	if err != nil {
+		return err
+	}
+	if listMultipartUploadsOutput != nil {
+		return checkEqual(len(listMultipartUploadsOutput.Uploads), count)
+	}
+	return nil
 }
