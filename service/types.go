@@ -450,3 +450,19 @@ func (v *StringNotLikeType) Validate() error {
 
 	return nil
 }
+
+// UploadsType presents Uploads.
+type UploadsType struct {
+	// Object part created time
+	Created *time.Time `json:"created,omitempty" name:"created" format:"ISO 8601"`
+	// Object key
+	Key *string `json:"key,omitempty" name:"key"`
+	// Object upload id
+	UploadID *string `json:"upload_id,omitempty" name:"upload_id"`
+}
+
+// Validate validates the Uploads.
+func (v *UploadsType) Validate() error {
+
+	return nil
+}

@@ -667,6 +667,95 @@ type HeadBucketOutput struct {
 	RequestID *string `location:"requestID"`
 }
 
+// ListMultipartUploads does List multipart uploads in the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/list_multipart_uploads.html
+func (s *Bucket) ListMultipartUploads(input *ListMultipartUploadsInput) (*ListMultipartUploadsOutput, error) {
+	r, x, err := s.ListMultipartUploadsRequest(input)
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get("X-Qs-Request-Id")
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// ListMultipartUploadsRequest creates request and output object of ListMultipartUploads.
+func (s *Bucket) ListMultipartUploadsRequest(input *ListMultipartUploadsInput) (*request.Request, *ListMultipartUploadsOutput, error) {
+
+	if input == nil {
+		input = &ListMultipartUploadsInput{}
+	}
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    s.Properties,
+		APIName:       "List Multipart Uploads",
+		RequestMethod: "GET",
+		RequestURI:    "/<bucket-name>?uploads",
+		StatusCodes: []int{
+			200, // OK
+		},
+	}
+
+	x := &ListMultipartUploadsOutput{}
+	r, err := request.New(o, input, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// ListMultipartUploadsInput presents input for ListMultipartUploads.
+type ListMultipartUploadsInput struct {
+	// Put all keys that share a common prefix into a list
+	Delimiter *string `json:"delimiter,omitempty" name:"delimiter" location:"params"`
+	// Results count limit
+	Limit *int `json:"limit,omitempty" name:"limit" location:"params"`
+	// Limit results to keys that start at this marker
+	Marker *string `json:"marker,omitempty" name:"marker" location:"params"`
+	// Limits results to keys that begin with the prefix
+	Prefix *string `json:"prefix,omitempty" name:"prefix" location:"params"`
+}
+
+// Validate validates the input for ListMultipartUploads.
+func (v *ListMultipartUploadsInput) Validate() error {
+
+	return nil
+}
+
+// ListMultipartUploadsOutput presents output for ListMultipartUploads.
+type ListMultipartUploadsOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+
+	// Other object keys that share common prefixes
+	CommonPrefixes []*string `json:"common_prefixes,omitempty" name:"common_prefixes" location:"elements"`
+	// Delimiter that specified in request parameters
+	Delimiter *string `json:"delimiter,omitempty" name:"delimiter" location:"elements"`
+	// Limit that specified in request parameters
+	Limit *int `json:"limit,omitempty" name:"limit" location:"elements"`
+	// Marker that specified in request parameters
+	Marker *string `json:"marker,omitempty" name:"marker" location:"elements"`
+	// Bucket name
+	Name *string `json:"name,omitempty" name:"name" location:"elements"`
+	// The last key in keys list
+	NextMarker *string `json:"next_marker,omitempty" name:"next_marker" location:"elements"`
+	// Prefix that specified in request parameters
+	Prefix *string `json:"prefix,omitempty" name:"prefix" location:"elements"`
+	// Multipart uploads
+	Uploads []*UploadsType `json:"uploads,omitempty" name:"uploads" location:"elements"`
+}
+
 // ListObjects does Retrieve the object list in a bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/get.html
 func (s *Bucket) ListObjects(input *ListObjectsInput) (*ListObjectsOutput, error) {
