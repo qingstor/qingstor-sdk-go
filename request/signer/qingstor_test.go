@@ -79,6 +79,6 @@ func TestQingStorSignerWriteQuerySignature(t *testing.T) {
 	err = s.WriteQuerySignature(httpRequest, utils.StringToUnixInt(httpRequest.Header.Get("Date"), "RFC 822"))
 	assert.Nil(t, err)
 
-	targetURL := "https://qingstor.com/?acl&upload_id=fde133b5f6d932cd9c79bac3c7318da1&part_number=0&access_key_id=ENV_ACCESS_KEY_ID&expires=-62135596800&signature=gTdB%2FcmD6rjv8CbFRDfFbHc64q442rYNAp99Hm7fBl4%3D"
+	targetURL := "https://qingstor.com/?acl&upload_id=fde133b5f6d932cd9c79bac3c7318da1&part_number=0&access_key_id=ENV_ACCESS_KEY_ID&expires=-62135596800&signature=gTdB/cmD6rjv8CbFRDfFbHc64q442rYNAp99Hm7fBl4="
 	assert.Equal(t, httpRequest.URL.String(), targetURL)
 }
