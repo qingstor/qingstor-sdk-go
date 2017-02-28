@@ -1,7 +1,5 @@
 SHELL := /bin/bash
 
-.PHONY: all check vet lint update generate build unit test release clean
-
 PREFIX=qingstor-sdk-go
 VERSION=$(shell cat version.go | grep "Version\ =" | sed -e s/^.*\ //g | sed -e s/\"//g)
 DIRS_TO_CHECK=$(shell ls -d */ | grep -vE "vendor|test")
@@ -10,6 +8,7 @@ PKGS_TO_RELEASE=$(shell go list ./... | grep -vE "/vendor/|/test")
 FILES_TO_RELEASE=$(shell find . -name "*.go" | grep -vE "/vendor/|/test|.*_test.go")
 FILES_TO_RELEASE_WITH_VENDOR=$(shell find . -name "*.go" | grep -vE "/test|.*_test.go")
 
+.PHONY: help
 help:
 	@echo "Please use \`make <target>\` where <target> is one of"
 	@echo "  all               to check, build, test and release this SDK"
@@ -26,19 +25,21 @@ help:
 	@echo "  test              to run service test"
 	@echo "  release           to build and release current version"
 	@echo "  release-source    to pack the source code"
-	@echo "  release-headers   to build and pack the headers source code for go 1.7"
-	@echo "  release-binary    to build the static binary for go 1.7"
 	@echo "  clean             to clean the coverage files"
 
+.PHONY: all
 all: check build unit release
 
+.PHONY: check
 check: vet lint
 
+.PHONY: vet
 vet:
 	@echo "go tool vet, skipping vendor packages"
 	@go tool vet -all ${DIRS_TO_CHECK}
 	@echo "ok"
 
+.PHONY: lint
 lint:
 	@echo "golint, skipping vendor packages"
 	@lint=$$(for pkg in ${PKGS_TO_CHECK}; do golint $${pkg}; done); \
@@ -46,10 +47,12 @@ lint:
 	 if [[ -n $${lint} ]]; then echo "$${lint}"; exit 1; fi
 	@echo "ok"
 
+.PHONY: update
 update:
 	git submodule update --remote
 	@echo "ok"
 
+.PHONY: generate
 generate:
 	@if [[ ! -f "$$(which snips)" ]]; then \
 		echo "ERROR: Command \"snips\" not found."; \
@@ -60,6 +63,7 @@ generate:
 	gofmt -w .
 	@echo "ok"
 
+.PHONY: build
 build:
 	@echo "build the SDK"
 	GOOS=linux GOARCH=amd64 go build ${PKGS_TO_CHECK}
@@ -67,18 +71,22 @@ build:
 	GOOS=windows GOARCH=amd64 go build ${PKGS_TO_CHECK}
 	@echo "ok"
 
+.PHONY: unit
 unit: unit-test unit-benchmark unit-coverage unit-race
 
+.PHONY: unit-test
 unit-test:
 	@echo "run unit test"
 	go test -v ${PKGS_TO_CHECK}
 	@echo "ok"
 
+.PHONY: unit-benchmark
 unit-benchmark:
 	@echo "run unit test with benchmark"
 	go test -v -bench=. ${PKGS_TO_CHECK}
 	@echo "ok"
 
+.PHONY: unit-coverage
 unit-coverage:
 	@echo "run unit test with coverage"
 	for pkg in ${PKGS_TO_CHECK}; do \
@@ -91,12 +99,34 @@ unit-coverage:
 	done
 	@echo "ok"
 
+.PHONY: unit-race
 unit-race:
 	@echo "run unit test with race"
 	go test -v -race -cpu=1,2,4 ${PKGS_TO_CHECK}
 	@echo "ok"
 
-unit-runtime: unit-runtime-go-1.7 unit-runtime-go-1.6 unit-runtime-go-1.5
+.PHONY: unit-runtime
+unit-runtime: unit-runtime-go-1.8 unit-runtime-go-1.7 unit-runtime-go-1.6 unit-runtime-go-1.5
+
+export define DOCKERFILE_GO_1_8
+FROM golang:1.8
+
+ADD . /go/src/github.com/yunify/qingstor-sdk-go
+WORKDIR /go/src/github.com/yunify/qingstor-sdk-go
+
+CMD ["make", "build", "unit"]
+endef
+
+.PHONY: unit-runtime-go-1.8
+unit-runtime-go-1.8:
+	@echo "run test in go 1.8"
+	echo "$${DOCKERFILE_GO_1_8}" > "dockerfile_go_1.8"
+	docker build -f "./dockerfile_go_1.8" -t "${PREFIX}:go-1.8" .
+	rm -f "./dockerfile_go_1.8"
+	docker run --name "${PREFIX}-go-1.8-unit" -t "${PREFIX}:go-1.8"
+	docker rm "${PREFIX}-go-1.8-unit"
+	docker rmi "${PREFIX}:go-1.8"
+	@echo "ok"
 
 export define DOCKERFILE_GO_1_7
 FROM golang:1.7
@@ -107,6 +137,7 @@ WORKDIR /go/src/github.com/yunify/qingstor-sdk-go
 CMD ["make", "build", "unit"]
 endef
 
+.PHONY: unit-runtime-go-1.7
 unit-runtime-go-1.7:
 	@echo "run test in go 1.7"
 	echo "$${DOCKERFILE_GO_1_7}" > "dockerfile_go_1.7"
@@ -126,6 +157,7 @@ WORKDIR /go/src/github.com/yunify/qingstor-sdk-go
 CMD ["make", "build", "unit"]
 endef
 
+.PHONY: unit-runtime-go-1.6
 unit-runtime-go-1.6:
 	@echo "run test in go 1.6"
 	echo "$${DOCKERFILE_GO_1_6}" > "dockerfile_go_1.6"
@@ -146,6 +178,7 @@ WORKDIR /go/src/github.com/yunify/qingstor-sdk-go
 CMD ["make", "build", "unit"]
 endef
 
+.PHONY: unit-runtime-go-1.5
 unit-runtime-go-1.5:
 	@echo "run test in go 1.5"
 	echo "$${DOCKERFILE_GO_1_5}" > "dockerfile_go_1.5"
@@ -156,66 +189,29 @@ unit-runtime-go-1.5:
 	docker rmi "${PREFIX}:go-1.5"
 	@echo "ok"
 
+.PHONY: test
 test:
 	pushd "./test"; go run *.go; popd
 	@echo "ok"
 
-release: release-source release-source-with-vendor release-headers release-binary
+.PHONY: release
+release: release-source release-source-with-vendor
 
+.PHONY: release-source
 release-source:
 	@echo "pack the source code"
 	mkdir -p "release"
 	zip -FS "release/${PREFIX}-source-v${VERSION}.zip" ${FILES_TO_RELEASE}
 	@echo "ok"
 
+.PHONY: release-source-with-vendor
 release-source-with-vendor:
 	@echo "pack the source code"
 	mkdir -p "release"
 	zip -FS "release/${PREFIX}-source-with-vendor-v${VERSION}.zip" ${FILES_TO_RELEASE_WITH_VENDOR}
 	@echo "ok"
 
-release-headers: release-headers-go-1.7
-
-release-headers-go-1.7:
-	@echo "build and pack the headers source code for go 1.7"
-	mkdir -p "release"
-	mkdir -p "/tmp/${PREFIX}-headers/"
-	for file in ${FILES_TO_RELEASE}; do \
-		filepath="/tmp/${PREFIX}-headers/$$(dirname $${file})/binary.go"; \
-		mkdir -p "$$(dirname $${filepath})"; \
-		package_line=$$(cat "$${file}" | grep -E "^package"); \
-		echo -ne "//go:binary-only-package\n\n" > "$${filepath}"; \
-		echo -ne "$${package_line}" >> "$${filepath}"; \
-	done
-	pushd "/tmp/${PREFIX}-headers/"; \
-	zip -r "/tmp/${PREFIX}-headers-v${VERSION}-go-1.7.zip" .; \
-	popd
-	cp "/tmp/${PREFIX}-headers-v${VERSION}-go-1.7.zip" "release/"
-	rm -f "/tmp/${PREFIX}-headers-v${VERSION}-go-1.7.zip"
-	rm -rf "/tmp/${PREFIX}-headers"
-	@echo "ok"
-
-release-binary: release-binary-go-1.7
-
-release-binary-go-1.7:
-	@echo "build the static binary for go 1.7"
-	mkdir -p "release"
-	for pkg in ${PKGS_TO_RELEASE}; do \
-		GOOS=linux GOARCH=amd64 go install $${pkg}; \
-		GOOS=darwin GOARCH=amd64 go install $${pkg}; \
-		GOOS=windows GOARCH=amd64 go install $${pkg}; \
-	done
-	cross=(linux_amd64 darwin_amd64 windows_amd64); \
-	for os_arch in $${cross[@]}; do \
-		MAIN_GOPATH=$$(echo "${GOPATH}" | awk '{split($$1,p,":"); print(p[1])}'); \
-		pushd "$${MAIN_GOPATH}/pkg/$${os_arch}/github.com/yunify/qingstor-sdk-go"; \
-		zip -r "/tmp/${PREFIX}-binary-v${VERSION}-$${os_arch}-go-1.7.zip" .; \
-		popd; \
-		cp "/tmp/${PREFIX}-binary-v${VERSION}-$${os_arch}-go-1.7.zip" "release/"; \
-		rm -f "/tmp/${PREFIX}-binary-v${VERSION}-$${os_arch}-go-1.7.zip"; \
-	done
-	@echo "ok"
-
+.PHONY: clean
 clean:
 	rm -rf $${PWD}/coverage
 	@echo "ok"
