@@ -52,10 +52,7 @@ func putBucketACL(ACLJSONText *gherkin.DocString) error {
 }
 
 func putBucketACLStatusCodeIs(statusCode int) error {
-	if putBucketACLOutput != nil {
-		return checkEqual(qs.IntValue(putBucketACLOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(putBucketACLOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
@@ -68,10 +65,7 @@ func getBucketACL() error {
 }
 
 func getBucketACLStatusCodeIs(statusCode int) error {
-	if getBucketACLOutput != nil {
-		return checkEqual(qs.IntValue(getBucketACLOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(getBucketACLOutput.StatusCode), statusCode)
 }
 
 func getBucketACLShouldHaveGranteeName(name string) error {

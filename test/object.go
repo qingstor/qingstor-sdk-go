@@ -20,8 +20,8 @@ import (
 	"bytes"
 	"crypto/md5"
 	"encoding/hex"
+	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
@@ -34,49 +34,42 @@ import (
 
 // ObjectFeatureContext provides feature context for object.
 func ObjectFeatureContext(s *godog.Suite) {
-	s.Step(`^put object with key "([^"]*)"$`, putObjectWithKey)
+	s.Step(`^put object with key "(.{1,})"$`, putObjectWithKey)
 	s.Step(`^put object status code is (\d+)$`, putObjectStatusCodeIs)
 
-	s.Step(`^copy object with key "([^"]*)"$`, copyObjectWithKey)
+	s.Step(`^copy object with key "(.{1,})"$`, copyObjectWithKey)
 	s.Step(`^copy object status code is (\d+)$`, copyObjectStatusCodeIs)
 
-	s.Step(`^move object with key "([^"]*)"$`, moveObjectWithKey)
+	s.Step(`^move object with key "(.{1,})"$`, moveObjectWithKey)
 	s.Step(`^move object status code is (\d+)$`, moveObjectStatusCodeIs)
 
-	s.Step(`^get object$`, getObject)
+	s.Step(`^get object with key "(.{1,})"$`, getObjectWithKey)
 	s.Step(`^get object status code is (\d+)$`, getObjectStatusCodeIs)
 	s.Step(`^get object content length is (\d+)$`, getObjectContentLengthIs)
-	s.Step(`^get object with content type "([^"]*)"$`, getObjectWithContentType)
-	s.Step(`^get object content type is "([^"]*)"$`, getObjectContentTypeIs)
-	s.Step(`^get object with query signature$`, getObjectWithQuerySignature)
+
+	s.Step(`^get object "(.{1,})" with content type "(.{1,})"$`, getObjectWithContentType)
+	s.Step(`^get object content type is "(.{1,})"$`, getObjectContentTypeIs)
+
+	s.Step(`^get object "(.{1,})" with query signature$`, getObjectWithQuerySignature)
 	s.Step(`^get object with query signature content length is (\d+)$`, getObjectWithQuerySignatureContentLengthIs)
 
-	s.Step(`^head object$`, headObject)
+	s.Step(`^head object with key "(.{1,})"$`, headObjectWithKey)
 	s.Step(`^head object status code is (\d+)$`, headObjectStatusCodeIs)
 
-	s.Step(`^options object with method "([^"]*)" and origin "([^"]*)"$`, optionsObjectWithMethodAndOrigin)
+	s.Step(`^options object "(.{1,})" with method "([^"]*)" and origin "([^"]*)"$`, optionsObjectWithMethodAndOrigin)
 	s.Step(`^options object status code is (\d+)$`, optionsObjectStatusCodeIs)
 
-	s.Step(`^delete object$`, deleteObject)
+	s.Step(`^delete object with key "(.{1,})"$`, deleteObjectWithKey)
 	s.Step(`^delete object status code is (\d+)$`, deleteObjectStatusCodeIs)
-	s.Step(`^delete the move object$`, deleteTheMoveObject)
+	s.Step(`^delete the move object with key "(.{1,})"$`, deleteTheMoveObjectWithKey)
 	s.Step(`^delete the move object status code is (\d+)$`, deleteTheMoveObjectStatusCodeIs)
 }
 
 // --------------------------------------------------------------------------
-
-var theObjectKey string
-var theCopyObjectKey string
-var theMoveObjectKey string
-
 var putObjectOutput *qs.PutObjectOutput
-var copyObjectOutput *qs.PutObjectOutput
-var moveObjectOutput *qs.PutObjectOutput
 
 func putObjectWithKey(objectKey string) error {
-	theObjectKey = objectKey
-
-	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin", "bs=1048576", "count=1").Output()
+	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin", "bs=1024", "count=1").Output()
 	if err != nil {
 		return err
 	}
@@ -95,7 +88,7 @@ func putObjectWithKey(objectKey string) error {
 
 	//file.Seek(0, io.SeekStart)
 	file.Seek(0, 0)
-	putObjectOutput, err = bucket.PutObject(theObjectKey, &qs.PutObjectInput{
+	putObjectOutput, err = bucket.PutObject(objectKey, &qs.PutObjectInput{
 		ContentType: qs.String("text/plain"),
 		ContentMD5:  qs.String(md5String),
 		Body:        file,
@@ -104,76 +97,67 @@ func putObjectWithKey(objectKey string) error {
 }
 
 func putObjectStatusCodeIs(statusCode int) error {
-	if putObjectOutput != nil {
-		return checkEqual(qs.IntValue(putObjectOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(putObjectOutput.StatusCode), statusCode)
 }
 
+// --------------------------------------------------------------------------
+var copyObjectOutput *qs.PutObjectOutput
+
 func copyObjectWithKey(objectKey string) error {
-	theCopyObjectKey = objectKey
-	copyObjectOutput, err = bucket.PutObject(theCopyObjectKey, &qs.PutObjectInput{
-		XQSCopySource: qs.String("/" + tc.BucketName + "/" + theObjectKey),
+	copyObjectKey := fmt.Sprintf(`%s_copy`, objectKey)
+	copyObjectOutput, err = bucket.PutObject(copyObjectKey, &qs.PutObjectInput{
+		XQSCopySource: qs.String(fmt.Sprintf(`/%s/%s`, tc.BucketName, objectKey)),
 	})
 	return err
 }
 
 func copyObjectStatusCodeIs(statusCode int) error {
-	if copyObjectOutput != nil {
-		return checkEqual(qs.IntValue(copyObjectOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(copyObjectOutput.StatusCode), statusCode)
 }
 
+// --------------------------------------------------------------------------
+var moveObjectOutput *qs.PutObjectOutput
+
 func moveObjectWithKey(objectKey string) error {
-	theMoveObjectKey = objectKey
-	moveObjectOutput, err = bucket.PutObject(theMoveObjectKey, &qs.PutObjectInput{
-		XQSMoveSource: qs.String("/" + tc.BucketName + "/" + theCopyObjectKey),
+	copyObjectKey := fmt.Sprintf(`%s_copy`, objectKey)
+	moveObjectKey := fmt.Sprintf(`%s_move`, objectKey)
+	moveObjectOutput, err = bucket.PutObject(moveObjectKey, &qs.PutObjectInput{
+		XQSMoveSource: qs.String(fmt.Sprintf(`/%s/%s`, tc.BucketName, copyObjectKey)),
 	})
 	return err
 }
 
 func moveObjectStatusCodeIs(statusCode int) error {
-	if moveObjectOutput != nil {
-		return checkEqual(qs.IntValue(moveObjectOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(moveObjectOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
 
 var getObjectOutput *qs.GetObjectOutput
 
-func getObject() error {
-	getObjectOutput, err = bucket.GetObject(theObjectKey, nil)
+func getObjectWithKey(objectKey string) error {
+	getObjectOutput, err = bucket.GetObject(objectKey, nil)
 	return err
 }
 
 func getObjectStatusCodeIs(statusCode int) error {
-	if getObjectOutput != nil {
-		return checkEqual(qs.IntValue(getObjectOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(getObjectOutput.StatusCode), statusCode)
 }
 
 func getObjectContentLengthIs(length int) error {
 	buffer := &bytes.Buffer{}
 	buffer.ReadFrom(getObjectOutput.Body)
 	getObjectOutput.Body.Close()
-
-	ioutil.WriteFile("/tmp/sdk_bin", buffer.Bytes(), 0644)
-	defer os.Remove("/tmp/sdk_bin")
-
-	return checkEqual(len(buffer.Bytes()), length)
+	return checkEqual(len(buffer.Bytes())*1024, length)
 }
 
 // --------------------------------------------------------------------------
 
 var getObjectWithContentTypeRequest *request.Request
 
-func getObjectWithContentType(contentType string) error {
+func getObjectWithContentType(objectKey, contentType string) error {
 	getObjectWithContentTypeRequest, _, err = bucket.GetObjectRequest(
-		theObjectKey,
+		objectKey,
 		&qs.GetObjectInput{
 			ResponseContentType: qs.String(contentType),
 		},
@@ -182,74 +166,67 @@ func getObjectWithContentType(contentType string) error {
 		return err
 	}
 	err = getObjectWithContentTypeRequest.Send()
-	return err
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func getObjectContentTypeIs(contentType string) error {
-	return checkEqual(
-		getObjectWithContentTypeRequest.HTTPResponse.Header.Get("Content-Type"),
-		contentType,
-	)
+	return checkEqual(getObjectWithContentTypeRequest.HTTPResponse.Header.Get("Content-Type"), contentType)
 }
 
 // --------------------------------------------------------------------------
 
 var getObjectWithQuerySignatureURL string
 
-func getObjectWithQuerySignature() error {
-	getObjectRequest, _, err := bucket.GetObjectRequest(theObjectKey, nil)
+func getObjectWithQuerySignature(objectKey string) error {
+	r, _, err := bucket.GetObjectRequest(objectKey, nil)
 	if err != nil {
 		return err
 	}
 
-	err = getObjectRequest.SignQuery(10)
+	err = r.SignQuery(10)
 	if err != nil {
 		return err
 	}
 
-	getObjectWithQuerySignatureURL = getObjectRequest.HTTPRequest.URL.String()
+	getObjectWithQuerySignatureURL = r.HTTPRequest.URL.String()
 	return nil
 }
 
 func getObjectWithQuerySignatureContentLengthIs(length int) error {
-	getObjectResponse, err := http.Get(getObjectWithQuerySignatureURL)
+	out, err := http.Get(getObjectWithQuerySignatureURL)
 	if err != nil {
 		return err
 	}
-
 	buffer := &bytes.Buffer{}
-	buffer.ReadFrom(getObjectResponse.Body)
-	getObjectResponse.Body.Close()
+	buffer.ReadFrom(out.Body)
+	out.Body.Close()
 
-	ioutil.WriteFile("/tmp/sdk_bin", buffer.Bytes(), 0644)
-	defer os.Remove("/tmp/sdk_bin")
-
-	return checkEqual(len(buffer.Bytes()), length)
+	return checkEqual(len(buffer.Bytes())*1024, length)
 }
 
 // --------------------------------------------------------------------------
 
 var headObjectOutput *qs.HeadObjectOutput
 
-func headObject() error {
-	headObjectOutput, err = bucket.HeadObject(theObjectKey, nil)
+func headObjectWithKey(objectKey string) error {
+	headObjectOutput, err = bucket.HeadObject(objectKey, nil)
 	return err
 }
 
 func headObjectStatusCodeIs(statusCode int) error {
-	if headObjectOutput != nil {
-		return checkEqual(qs.IntValue(headObjectOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(headObjectOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
 
 var optionsObjectOutput *qs.OptionsObjectOutput
 
-func optionsObjectWithMethodAndOrigin(method, origin string) error {
+func optionsObjectWithMethodAndOrigin(objectKey, method, origin string) error {
 	optionsObjectOutput, err = bucket.OptionsObject(
-		theObjectKey,
+		objectKey,
 		&qs.OptionsObjectInput{
 			AccessControlRequestMethod: qs.String(method),
 			Origin: qs.String(origin),
@@ -259,10 +236,7 @@ func optionsObjectWithMethodAndOrigin(method, origin string) error {
 }
 
 func optionsObjectStatusCodeIs(statusCode int) error {
-	if optionsObjectOutput != nil {
-		return checkEqual(qs.IntValue(optionsObjectOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(optionsObjectOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
@@ -270,26 +244,20 @@ func optionsObjectStatusCodeIs(statusCode int) error {
 var deleteObjectOutput *qs.DeleteObjectOutput
 var deleteTheMoveObjectOutput *qs.DeleteObjectOutput
 
-func deleteObject() error {
-	deleteObjectOutput, err = bucket.DeleteObject(theObjectKey)
+func deleteObjectWithKey(objectKey string) error {
+	deleteObjectOutput, err = bucket.DeleteObject(objectKey)
 	return err
 }
 
 func deleteObjectStatusCodeIs(statusCode int) error {
-	if deleteObjectOutput != nil {
-		return checkEqual(qs.IntValue(deleteObjectOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(deleteObjectOutput.StatusCode), statusCode)
 }
 
-func deleteTheMoveObject() error {
-	deleteTheMoveObjectOutput, err = bucket.DeleteObject(theMoveObjectKey)
+func deleteTheMoveObjectWithKey(objectKey string) error {
+	deleteTheMoveObjectOutput, err = bucket.DeleteObject(fmt.Sprintf(`%s_move`, objectKey))
 	return err
 }
 
 func deleteTheMoveObjectStatusCodeIs(statusCode int) error {
-	if deleteTheMoveObjectOutput != nil {
-		return checkEqual(qs.IntValue(deleteTheMoveObjectOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(deleteTheMoveObjectOutput.StatusCode), statusCode)
 }

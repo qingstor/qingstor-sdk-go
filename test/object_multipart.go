@@ -29,39 +29,37 @@ import (
 
 // ObjectMultipartFeatureContext provides feature context for object multipart.
 func ObjectMultipartFeatureContext(s *godog.Suite) {
-	s.Step(`^initiate multipart upload with key "([^"]*)"$`, initiateMultipartUploadWithKey)
+	s.Step(`^initiate multipart upload with key "(.{1,})"$`, initiateMultipartUploadWithKey)
 	s.Step(`^initiate multipart upload status code is (\d+)$`, initiateMultipartUploadStatusCodeIs)
 
-	s.Step(`^upload the first part$`, uploadTheFirstPart)
+	s.Step(`^upload the first part with key "(.{1,})"$`, uploadTheFirstPartWithKey)
 	s.Step(`^upload the first part status code is (\d+)$`, uploadTheFirstPartStatusCodeIs)
-	s.Step(`^upload the second part$`, uploadTheSecondPart)
+	s.Step(`^upload the second part with key "(.{1,})"$`, uploadTheSecondPartWithKey)
 	s.Step(`^upload the second part status code is (\d+)$`, uploadTheSecondPartStatusCodeIs)
-	s.Step(`^upload the third part$`, uploadTheThirdPart)
+	s.Step(`^upload the third part with key "(.{1,})"$`, uploadTheThirdPartWithKey)
 	s.Step(`^upload the third part status code is (\d+)$`, uploadTheThirdPartStatusCodeIs)
 
-	s.Step(`^list multipart$`, listMultipart)
+	s.Step(`^list multipart with key "(.{1,})"$`, listMultipartWithKey)
 	s.Step(`^list multipart status code is (\d+)$`, listMultipartStatusCodeIs)
 	s.Step(`^list multipart object parts count is (\d+)$`, listMultipartObjectPartsCountIs)
 
-	s.Step(`^complete multipart upload$`, completeMultipartUpload)
+	s.Step(`^complete multipart upload with key "(.{1,})"$`, completeMultipartUploadWithKey)
 	s.Step(`^complete multipart upload status code is (\d+)$`, completeMultipartUploadStatusCodeIs)
 
-	s.Step(`^abort multipart upload$`, abortMultipartUpload)
+	s.Step(`^abort multipart upload with key "(.{1,})"$`, abortMultipartUploadWithKey)
 	s.Step(`^abort multipart upload status code is (\d+)$`, abortMultipartUploadStatusCodeIs)
 
-	s.Step(`^delete the multipart object$`, deleteTheMultipartObject)
+	s.Step(`^delete the multipart object with key "(.{1,})"$`, deleteTheMultipartObjectWithKey)
 	s.Step(`^delete the multipart object status code is (\d+)$`, deleteTheMultipartObjectStatusCodeIs)
 }
 
 // --------------------------------------------------------------------------
 
-var theMultipartObjectKey string
 var initiateMultipartUploadOutput *qs.InitiateMultipartUploadOutput
 
 func initiateMultipartUploadWithKey(objectKey string) error {
-	theMultipartObjectKey = objectKey
 	initiateMultipartUploadOutput, err = bucket.InitiateMultipartUpload(
-		theMultipartObjectKey,
+		objectKey,
 		&qs.InitiateMultipartUploadInput{
 			ContentType: qs.String("text/plain"),
 		},
@@ -70,10 +68,7 @@ func initiateMultipartUploadWithKey(objectKey string) error {
 }
 
 func initiateMultipartUploadStatusCodeIs(statusCode int) error {
-	if initiateMultipartUploadOutput != nil {
-		return checkEqual(qs.IntValue(initiateMultipartUploadOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(initiateMultipartUploadOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
@@ -82,7 +77,7 @@ var uploadTheFirstPartOutput *qs.UploadMultipartOutput
 var uploadTheSecondPartOutput *qs.UploadMultipartOutput
 var uploadTheThirdPartOutput *qs.UploadMultipartOutput
 
-func uploadTheFirstPart() error {
+func uploadTheFirstPartWithKey(objectKey string) error {
 	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin_part_0", "bs=1048576", "count=5").Output()
 	if err != nil {
 		return err
@@ -96,7 +91,7 @@ func uploadTheFirstPart() error {
 	defer file.Close()
 
 	uploadTheFirstPartOutput, err = bucket.UploadMultipart(
-		theMultipartObjectKey,
+		objectKey,
 		&qs.UploadMultipartInput{
 			UploadID:   initiateMultipartUploadOutput.UploadID,
 			PartNumber: qs.Int(0),
@@ -107,13 +102,10 @@ func uploadTheFirstPart() error {
 }
 
 func uploadTheFirstPartStatusCodeIs(statusCode int) error {
-	if uploadTheFirstPartOutput != nil {
-		return checkEqual(qs.IntValue(uploadTheFirstPartOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(uploadTheFirstPartOutput.StatusCode), statusCode)
 }
 
-func uploadTheSecondPart() error {
+func uploadTheSecondPartWithKey(objectKey string) error {
 	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin_part_1", "bs=1048576", "count=4").Output()
 	if err != nil {
 		return err
@@ -127,7 +119,7 @@ func uploadTheSecondPart() error {
 	defer file.Close()
 
 	uploadTheSecondPartOutput, err = bucket.UploadMultipart(
-		theMultipartObjectKey,
+		objectKey,
 		&qs.UploadMultipartInput{
 			UploadID:   initiateMultipartUploadOutput.UploadID,
 			PartNumber: qs.Int(1),
@@ -138,13 +130,10 @@ func uploadTheSecondPart() error {
 }
 
 func uploadTheSecondPartStatusCodeIs(statusCode int) error {
-	if uploadTheSecondPartOutput != nil {
-		return checkEqual(qs.IntValue(uploadTheSecondPartOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(uploadTheSecondPartOutput.StatusCode), statusCode)
 }
 
-func uploadTheThirdPart() error {
+func uploadTheThirdPartWithKey(objectKey string) error {
 	_, err = exec.Command("dd", "if=/dev/zero", "of=/tmp/sdk_bin_part_2", "bs=1048576", "count=3").Output()
 	if err != nil {
 		return err
@@ -158,7 +147,7 @@ func uploadTheThirdPart() error {
 	defer file.Close()
 
 	uploadTheThirdPartOutput, err = bucket.UploadMultipart(
-		theMultipartObjectKey,
+		objectKey,
 		&qs.UploadMultipartInput{
 			UploadID:   initiateMultipartUploadOutput.UploadID,
 			PartNumber: qs.Int(2),
@@ -169,19 +158,16 @@ func uploadTheThirdPart() error {
 }
 
 func uploadTheThirdPartStatusCodeIs(statusCode int) error {
-	if uploadTheThirdPartOutput != nil {
-		return checkEqual(qs.IntValue(uploadTheThirdPartOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(uploadTheThirdPartOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
 
 var listMultipartOutput *qs.ListMultipartOutput
 
-func listMultipart() error {
+func listMultipartWithKey(objectKey string) error {
 	listMultipartOutput, err = bucket.ListMultipart(
-		theMultipartObjectKey,
+		objectKey,
 		&qs.ListMultipartInput{
 			UploadID: initiateMultipartUploadOutput.UploadID,
 		},
@@ -190,26 +176,20 @@ func listMultipart() error {
 }
 
 func listMultipartStatusCodeIs(statusCode int) error {
-	if listMultipartOutput != nil {
-		return checkEqual(qs.IntValue(listMultipartOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(listMultipartOutput.StatusCode), statusCode)
 }
 
 func listMultipartObjectPartsCountIs(count int) error {
-	if listMultipartOutput != nil {
-		return checkEqual(len(listMultipartOutput.ObjectParts), count)
-	}
-	return err
+	return checkEqual(len(listMultipartOutput.ObjectParts), count)
 }
 
 // --------------------------------------------------------------------------
 
 var completeMultipartUploadOutput *qs.CompleteMultipartUploadOutput
 
-func completeMultipartUpload() error {
+func completeMultipartUploadWithKey(objectKey string) error {
 	completeMultipartUploadOutput, err = bucket.CompleteMultipartUpload(
-		theMultipartObjectKey,
+		objectKey,
 		&qs.CompleteMultipartUploadInput{
 			UploadID:    initiateMultipartUploadOutput.UploadID,
 			ETag:        qs.String(`"4072783b8efb99a9e5817067d68f61c6"`),
@@ -220,17 +200,14 @@ func completeMultipartUpload() error {
 }
 
 func completeMultipartUploadStatusCodeIs(statusCode int) error {
-	if completeMultipartUploadOutput != nil {
-		return checkEqual(qs.IntValue(completeMultipartUploadOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(completeMultipartUploadOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
 
-func abortMultipartUpload() error {
+func abortMultipartUploadWithKey(objectKey string) error {
 	_, err = bucket.AbortMultipartUpload(
-		theMultipartObjectKey,
+		objectKey,
 		&qs.AbortMultipartUploadInput{
 			UploadID: initiateMultipartUploadOutput.UploadID,
 		},
@@ -251,14 +228,11 @@ func abortMultipartUploadStatusCodeIs(statusCode int) error {
 
 var deleteTheMultipartObjectOutput *qs.DeleteObjectOutput
 
-func deleteTheMultipartObject() error {
-	deleteTheMultipartObjectOutput, err = bucket.DeleteObject(theMultipartObjectKey)
+func deleteTheMultipartObjectWithKey(objectKey string) error {
+	deleteTheMultipartObjectOutput, err = bucket.DeleteObject(objectKey)
 	return err
 }
 
 func deleteTheMultipartObjectStatusCodeIs(statusCode int) error {
-	if deleteTheMultipartObjectOutput != nil {
-		return checkEqual(qs.IntValue(deleteTheMultipartObjectOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(deleteTheMultipartObjectOutput.StatusCode), statusCode)
 }
