@@ -9,6 +9,7 @@ go:
 
 env:
   matrix:
+    - GO_VERSION=1.8
     - GO_VERSION=1.7
     - GO_VERSION=1.6
     - GO_VERSION=1.5
