@@ -22,7 +22,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
-	"net/url"
 	"sort"
 	"strings"
 
@@ -62,7 +61,7 @@ func (qss *QingStorSigner) WriteQuerySignature(request *http.Request, expires in
 	}
 
 	newRequest, err := http.NewRequest(request.Method,
-		request.URL.Scheme+"://"+request.URL.Host+request.URL.Path+query, nil)
+		request.URL.Scheme+"://"+request.URL.Host+utils.URLQueryEscape(request.URL.Path)+query, nil)
 	if err != nil {
 		return err
 	}
@@ -102,7 +101,7 @@ func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires in
 	h.Write([]byte(stringToSign))
 
 	signature := strings.TrimSpace(base64.StdEncoding.EncodeToString(h.Sum(nil)))
-	signature = url.QueryEscape(signature)
+	signature = utils.URLQueryEscape(signature)
 	query := fmt.Sprintf(
 		"access_key_id=%s&expires=%d&signature=%s",
 		qss.AccessKeyID, expires, signature,
@@ -182,9 +181,7 @@ func (qss *QingStorSigner) buildCanonicalizedHeaders(request *http.Request) stri
 }
 
 func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (string, error) {
-	path := url.QueryEscape(request.URL.Path)
-	path = strings.Replace(path, "%2F", "/", -1)
-	path = strings.Replace(path, "+", "%20", -1)
+	path := utils.URLQueryEscape(request.URL.Path)
 	query := request.URL.Query()
 
 	keys := []string{}
@@ -201,7 +198,7 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (st
 			if len(values) > 0 {
 				if values[0] != "" {
 					value := strings.TrimSpace(strings.Join(values, ""))
-					value, err := url.QueryUnescape(value)
+					value, err := utils.URLQueryUnescape(value)
 					if err != nil {
 						return "", err
 					}

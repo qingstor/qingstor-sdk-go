@@ -24,7 +24,6 @@ import (
 	"io/ioutil"
 	"mime"
 	"net/http"
-	"net/url"
 	"path"
 	"reflect"
 	"regexp"
@@ -105,8 +104,8 @@ func (qb *QingStorBuilder) parseURL() error {
 
 	requestURI := qb.baseBuilder.operation.RequestURI
 	for key, value := range *qb.baseBuilder.parsedProperties {
-		endpoint = strings.Replace(endpoint, "<"+key+">", value, -1)
-		requestURI = strings.Replace(requestURI, "<"+key+">", value, -1)
+		endpoint = strings.Replace(endpoint, "<"+key+">", utils.URLQueryEscape(value), -1)
+		requestURI = strings.Replace(requestURI, "<"+key+">", utils.URLQueryEscape(value), -1)
 	}
 	requestURI = regexp.MustCompile(`/+`).ReplaceAllString(requestURI, "/")
 
@@ -115,7 +114,7 @@ func (qb *QingStorBuilder) parseURL() error {
 	if qb.baseBuilder.parsedParams != nil {
 		paramsParts := []string{}
 		for key, value := range *qb.baseBuilder.parsedParams {
-			paramsParts = append(paramsParts, key+"="+url.QueryEscape(value))
+			paramsParts = append(paramsParts, key+"="+utils.URLQueryEscape(value))
 
 		}
 

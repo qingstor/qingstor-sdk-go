@@ -24,6 +24,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/yunify/qingstor-sdk-go/request/data"
 	"github.com/yunify/qingstor-sdk-go/utils"
@@ -221,6 +222,12 @@ func (b *BaseBuilder) parseRequestURL() error {
 func (b *BaseBuilder) setupHeaders(httpRequest *http.Request) error {
 	if b.parsedHeaders != nil {
 		for headerKey, headerValue := range *b.parsedHeaders {
+			for _, r := range headerValue {
+				if r > unicode.MaxASCII {
+					headerValue = utils.URLQueryEscape(headerValue)
+					break
+				}
+			}
 			httpRequest.Header.Set(headerKey, headerValue)
 		}
 	}
