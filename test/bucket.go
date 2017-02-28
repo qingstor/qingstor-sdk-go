@@ -90,10 +90,7 @@ func putBucketFake() error {
 }
 
 func putBucketStatusCodeIs(statusCode int) error {
-	if putBucketOutput != nil {
-		return checkEqual(qs.IntValue(putBucketOutput.StatusCode), statusCode)
-	}
-	return nil
+	return checkEqual(qs.IntValue(putBucketOutput.StatusCode), statusCode)
 }
 
 func putBucketStatusCodeIsFake(_ int) error {
@@ -131,10 +128,7 @@ func listObjects() error {
 }
 
 func listObjectsStatusCodeIs(statusCode int) error {
-	if listObjectsOutput != nil {
-		return checkEqual(qs.IntValue(listObjectsOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(listObjectsOutput.StatusCode), statusCode)
 }
 
 func listObjectsKeysCountIs(count int) error {
@@ -151,10 +145,7 @@ func headBucket() error {
 }
 
 func headBucketStatusCodeIs(statusCode int) error {
-	if headBucketOutput != nil {
-		return checkEqual(qs.IntValue(headBucketOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(headBucketOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
@@ -171,10 +162,7 @@ func deleteBucketFake() error {
 }
 
 func deleteBucketStatusCodeIs(statusCode int) error {
-	if deleteBucketOutput != nil {
-		return checkEqual(qs.IntValue(deleteBucketOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(deleteBucketOutput.StatusCode), statusCode)
 }
 
 func deleteBucketStatusCodeIsFake(_ int) error {
@@ -215,10 +203,7 @@ func deleteMultipleObjects(requestJSON *gherkin.DocString) error {
 }
 
 func deleteMultipleObjectsCodeIs(statusCode int) error {
-	if deleteMultipleObjectsOutput != nil {
-		return checkEqual(qs.IntValue(deleteMultipleObjectsOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(deleteMultipleObjectsOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
@@ -231,17 +216,11 @@ func getBucketStatistics() error {
 }
 
 func getBucketStatisticsStatusCodeIs(statusCode int) error {
-	if getBucketStatisticsOutput != nil {
-		return checkEqual(qs.IntValue(getBucketStatisticsOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(getBucketStatisticsOutput.StatusCode), statusCode)
 }
 
 func getBucketStatisticsStatusIs(status string) error {
-	if getBucketStatisticsOutput != nil {
-		return checkEqual(qs.StringValue(getBucketStatisticsOutput.Status), status)
-	}
-	return err
+	return checkEqual(qs.StringValue(getBucketStatisticsOutput.Status), status)
 }
 
 // --------------------------------------------------------------------------
@@ -253,18 +232,12 @@ func anObjectCreatedByInitiateMultipartUpload() error {
 	listMultipartUploadsInitiateOutput, err = bucket.InitiateMultipartUpload(
 		listMultipartUploadsOutputObjectKey, nil,
 	)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func listMultipartUploads() error {
 	listMultipartUploadsOutput, err = bucket.ListMultipartUploads(nil)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func listMultipartUploadsCountIs(count int) error {
@@ -276,8 +249,6 @@ func listMultipartUploadsCountIs(count int) error {
 	if err != nil {
 		return err
 	}
-	if listMultipartUploadsOutput != nil {
-		return checkEqual(len(listMultipartUploadsOutput.Uploads), count)
-	}
-	return nil
+
+	return checkEqual(len(listMultipartUploadsOutput.Uploads), count)
 }

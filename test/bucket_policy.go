@@ -59,10 +59,7 @@ func putBucketPolicy(PolicyJSONText *gherkin.DocString) error {
 }
 
 func putBucketPolicyStatusCodeIs(statusCode int) error {
-	if putBucketPolicyOutput != nil {
-		return checkEqual(qs.IntValue(putBucketPolicyOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(putBucketPolicyOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
@@ -75,10 +72,7 @@ func getBucketPolicy() error {
 }
 
 func getBucketPolicyStatusCodeIs(statusCode int) error {
-	if getBucketPolicyOutput != nil {
-		return checkEqual(qs.IntValue(getBucketPolicyOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(getBucketPolicyOutput.StatusCode), statusCode)
 }
 
 func getBucketPolicyShouldHaveReferer(compare string) error {
@@ -107,8 +101,5 @@ func deleteBucketPolicy() error {
 }
 
 func deleteBucketPolicyStatusCodeIs(statusCode int) error {
-	if deleteBucketPolicyOutput != nil {
-		return checkEqual(qs.IntValue(deleteBucketPolicyOutput.StatusCode), statusCode)
-	}
-	return err
+	return checkEqual(qs.IntValue(deleteBucketPolicyOutput.StatusCode), statusCode)
 }
