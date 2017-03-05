@@ -258,6 +258,8 @@ func (v *IsNullType) Validate() error {
 type KeyType struct {
 	// Object created time
 	Created *time.Time `json:"created,omitempty" name:"created" format:"ISO 8601"`
+	// Whether this key is encrypted
+	Encrypted *bool `json:"encrypted,omitempty" name:"encrypted"`
 	// MD5sum of the object
 	Etag *string `json:"etag,omitempty" name:"etag"`
 	// Object key
