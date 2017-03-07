@@ -356,7 +356,7 @@ type StatementType struct {
 	// Bucket policy id, must be unique
 	ID *string `json:"id" name:"id"` // Required
 	// The resources to apply bucket policy
-	Resource []*string `json:"resource" name:"resource"` // Required
+	Resource []*string `json:"resource,omitempty" name:"resource"`
 	// The user to apply bucket policy
 	User []*string `json:"user" name:"user"` // Required
 
@@ -408,13 +408,6 @@ func (v *StatementType) Validate() error {
 	if v.ID == nil {
 		return errors.ParameterRequiredError{
 			ParameterName: "ID",
-			ParentName:    "Statement",
-		}
-	}
-
-	if len(v.Resource) == 0 {
-		return errors.ParameterRequiredError{
-			ParameterName: "Resource",
 			ParentName:    "Statement",
 		}
 	}
