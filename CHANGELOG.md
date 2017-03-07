@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v2.2.2] - 2017-03-08
+
+### Fixed
+
+- Resource is not mandatory in bucket policy statement
+
 ## [v2.2.1] - 2017-03-05
 
 ### Changed
@@ -62,6 +68,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v2.2.2]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.1...v2.2.2
 [v2.2.1]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.0...v2.2.1
 [v2.2.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.1.2...v2.2.0
 [v2.1.2]: https://github.com/yunify/qingstor-sdk-go/compare/v2.1.1...v2.1.2
