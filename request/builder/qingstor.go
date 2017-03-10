@@ -139,9 +139,12 @@ func (qb *QingStorBuilder) setupHeaders(httpRequest *http.Request) error {
 	}
 
 	if httpRequest.Header.Get("User-Agent") == "" {
-		version := "Go v" + strings.Replace(runtime.Version(), "go", "", -1) + ""
-		system := runtime.GOOS + "_" + runtime.GOARCH + "_" + runtime.Compiler
-		ua := "qingstor-sdk-go/" + sdk.Version + " (" + version + "; " + system + ")"
+		version := fmt.Sprintf(`Go v%s`, strings.Replace(runtime.Version(), "go", "", -1))
+		system := fmt.Sprintf(`%s_%s_%s`, runtime.GOOS, runtime.GOARCH, runtime.Compiler)
+		ua := fmt.Sprintf(
+			`qingstor-sdk-go/%s (%s; %s) %s`,
+			sdk.Version, version, system, qb.baseBuilder.operation.Config.AdditionalUserAgent,
+		)
 		httpRequest.Header.Set("User-Agent", ua)
 	}
 
