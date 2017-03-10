@@ -17,6 +17,7 @@
 package config
 
 import (
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -35,6 +36,8 @@ type Config struct {
 	Port              int    `yaml:"port"`
 	Protocol          string `yaml:"protocol"`
 	ConnectionRetries int    `yaml:"connection_retries"`
+
+	AdditionalUserAgent string `yaml:"additional_user_agent"`
 
 	LogLevel string `yaml:"log_level"`
 
@@ -66,6 +69,42 @@ func NewDefault() (*Config, error) {
 	config.Connection = &http.Client{}
 
 	return config, nil
+}
+
+// Check checks the configuration.
+func (c *Config) Check() error {
+	if c.AccessKeyID == "" {
+		return errors.New("access key ID not specified")
+	}
+	if c.SecretAccessKey == "" {
+		return errors.New("secret access key not specified")
+	}
+
+	if c.Host == "" {
+		return errors.New("server host not specified")
+	}
+	if c.Port <= 0 {
+		return errors.New("server port not specified")
+	}
+	if c.Protocol == "" {
+		return errors.New("server protocol not specified")
+	}
+
+	if c.AdditionalUserAgent != "" {
+		for _, x := range c.AdditionalUserAgent {
+			// Allow space(32) to ~(126) in ASCII Table, exclude "(34).
+			if int(x) < 32 || int(x) > 126 || int(x) == 32 || int(x) == 34 {
+				return errors.New("additional User-Agent contains characters that not allowed")
+			}
+		}
+	}
+
+	err := logger.CheckLevel(c.LogLevel)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // LoadDefaultConfig loads the default configuration for Config.
@@ -118,6 +157,11 @@ func (c *Config) LoadConfigFromContent(content []byte) error {
 	_, err := utils.YAMLDecode(content, c)
 	if err != nil {
 		logger.Error("Config parse error: " + err.Error())
+		return err
+	}
+
+	err = c.Check()
+	if err != nil {
 		return err
 	}
 

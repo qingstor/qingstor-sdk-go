@@ -24,22 +24,30 @@ import (
 )
 
 func TestConfig(t *testing.T) {
-	config := Config{
+	c := Config{
 		AccessKeyID:       "AccessKeyID",
 		SecretAccessKey:   "SecretAccessKey",
 		Host:              "qingstor.dev",
+		Port:              443,
+		Protocol:          "https",
 		ConnectionRetries: 10,
 		LogLevel:          "warn",
 	}
 
-	assert.Equal(t, "AccessKeyID", config.AccessKeyID)
-	assert.Equal(t, "SecretAccessKey", config.SecretAccessKey)
-	assert.Equal(t, "qingstor.dev", config.Host)
-	assert.Equal(t, 10, config.ConnectionRetries)
-	assert.Equal(t, "warn", config.LogLevel)
+	assert.Equal(t, "AccessKeyID", c.AccessKeyID)
+	assert.Equal(t, "SecretAccessKey", c.SecretAccessKey)
+	assert.Equal(t, "qingstor.dev", c.Host)
+	assert.Equal(t, 10, c.ConnectionRetries)
+	assert.Equal(t, "warn", c.LogLevel)
+
+	c.AdditionalUserAgent = `"`
+	assert.Error(t, c.Check())
+
+	c.AdditionalUserAgent = `test/user`
+	assert.NoError(t, c.Check())
 }
 
-func TestConfig_LoadDefaultConfig(t *testing.T) {
+func TestLoadDefaultConfig(t *testing.T) {
 	config := Config{}
 	config.LoadDefaultConfig()
 
@@ -47,18 +55,19 @@ func TestConfig_LoadDefaultConfig(t *testing.T) {
 	assert.Equal(t, "", config.SecretAccessKey)
 	assert.Equal(t, "https", config.Protocol)
 	assert.Equal(t, "qingstor.com", config.Host)
+	assert.Equal(t, "", config.AdditionalUserAgent)
 	assert.Equal(t, "warning", logger.GetLevel())
 }
 
-func TestConfig_LoadUserConfig(t *testing.T) {
+func TestLoadUserConfig(t *testing.T) {
 	config := Config{}
 	config.LoadUserConfig()
 
-	assert.Equal(t, "https", config.Protocol)
-	assert.Equal(t, "qingstor.com", config.Host)
+	assert.NotNil(t, config.Host)
+	assert.NotNil(t, config.Protocol)
 }
 
-func TestConfig_LoadConfigFromContent(t *testing.T) {
+func TestLoadConfigFromContent(t *testing.T) {
 	fileContent := `
 access_key_id: 'access_key_id'
 secret_access_key: 'secret_access_key'
