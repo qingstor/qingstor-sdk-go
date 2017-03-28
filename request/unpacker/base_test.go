@@ -42,6 +42,13 @@ func IntValue(v *int) int {
 	return 0
 }
 
+func Int64Value(v *int64) int64 {
+	if v != nil {
+		return *v
+	}
+	return 0
+}
+
 func TimeValue(v *time.Time) time.Time {
 	if v != nil {
 		return *v
@@ -56,12 +63,13 @@ func TestBaseUnpacker_UnpackHTTPRequest(t *testing.T) {
 		A  *string `location:"elements" json:"a" name:"a"`
 		B  *string `location:"elements" json:"b" name:"b"`
 		CD *int    `location:"elements" json:"cd" name:"cd"`
+		EF *int64  `location:"elements" json:"ef" name:"ef"`
 	}
 
 	httpResponse := &http.Response{Header: http.Header{}}
 	httpResponse.StatusCode = 200
 	httpResponse.Header.Set("Content-Type", "application/json")
-	responseString := `{"a": "el_a", "b": "el_b", "cd": 1024}`
+	responseString := `{"a": "el_a", "b": "el_b", "cd": 1024, "ef": 2048}`
 	httpResponse.Body = ioutil.NopCloser(bytes.NewReader([]byte(responseString)))
 
 	output := &FakeOutput{}
@@ -73,4 +81,5 @@ func TestBaseUnpacker_UnpackHTTPRequest(t *testing.T) {
 	assert.Equal(t, "el_a", StringValue(output.A))
 	assert.Equal(t, "el_b", StringValue(output.B))
 	assert.Equal(t, 1024, IntValue(output.CD))
+	assert.Equal(t, int64(2048), Int64Value(output.EF))
 }

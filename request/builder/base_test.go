@@ -41,7 +41,7 @@ type FakeInput struct {
 	HeaderCD  *int       `location:"headers" name:"C-D"`
 	ElementA  *string    `location:"elements" name:"a"`
 	ElementB  *string    `location:"elements" name:"b"`
-	ElementCD *int       `location:"elements" name:"cd"`
+	ElementCD *int64     `location:"elements" name:"cd"`
 	Body      *string    `localtion:"body"`
 }
 
@@ -54,6 +54,10 @@ func String(v string) *string {
 }
 
 func Int(v int) *int {
+	return &v
+}
+
+func Int64(v int64) *int64 {
 	return &v
 }
 
@@ -92,7 +96,7 @@ func TestBaseBuilder_BuildHTTPRequest(t *testing.T) {
 		HeaderB:   Time(time.Date(2016, 9, 1, 15, 30, 0, 0, tz)),
 		ElementA:  String("element_a"),
 		ElementB:  String("element_b"),
-		ElementCD: Int(0),
+		ElementCD: Int64(0),
 		Body:      String("This is body string"),
 	})
 	httpRequest, err := builder.BuildHTTPRequest(operation, &inputValue)

@@ -102,6 +102,12 @@ func (b *BaseUnpacker) parseResponseHeaders() error {
 						return err
 					}
 					field.Set(reflect.ValueOf(&intValue))
+				case *int64:
+					int64Value, err := strconv.ParseInt(fieldStringValue, 10, 64)
+					if err != nil {
+						return err
+					}
+					field.Set(reflect.ValueOf(&int64Value))
 				case *bool:
 				case *time.Time:
 					format := fields.Type().Field(i).Tag.Get("format")
