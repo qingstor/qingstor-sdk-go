@@ -1,6 +1,19 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v2.2.4] - 2017-03-28
+
+### Fixed
+
+- Fix type of Content-Type header.
+- Add Content-Length to GetObjectOutput.
+- Fix status code of DELETE CORS API.
+- Fix type of object size for GET Bucket API.
+
+### BREAKING CHANGES
+
+- The type of content length and object size has been changed from `*int` to `*int64`.
+
 ## [v2.2.3] - 2017-03-10
 
 ### Added
@@ -74,6 +87,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v2.2.4]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.3...v2.2.4
 [v2.2.3]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.2...v2.2.3
 [v2.2.2]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.1...v2.2.2
 [v2.2.1]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.0...v2.2.1
