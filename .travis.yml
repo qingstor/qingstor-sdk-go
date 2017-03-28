@@ -40,4 +40,4 @@ before_script:
 script:
   - /usr/local/bin/make check
   - /usr/local/bin/make release
-  - /usr/local/bin/make unit-runtime-go-${GO_VERSION}
+  - /usr/local/bin/make test-runtime-go-${GO_VERSION}
