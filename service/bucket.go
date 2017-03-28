@@ -128,7 +128,7 @@ func (s *Bucket) DeleteCORSRequest() (*request.Request, *DeleteBucketCORSOutput,
 		RequestMethod: "DELETE",
 		RequestURI:    "/<bucket-name>?cors",
 		StatusCodes: []int{
-			200, // OK
+			204, // OK
 		},
 	}
 
@@ -601,7 +601,7 @@ type GetBucketStatisticsOutput struct {
 	RequestID *string `location:"requestID"`
 
 	// Objects count in the bucket
-	Count *int `json:"count,omitempty" name:"count" location:"elements"`
+	Count *int64 `json:"count,omitempty" name:"count" location:"elements"`
 	// Bucket created time
 	Created *time.Time `json:"created,omitempty" name:"created" format:"ISO 8601" location:"elements"`
 	// QingCloud Zone ID
@@ -609,7 +609,7 @@ type GetBucketStatisticsOutput struct {
 	// Bucket name
 	Name *string `json:"name,omitempty" name:"name" location:"elements"`
 	// Bucket storage size
-	Size *int `json:"size,omitempty" name:"size" location:"elements"`
+	Size *int64 `json:"size,omitempty" name:"size" location:"elements"`
 	// Bucket status
 	// Status's available values: active, suspended
 	Status *string `json:"status,omitempty" name:"status" location:"elements"`
