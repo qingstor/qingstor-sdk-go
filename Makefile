@@ -16,13 +16,11 @@ help:
 	@echo "  update            to update git submodules"
 	@echo "  generate          to generate service code"
 	@echo "  build             to build the SDK"
-	@echo "  unit              to run all sort of unit tests except runtime"
-	@echo "  unit-test         to run unit test"
-	@echo "  unit-benchmark    to run unit test with benchmark"
-	@echo "  unit-coverage     to run unit test with coverage"
-	@echo "  unit-race         to run unit test with race"
-	@echo "  unit-runtime      to run test with go1.7, go1.6, go 1.5 in docker"
-	@echo "  test              to run service test"
+	@echo "  test              to run test"
+	@echo "  test-coverage     to run test with coverage"
+	@echo "  test-race         to run test with race"
+	@echo "  test-runtime      to run test in Go 1.8/1.7/1.6/1.5 in docker"
+	@echo "  integration-test  to run integration test"
 	@echo "  release           to build and release current version"
 	@echo "  release-source    to pack the source code"
 	@echo "  clean             to clean the coverage files"
@@ -71,24 +69,15 @@ build:
 	GOOS=windows GOARCH=amd64 go build ${PKGS_TO_CHECK}
 	@echo "ok"
 
-.PHONY: unit
-unit: unit-test unit-benchmark unit-coverage unit-race
-
-.PHONY: unit-test
-unit-test:
-	@echo "run unit test"
+.PHONY: test
+test:
+	@echo "run test"
 	go test -v ${PKGS_TO_CHECK}
 	@echo "ok"
 
-.PHONY: unit-benchmark
-unit-benchmark:
-	@echo "run unit test with benchmark"
-	go test -v -bench=. ${PKGS_TO_CHECK}
-	@echo "ok"
-
-.PHONY: unit-coverage
-unit-coverage:
-	@echo "run unit test with coverage"
+.PHONY: test-coverage
+test-coverage:
+	@echo "run test with coverage"
 	for pkg in ${PKGS_TO_CHECK}; do \
 		output="coverage$${pkg#github.com/yunify/qingstor-sdk-go}"; \
 		mkdir -p $${output}; \
@@ -99,14 +88,14 @@ unit-coverage:
 	done
 	@echo "ok"
 
-.PHONY: unit-race
-unit-race:
-	@echo "run unit test with race"
+.PHONY: test-race
+test-race:
+	@echo "run test with race"
 	go test -v -race -cpu=1,2,4 ${PKGS_TO_CHECK}
 	@echo "ok"
 
-.PHONY: unit-runtime
-unit-runtime: unit-runtime-go-1.8 unit-runtime-go-1.7 unit-runtime-go-1.6 unit-runtime-go-1.5
+.PHONY: test-runtime
+test-runtime: test-runtime-go-1.8 test-runtime-go-1.7 test-runtime-go-1.6 test-runtime-go-1.5
 
 export define DOCKERFILE_GO_1_8
 FROM golang:1.8
@@ -114,11 +103,11 @@ FROM golang:1.8
 ADD . /go/src/github.com/yunify/qingstor-sdk-go
 WORKDIR /go/src/github.com/yunify/qingstor-sdk-go
 
-CMD ["make", "build", "unit"]
+CMD ["make", "build", "test", "test-coverage"]
 endef
 
-.PHONY: unit-runtime-go-1.8
-unit-runtime-go-1.8:
+.PHONY: test-runtime-go-1.8
+test-runtime-go-1.8:
 	@echo "run test in go 1.8"
 	echo "$${DOCKERFILE_GO_1_8}" > "dockerfile_go_1.8"
 	docker build -f "./dockerfile_go_1.8" -t "${PREFIX}:go-1.8" .
@@ -134,11 +123,11 @@ FROM golang:1.7
 ADD . /go/src/github.com/yunify/qingstor-sdk-go
 WORKDIR /go/src/github.com/yunify/qingstor-sdk-go
 
-CMD ["make", "build", "unit"]
+CMD ["make", "build", "test", "test-coverage"]
 endef
 
-.PHONY: unit-runtime-go-1.7
-unit-runtime-go-1.7:
+.PHONY: test-runtime-go-1.7
+test-runtime-go-1.7:
 	@echo "run test in go 1.7"
 	echo "$${DOCKERFILE_GO_1_7}" > "dockerfile_go_1.7"
 	docker build -f "./dockerfile_go_1.7" -t "${PREFIX}:go-1.7" .
@@ -154,11 +143,11 @@ FROM golang:1.6
 ADD . /go/src/github.com/yunify/qingstor-sdk-go
 WORKDIR /go/src/github.com/yunify/qingstor-sdk-go
 
-CMD ["make", "build", "unit"]
+CMD ["make", "build", "test", "test-coverage"]
 endef
 
-.PHONY: unit-runtime-go-1.6
-unit-runtime-go-1.6:
+.PHONY: test-runtime-go-1.6
+test-runtime-go-1.6:
 	@echo "run test in go 1.6"
 	echo "$${DOCKERFILE_GO_1_6}" > "dockerfile_go_1.6"
 	docker build -f "./dockerfile_go_1.6" -t "${PREFIX}:go-1.6" .
@@ -175,11 +164,11 @@ ENV GO15VENDOREXPERIMENT="1"
 ADD . /go/src/github.com/yunify/qingstor-sdk-go
 WORKDIR /go/src/github.com/yunify/qingstor-sdk-go
 
-CMD ["make", "build", "unit"]
+CMD ["make", "build", "test", "test-coverage"]
 endef
 
-.PHONY: unit-runtime-go-1.5
-unit-runtime-go-1.5:
+.PHONY: test-runtime-go-1.5
+test-runtime-go-1.5:
 	@echo "run test in go 1.5"
 	echo "$${DOCKERFILE_GO_1_5}" > "dockerfile_go_1.5"
 	docker build -f "dockerfile_go_1.5" -t "${PREFIX}:go-1.5" .
@@ -189,8 +178,9 @@ unit-runtime-go-1.5:
 	docker rmi "${PREFIX}:go-1.5"
 	@echo "ok"
 
-.PHONY: test
-test:
+.PHONY: integration-test
+integration-test:
+	@echo "run integration test"
 	pushd "./test"; go run *.go; popd
 	@echo "ok"
 
