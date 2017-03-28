@@ -127,6 +127,10 @@ func (b *BaseBuilder) parseRequestParamsAndHeaders() error {
 				if value != nil {
 					maps[tagLocation][tagName] = strconv.Itoa(int(*value))
 				}
+			case *int64:
+				if value != nil {
+					maps[tagLocation][tagName] = strconv.FormatInt(int64(*value), 10)
+				}
 			case *bool:
 			case *time.Time:
 				if value != nil {
