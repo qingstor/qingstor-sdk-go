@@ -8,6 +8,8 @@
 		{{- if not $disablePointer -}}*{{- end -}}bool
 	{{- else if eq $typeName "integer" -}}
 		{{- if not $disablePointer -}}*{{- end -}}int
+	{{- else if eq $typeName "long" -}}
+		{{- if not $disablePointer -}}*{{- end -}}int64
 	{{- else if eq $typeName "timestamp" -}}
 		{{- if not $disablePointer -}}*{{- end -}}time.Time
 	{{- else if eq $typeName "binary" -}}
