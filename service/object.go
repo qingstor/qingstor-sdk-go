@@ -355,6 +355,8 @@ type GetObjectOutput struct {
 	// The response body
 	Body io.ReadCloser `location:"body"`
 
+	// Object content length
+	ContentLength *int64 `json:"Content-Length,omitempty" name:"Content-Length" location:"headers"`
 	// Range of response data content
 	ContentRange *string `json:"Content-Range,omitempty" name:"Content-Range" location:"headers"`
 	// MD5sum of the object
@@ -443,7 +445,7 @@ type HeadObjectOutput struct {
 	RequestID *string `location:"requestID"`
 
 	// Object content length
-	ContentLength *int `json:"Content-Length,omitempty" name:"Content-Length" location:"headers"`
+	ContentLength *int64 `json:"Content-Length,omitempty" name:"Content-Length" location:"headers"`
 	// Object content type
 	ContentType *string `json:"Content-Type,omitempty" name:"Content-Type" location:"headers"`
 	// MD5sum of the object
@@ -772,7 +774,7 @@ func (s *Bucket) PutObjectRequest(objectKey string, input *PutObjectInput) (*req
 // PutObjectInput presents input for PutObject.
 type PutObjectInput struct {
 	// Object content size
-	ContentLength *int `json:"Content-Length" name:"Content-Length" location:"headers"` // Required
+	ContentLength *int64 `json:"Content-Length" name:"Content-Length" location:"headers"` // Required
 	// Object MD5sum
 	ContentMD5 *string `json:"Content-MD5,omitempty" name:"Content-MD5" location:"headers"`
 	// Object content type
@@ -882,7 +884,7 @@ type UploadMultipartInput struct {
 	UploadID *string `json:"upload_id" name:"upload_id" location:"params"` // Required
 
 	// Object multipart content length
-	ContentLength *int `json:"Content-Length,omitempty" name:"Content-Length" location:"headers"`
+	ContentLength *int64 `json:"Content-Length,omitempty" name:"Content-Length" location:"headers"`
 	// Object multipart content MD5sum
 	ContentMD5 *string `json:"Content-MD5,omitempty" name:"Content-MD5" location:"headers"`
 	// Encryption algorithm of the object

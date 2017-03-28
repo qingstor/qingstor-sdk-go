@@ -269,7 +269,7 @@ type KeyType struct {
 	// Last modified time in unix time format
 	Modified *int `json:"modified,omitempty" name:"modified"`
 	// Object content size
-	Size *int `json:"size,omitempty" name:"size"`
+	Size *int64 `json:"size,omitempty" name:"size"`
 }
 
 // Validate validates the Key.
@@ -315,7 +315,7 @@ type ObjectPartType struct {
 	// Object part number
 	PartNumber *int `json:"part_number" name:"part_number" default:"0"` // Required
 	// Object part size
-	Size *int `json:"size,omitempty" name:"size"`
+	Size *int64 `json:"size,omitempty" name:"size"`
 }
 
 // Validate validates the ObjectPart.
