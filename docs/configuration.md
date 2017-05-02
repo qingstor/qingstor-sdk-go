@@ -63,7 +63,7 @@ Change API endpoint
 ``` go
 moreConfiguration, _ := config.NewDefault()
 
-moreConfiguration.Protocol = "https"
+moreConfiguration.Protocol = "http"
 moreConfiguration.Host = "api.private.com"
-moreConfiguration.Port = 4433
+moreConfiguration.Port = 80
 ```
