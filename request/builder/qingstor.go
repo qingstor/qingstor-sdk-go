@@ -24,6 +24,7 @@ import (
 	"io/ioutil"
 	"mime"
 	"net/http"
+	"net/url"
 	"path"
 	"reflect"
 	"regexp"
@@ -109,20 +110,20 @@ func (qb *QingStorBuilder) parseURL() error {
 	}
 	requestURI = regexp.MustCompile(`/+`).ReplaceAllString(requestURI, "/")
 
-	qb.baseBuilder.parsedURL = endpoint + requestURI
+	requestURL, err := url.Parse(endpoint + requestURI)
+	if err != nil {
+		return err
+	}
 
 	if qb.baseBuilder.parsedParams != nil {
-		paramsParts := []string{}
+		queryValue := requestURL.Query()
 		for key, value := range *qb.baseBuilder.parsedParams {
-			paramsParts = append(paramsParts, key+"="+utils.URLQueryEscape(value))
-
+			queryValue.Set(key, value)
 		}
-
-		joined := strings.Join(paramsParts, "&")
-		if joined != "" {
-			qb.baseBuilder.parsedURL += "?" + joined
-		}
+		requestURL.RawQuery = queryValue.Encode()
 	}
+
+	qb.baseBuilder.parsedURL = requestURL.String()
 
 	return nil
 }
