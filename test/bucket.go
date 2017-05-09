@@ -58,6 +58,8 @@ func BucketFeatureContext(s *godog.Suite) {
 	s.Step(`^an object created by initiate multipart upload$`, anObjectCreatedByInitiateMultipartUpload)
 	s.Step(`^list multipart uploads$`, listMultipartUploads)
 	s.Step(`^list multipart uploads count is (\d+)$`, listMultipartUploadsCountIs)
+	s.Step(`^list multipart uploads with prefix$`, listMultipartUploadsWithPrefix)
+	s.Step(`^list multipart uploads with prefix count is (\d+)$`, listMultipartUploadsWithPrefixCountIs)
 }
 
 // --------------------------------------------------------------------------
@@ -241,6 +243,19 @@ func listMultipartUploads() error {
 }
 
 func listMultipartUploadsCountIs(count int) error {
+	return checkEqual(len(listMultipartUploadsOutput.Uploads), count)
+}
+
+func listMultipartUploadsWithPrefix() error {
+	listMultipartUploadsOutput, err = bucket.ListMultipartUploads(
+		&qs.ListMultipartUploadsInput{
+			Prefix: qs.String(listMultipartUploadsOutputObjectKey),
+		},
+	)
+	return err
+}
+
+func listMultipartUploadsWithPrefixCountIs(count int) error {
 	_, err = bucket.AbortMultipartUpload(
 		listMultipartUploadsOutputObjectKey, &qs.AbortMultipartUploadInput{
 			UploadID: listMultipartUploadsInitiateOutput.UploadID,
