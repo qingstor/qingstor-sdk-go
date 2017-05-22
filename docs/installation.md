@@ -2,7 +2,7 @@
 
 ## Requirement
 
-This SDK requires Go 1.6 and higher vendor feature, the dependencies this project uses are included in the `vendor` directory. We use [govendor](https://github.com/kardianos/govendor) to manage project dependences.
+This SDK requires Go 1.6 and higher vendor feature, the dependencies this project uses are included in the `vendor` directory. We use [glide](https://glide.sh) to manage project dependences.
 
 ___Notice:___ _You can also use Go 1.5 with the `GO15VENDOREXPERIMENT=1`._
 
@@ -14,11 +14,14 @@ Use `go get` to download this SDK from GitHub:
 $ go get -u github.com/yunify/qingstor-sdk-go
 ```
 
-You can also download a specified version of zipped source code in the repository [releases page](https://github.com/yunify/qingstor-sdk-go/releases). The zipped source code only contains golang source code  without unit test files.
+You can also download a specified version of zipped source code in the repository [releases page](https://github.com/yunify/qingstor-sdk-go/releases). The zipped source code only contains golang source code without unit test files.
 
-___For example:___ _[qingstor-sdk-go-source-v0.7.1.zip](https://github.com/yunify/qingstor-sdk-go/releases/download/v0.7.1/qingstor-sdk-go-source-v0.7.1.zip)_
+___Examples:___
 
-## Install from binary release
+- *[qingstor-sdk-go-source-v0.7.1.zip](https://github.com/yunify/qingstor-sdk-go/releases/download/v0.7.1/qingstor-sdk-go-source-v0.7.1.zip)*
+- *[qingstor-sdk-go-source-with-vendor-v0.7.1.zip](https://github.com/yunify/qingstor-sdk-go/releases/download/v0.7.1/qingstor-sdk-go-source-with-vendor-v0.7.1.zip)*
+
+## Install from binary release (deprecated)
 
 After Go 1.7, there's a new feature called Binary-Only Package. It allows distributing packages in binary form without including the source code used for compiling the package. For more information about Binary-Only Package, please read [_GoLang Package Build_](https://golang.org/pkg/go/build/) to know how to use that.
 
