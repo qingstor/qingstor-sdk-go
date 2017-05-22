@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v2.2.5] - 2017-05-22
+
+### Fixed
+
+- Fix error in request URL query.
+- Fix error in request header value.
+
 ## [v2.2.4] - 2017-03-28
 
 ### Fixed
@@ -87,6 +94,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v2.2.5]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.4...v2.2.5
 [v2.2.4]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.3...v2.2.4
 [v2.2.3]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.2...v2.2.3
 [v2.2.2]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.1...v2.2.2
