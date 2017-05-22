@@ -28,6 +28,9 @@ import (
 	"time"
 	"unicode"
 
+	"github.com/pengsrc/go-shared/convert"
+	"github.com/pengsrc/go-shared/json"
+
 	"github.com/yunify/qingstor-sdk-go/request/data"
 	"github.com/yunify/qingstor-sdk-go/utils"
 )
@@ -136,8 +139,15 @@ func (b *BaseBuilder) parseRequestParamsAndHeaders() error {
 			case *bool:
 			case *time.Time:
 				if value != nil {
-					format := fields.Type().Field(i).Tag.Get("format")
-					maps[tagLocation][tagName] = utils.TimeToString(*value, format)
+					formatString := fields.Type().Field(i).Tag.Get("format")
+					format := ""
+					switch formatString {
+					case "RFC 822":
+						format = convert.RFC822
+					case "ISO 8601":
+						format = convert.ISO8601
+					}
+					maps[tagLocation][tagName] = convert.TimeToString(*value, format)
 				}
 			}
 		}
@@ -167,7 +177,7 @@ func (b *BaseBuilder) parseRequestBody() error {
 	}
 
 	if len(requestData) != 0 {
-		dataValue, err := utils.JSONEncode(requestData, true)
+		dataValue, err := json.Encode(requestData, true)
 		if err != nil {
 			return err
 		}
@@ -286,7 +296,7 @@ func (b *BaseBuilder) setupHeaders(httpRequest *http.Request) error {
 	httpRequest.ContentLength = int64(length)
 
 	if httpRequest.Header.Get("Date") == "" {
-		httpRequest.Header.Set("Date", utils.TimeToString(time.Now(), "RFC 822"))
+		httpRequest.Header.Set("Date", convert.TimeToString(time.Now(), convert.RFC822))
 	}
 
 	return nil

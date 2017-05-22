@@ -23,8 +23,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/pengsrc/go-shared/yaml"
+
 	"github.com/yunify/qingstor-sdk-go/logger"
-	"github.com/yunify/qingstor-sdk-go/utils"
 )
 
 // A Config stores a configuration of this sdk.
@@ -110,7 +111,7 @@ func (c *Config) Check() error {
 // LoadDefaultConfig loads the default configuration for Config.
 // It returns error if yaml decode failed.
 func (c *Config) LoadDefaultConfig() error {
-	_, err := utils.YAMLDecode([]byte(DefaultConfigFileContent), c)
+	_, err := yaml.Decode([]byte(DefaultConfigFileContent), c)
 	if err != nil {
 		logger.Error("Config parse error: " + err.Error())
 		return err
@@ -130,23 +131,23 @@ func (c *Config) LoadUserConfig() error {
 		InstallDefaultUserConfig()
 	}
 
-	return c.LoadConfigFromFilepath(GetUserConfigFilePath())
+	return c.LoadConfigFromFilePath(GetUserConfigFilePath())
 }
 
-// LoadConfigFromFilepath loads configuration from a specified local path.
+// LoadConfigFromFilePath loads configuration from a specified local path.
 // It returns error if file not found or yaml decode failed.
-func (c *Config) LoadConfigFromFilepath(filepath string) error {
+func (c *Config) LoadConfigFromFilePath(filepath string) error {
 	if strings.Index(filepath, "~/") == 0 {
 		filepath = strings.Replace(filepath, "~/", getHome()+"/", 1)
 	}
 
-	configYAML, err := ioutil.ReadFile(filepath)
+	yamlString, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		logger.Error("File not found: " + filepath)
 		return err
 	}
 
-	return c.LoadConfigFromContent(configYAML)
+	return c.LoadConfigFromContent(yamlString)
 }
 
 // LoadConfigFromContent loads configuration from a given byte slice.
@@ -154,7 +155,7 @@ func (c *Config) LoadConfigFromFilepath(filepath string) error {
 func (c *Config) LoadConfigFromContent(content []byte) error {
 	c.LoadDefaultConfig()
 
-	_, err := utils.YAMLDecode(content, c)
+	_, err := yaml.Decode(content, c)
 	if err != nil {
 		logger.Error("Config parse error: " + err.Error())
 		return err

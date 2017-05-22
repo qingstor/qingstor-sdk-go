@@ -125,7 +125,7 @@ func loadConfig() {
 		c, err = config.NewDefault()
 		checkErrorForExit(err)
 
-		err = c.LoadConfigFromFilepath("./config.yaml")
+		err = c.LoadConfigFromFilePath("./config.yaml")
 		checkErrorForExit(err)
 	}
 }
