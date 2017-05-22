@@ -32,6 +32,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/pengsrc/go-shared/convert"
+
 	"github.com/yunify/qingstor-sdk-go"
 	"github.com/yunify/qingstor-sdk-go/logger"
 	"github.com/yunify/qingstor-sdk-go/request/data"
@@ -75,19 +77,22 @@ func (qb *QingStorBuilder) BuildHTTPRequest(o *data.Operation, i *reflect.Value)
 
 	logger.Info(fmt.Sprintf(
 		"Built QingStor request: [%d] %s",
-		utils.StringToUnixInt(httpRequest.Header.Get("Date"), "RFC 822"),
-		httpRequest.URL.String()))
+		convert.StringToUnixTimestamp(httpRequest.Header.Get("Date"), convert.RFC822),
+		httpRequest.URL.String()),
+	)
 
 	logger.Info(fmt.Sprintf(
 		"QingStor request headers: [%d] %s",
-		utils.StringToUnixInt(httpRequest.Header.Get("Date"), "RFC 822"),
-		fmt.Sprint(httpRequest.Header)))
+		convert.StringToUnixTimestamp(httpRequest.Header.Get("Date"), convert.RFC822),
+		fmt.Sprint(httpRequest.Header)),
+	)
 
 	if qb.baseBuilder.parsedBodyString != "" {
 		logger.Info(fmt.Sprintf(
 			"QingStor request body string: [%d] %s",
-			utils.StringToUnixInt(httpRequest.Header.Get("Date"), "RFC 822"),
-			qb.baseBuilder.parsedBodyString))
+			convert.StringToUnixTimestamp(httpRequest.Header.Get("Date"), convert.RFC822),
+			qb.baseBuilder.parsedBodyString),
+		)
 	}
 
 	return httpRequest, nil

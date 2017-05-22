@@ -21,9 +21,10 @@ import (
 	"net/http"
 	"reflect"
 
+	"github.com/pengsrc/go-shared/json"
+
 	"github.com/yunify/qingstor-sdk-go/request/data"
 	"github.com/yunify/qingstor-sdk-go/request/errors"
-	"github.com/yunify/qingstor-sdk-go/utils"
 )
 
 // QingStorUnpacker is the response unpacker for QingStor service.
@@ -56,7 +57,7 @@ func (qu *QingStorUnpacker) parseError() error {
 
 			qsError := &errors.QingStorError{}
 			if buffer.Len() > 0 {
-				_, err := utils.JSONDecode(buffer.Bytes(), qsError)
+				_, err := json.Decode(buffer.Bytes(), qsError)
 				if err != nil {
 					return err
 				}

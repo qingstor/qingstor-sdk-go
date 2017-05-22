@@ -25,6 +25,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/pengsrc/go-shared/convert"
+
 	"github.com/yunify/qingstor-sdk-go/logger"
 	"github.com/yunify/qingstor-sdk-go/utils"
 )
@@ -85,7 +87,9 @@ func (qss *QingStorSigner) BuildSignature(request *http.Request) (string, error)
 
 	logger.Debug(fmt.Sprintf(
 		"QingStor authorization: [%d] %s",
-		utils.StringToUnixInt(request.Header.Get("Date"), "RFC 822"), authorization))
+		convert.StringToUnixTimestamp(request.Header.Get("Date"), convert.RFC822),
+		authorization),
+	)
 
 	return authorization, nil
 }
@@ -109,7 +113,9 @@ func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires in
 
 	logger.Debug(fmt.Sprintf(
 		"QingStor query signature: [%d] %s",
-		utils.StringToUnixInt(request.Header.Get("Date"), "RFC 822"), query))
+		convert.StringToUnixTimestamp(request.Header.Get("Date"), convert.RFC822),
+		query,
+	))
 
 	return query, nil
 }
@@ -133,7 +139,9 @@ func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, err
 
 	logger.Debug(fmt.Sprintf(
 		"QingStor string to sign: [%d] %s",
-		utils.StringToUnixInt(request.Header.Get("Date"), "RFC 822"), stringToSign))
+		convert.StringToUnixTimestamp(request.Header.Get("Date"), convert.RFC822),
+		stringToSign,
+	))
 
 	return stringToSign, nil
 }
@@ -157,7 +165,9 @@ func (qss *QingStorSigner) BuildQueryStringToSign(request *http.Request, expires
 
 	logger.Debug(fmt.Sprintf(
 		"QingStor query string to sign: [%d] %s",
-		utils.StringToUnixInt(request.Header.Get("Date"), "RFC 822"), stringToSign))
+		convert.StringToUnixTimestamp(request.Header.Get("Date"), convert.RFC822),
+		stringToSign,
+	))
 
 	return stringToSign, nil
 }
@@ -219,7 +229,9 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (st
 
 	logger.Debug(fmt.Sprintf(
 		"QingStor canonicalized resource: [%d] %s",
-		utils.StringToUnixInt(request.Header.Get("Date"), "RFC 822"), path))
+		convert.StringToUnixTimestamp(request.Header.Get("Date"), convert.RFC822),
+		path,
+	))
 
 	return path, nil
 }

@@ -21,14 +21,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/pengsrc/go-shared/convert"
+
 	"github.com/stretchr/testify/assert"
-	"github.com/yunify/qingstor-sdk-go/utils"
 )
 
 func TestQingStorSignerWriteSignature(t *testing.T) {
 	url := "https://qingstor.com/?acl&upload_id=fde133b5f6d932cd9c79bac3c7318da1&part_number=0&other=abc"
 	httpRequest, err := http.NewRequest("GET", url, nil)
-	httpRequest.Header.Set("Date", utils.TimeToString(time.Time{}, "RFC 822"))
+	httpRequest.Header.Set("Date", convert.TimeToString(time.Time{}, convert.RFC822))
 	httpRequest.Header.Set("X-QS-Test-2", "Test 2")
 	httpRequest.Header.Set("X-QS-Test-1", "Test 1")
 	assert.Nil(t, err)
@@ -48,7 +49,7 @@ func TestQingStorSignerWriteSignature(t *testing.T) {
 func TestQingStorSignerWriteSignatureChinese(t *testing.T) {
 	url := "https://zone.qingstor.com/bucket-name/中文"
 	httpRequest, err := http.NewRequest("GET", url, nil)
-	httpRequest.Header.Set("Date", utils.TimeToString(time.Time{}, "RFC 822"))
+	httpRequest.Header.Set("Date", convert.TimeToString(time.Time{}, convert.RFC822))
 	assert.Nil(t, err)
 
 	s := QingStorSigner{
@@ -66,7 +67,7 @@ func TestQingStorSignerWriteSignatureChinese(t *testing.T) {
 func TestQingStorSignerWriteQuerySignature(t *testing.T) {
 	url := "https://qingstor.com/?acl&upload_id=fde133b5f6d932cd9c79bac3c7318da1&part_number=0"
 	httpRequest, err := http.NewRequest("GET", url, nil)
-	httpRequest.Header.Set("Date", utils.TimeToString(time.Time{}, "RFC 822"))
+	httpRequest.Header.Set("Date", convert.TimeToString(time.Time{}, convert.RFC822))
 	httpRequest.Header.Set("X-QS-Test-2", "Test 2")
 	httpRequest.Header.Set("X-QS-Test-1", "Test 1")
 	assert.Nil(t, err)
@@ -76,9 +77,9 @@ func TestQingStorSignerWriteQuerySignature(t *testing.T) {
 		SecretAccessKey: "ENV_SECRET_ACCESS_KEY",
 	}
 
-	err = s.WriteQuerySignature(httpRequest, utils.StringToUnixInt(httpRequest.Header.Get("Date"), "RFC 822"))
+	err = s.WriteQuerySignature(httpRequest, 3600)
 	assert.Nil(t, err)
 
-	targetURL := "https://qingstor.com/?acl&upload_id=fde133b5f6d932cd9c79bac3c7318da1&part_number=0&access_key_id=ENV_ACCESS_KEY_ID&expires=-62135596800&signature=gTdB/cmD6rjv8CbFRDfFbHc64q442rYNAp99Hm7fBl4="
+	targetURL := "https://qingstor.com/?acl&upload_id=fde133b5f6d932cd9c79bac3c7318da1&part_number=0&access_key_id=ENV_ACCESS_KEY_ID&expires=3600&signature=GRL3p3NOgHR9CQygASvyo344vdnO1hFke6ZvQ5mDVHM="
 	assert.Equal(t, httpRequest.URL.String(), targetURL)
 }
