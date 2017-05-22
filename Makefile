@@ -64,21 +64,21 @@ generate:
 .PHONY: build
 build:
 	@echo "build the SDK"
-	GOOS=linux GOARCH=amd64 go build ${PKGS_TO_CHECK}
-	GOOS=darwin GOARCH=amd64 go build ${PKGS_TO_CHECK}
-	GOOS=windows GOARCH=amd64 go build ${PKGS_TO_CHECK}
+	GOOS=linux GOARCH=amd64 go build ${PKGS_TO_RELEASE}
+	GOOS=darwin GOARCH=amd64 go build ${PKGS_TO_RELEASE}
+	GOOS=windows GOARCH=amd64 go build ${PKGS_TO_RELEASE}
 	@echo "ok"
 
 .PHONY: test
 test:
 	@echo "run test"
-	go test -v ${PKGS_TO_CHECK}
+	go test -v ${PKGS_TO_RELEASE}
 	@echo "ok"
 
 .PHONY: test-coverage
 test-coverage:
 	@echo "run test with coverage"
-	for pkg in ${PKGS_TO_CHECK}; do \
+	for pkg in ${PKGS_TO_RELEASE}; do \
 		output="coverage$${pkg#github.com/yunify/qingstor-sdk-go}"; \
 		mkdir -p $${output}; \
 		go test -v -cover -coverprofile="$${output}/profile.out" $${pkg}; \
@@ -91,7 +91,7 @@ test-coverage:
 .PHONY: test-race
 test-race:
 	@echo "run test with race"
-	go test -v -race -cpu=1,2,4 ${PKGS_TO_CHECK}
+	go test -v -race -cpu=1,2,4 ${PKGS_TO_RELEASE}
 	@echo "ok"
 
 .PHONY: test-runtime
