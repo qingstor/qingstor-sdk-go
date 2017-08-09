@@ -41,6 +41,7 @@ func main() {
 		BucketExternalMirrorFeatureContext(s)
 		ObjectFeatureContext(s)
 		ObjectMultipartFeatureContext(s)
+		ImageFeatureContext(s)
 	}
 	options := godog.Options{
 		Format: "pretty",
@@ -58,7 +59,6 @@ func setUp() {
 	loadTestConfig()
 	loadConfig()
 	initQingStorService()
-
 	err := initializeTheBucket()
 	checkErrorForExit(err)
 
