@@ -34,6 +34,7 @@ func main() {
 
 	context := func(s *godog.Suite) {
 		ServiceFeatureContext(s)
+		ImageFeatureContext(s)
 		BucketFeatureContext(s)
 		BucketACLFeatureContext(s)
 		BucketCORSFeatureContext(s)
@@ -58,7 +59,6 @@ func setUp() {
 	loadTestConfig()
 	loadConfig()
 	initQingStorService()
-
 	err := initializeTheBucket()
 	checkErrorForExit(err)
 
