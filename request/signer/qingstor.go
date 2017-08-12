@@ -247,6 +247,7 @@ func (qss *QingStorSigner) paramsToSign(key string) bool {
 		"stats":                        true,
 		"upload_id":                    true,
 		"uploads":                      true,
+		"image":                        true,
 		"response-expires":             true,
 		"response-cache-control":       true,
 		"response-content-type":        true,
