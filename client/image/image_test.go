@@ -14,7 +14,6 @@ func init() {
 
 	// test.jpg is only a string
 	image = Init(bucket, "test.jpg")
-
 }
 
 func TestQueryString(t *testing.T) {
@@ -61,5 +60,4 @@ func TestQueryString(t *testing.T) {
 
 	image.setActionParam(InfoOperation, nil)
 	assert.Equal(t, *image.input.Action, "rotate:a_90|crop:w_300,h_400,g_0|resize:w_500,h_500,m_1|format:t_png|watermark:t_5rC05Y2w5paH5a2X,c_|watermark_image:l_0,t_0,u_aHR0cHM6Ly9wZWszYS5xaW5nc3Rvci5jb20vaW1nLWRvYy1lZy9xaW5jbG91ZC5wbmc|info")
-
 }

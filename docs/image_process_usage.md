@@ -10,7 +10,7 @@ Before using the image service, you need to initialize the [Configuration](https
 //Import the latest version API
 import (
 	"github.com/yunify/qingstor-sdk-go/config"
-	imager "github.com/yunify/qingstor-sdk-go/client/image"
+	"github.com/yunify/qingstor-sdk-go/client/image"
 	qs "github.com/yunify/qingstor-sdk-go/service"
 )
 ```
@@ -29,66 +29,66 @@ bucket, _ := service.Bucket("bucketName", "zoneID")
 ```
 Initialize a image.
 ``` go
-image := imager.Init(bucket, "imageName")
+img := image.Init(bucket, "imageName")
 ```
 
 Now you can use the the high level APIs or basic image process API to do the image operation.
 
 Get the information of the image
 ``` go
-imageProcessOutput, _ := image.Info().Process()
+imageProcessOutput, _ := img.Info().Process()
 ```
 
 Crop the image.
 ``` go
-imageProcessOutput, _  := image.Crop(&imager.CropParam{
+imageProcessOutput, _  := img.Crop(&image.CropParam{
 	...operation_param...
 }).Process()
 ```
 
 Rotate the image.
 ``` go
-imageProcessOutput, _ := image.Rotate(&imager.RotateParam{
+imageProcessOutput, _ := img.Rotate(&image.RotateParam{
 	...operation_param...
 }).Process()
 ```
 Resize the image.
 ``` go
-imageProcessOutput, _ := image.Resize(&imager.ResizeParam{
+imageProcessOutput, _ := img.Resize(&image.ResizeParam{
 	...operation_param...
 }).Process()
 ```
 Watermark the image.
 ``` go
-imageProcessOutput, _ := image.WaterMark(&imager.WaterMarkParam{
+imageProcessOutput, _ := img.WaterMark(&image.WaterMarkParam{
 	...operation_param...
 }).Process()
 ```
 WaterMarkImage the image.
 ``` go
-imageProcessOutput, _ : = image.WaterMarkImage(&imager.WaterMarkImageParam{
+imageProcessOutput, _ : = img.WaterMarkImage(&image.WaterMarkImageParam{
 	...operation_param...
 }).Process()
 ```
 Format the image.
 ``` go
-image = image.Format(&imager.Format{
+imageProcessOutput, _ := img.Format(&image.Format{
 	...operation_param...
 }).Process()
 ```
 Operation pipline, the image will be processed by order. The maximum number of operations in the pipeline is 10.
 ``` go
 // Rotate and then resize the image
-image = image.Rotate(&imager.RotateParam{
+imageProcessOutput, _ := img.Rotate(&image.RotateParam{
 	... operation_param...
-}).Resize(&imager.ResizeParam{
+}).Resize(&image.ResizeParam{
 	... operation_param...
 }).Process()
 ```
 Use the original basic API to rotate the image 90 angles.
 ``` go
 operation := "rotate:a_90"
-imageProcessOutput, err := bucket.ImageProcess("yourImageName", &qs.ImageProcessInput{
+imageProcessOutput, err := bucket.ImageProcess("imageName", &qs.ImageProcessInput{
 	Action: &operation})
 ```
 
@@ -168,7 +168,7 @@ package main
 import (
 	"log"
 
-	imager "github.com/yunify/qingstor-sdk-go/client/image"
+	"github.com/yunify/qingstor-sdk-go/client/image"
 	"github.com/yunify/qingstor-sdk-go/config"
 	qs "github.com/yunify/qingstor-sdk-go/service"
 )
@@ -185,40 +185,40 @@ func main() {
 
 	// Initialize Bucket
 	// Replace here with your bucketName and zoneID
-	bucket, err := service.Bucket("yourBucketName", "zoneID")
+	bucket, err := service.Bucket("bucketName", "zoneID")
 	checkErr(err)
 
 	// Initialize Image
 	// Replace here with your your ImageName
-	image := imager.Init(bucket, "imageName")
+	img := image.Init(bucket, "imageName")
 	checkErr(err)
 
 	// Because 0 is an invalid parameter, default not modify
-	imageProcessOutput, err := image.Crop(&imager.CropParam{Width: 0}).Process()
+	imageProcessOutput, err := img.Crop(&image.CropParam{Width: 0}).Process()
 	checkErr(err)
 	testOutput(imageProcessOutput)
 
 	// Rotate the image 90 angles
-	imageProcessOutput, err = image.Rotate(&imager.RotateParam{Angle: 90}).Process()
+	imageProcessOutput, err = img.Rotate(&image.RotateParam{Angle: 90}).Process()
 	checkErr(err)
 	testOutput(imageProcessOutput)
 
 	// Text watermark, Watermark text content, encoded by base64.
-	imageProcessOutput, err = image.WaterMark(&imager.WaterMarkParam{
+	imageProcessOutput, err = img.WaterMark(&image.WaterMarkParam{
 		Text: "5rC05Y2w5paH5a2X",
 	}).Process()
 	checkErr(err)
 	testOutput(imageProcessOutput)
 
 	// Image watermark, Watermark image url encoded by base64.
-	imageProcessOutput, err = image.WaterMarkImage(&imager.WaterMarkImageParam{
+	imageProcessOutput, err = img.WaterMarkImage(&image.WaterMarkImageParam{
 		URL: "aHR0cHM6Ly9wZWszYS5xaW5nc3Rvci5jb20vaW1nLWRvYy1lZy9xaW5jbG91ZC5wbmc",
 	}).Process()
 	checkErr(err)
 	testOutput(imageProcessOutput)
 
 	// Reszie the image with width 300px and height 400 px
-	imageProcessOutput, err = image.Resize(&imager.ResizeParam{
+	imageProcessOutput, err = img.Resize(&image.ResizeParam{
 		Width:  300,
 		Height: 400,
 	}).Process()
@@ -226,7 +226,7 @@ func main() {
 	testOutput(imageProcessOutput)
 
 	// Swap format to jpeg
-	imageProcessOutput, err = image.Format(&imager.FormatParam{
+	imageProcessOutput, err = img.Format(&image.FormatParam{
 		Type: "jpeg",
 	}).Process()
 	checkErr(err)
@@ -234,9 +234,9 @@ func main() {
 
 	// Pipline model
 	// The maximum number of operations in the pipeline is 10
-	imageProcessOutput, err = image.Rotate(&imager.RotateParam{
+	imageProcessOutput, err = img.Rotate(&image.RotateParam{
 		Angle: 270,
-	}).Resize(&imager.ResizeParam{
+	}).Resize(&image.ResizeParam{
 		Width:  300,
 		Height: 300,
 	}).Process()
@@ -244,7 +244,7 @@ func main() {
 	testOutput(imageProcessOutput)
 
 	// Get the information of the image
-	imageProcessOutput, err = image.Info().Process()
+	imageProcessOutput, err = img.Info().Process()
 	checkErr(err)
 	testOutput(imageProcessOutput)
 
