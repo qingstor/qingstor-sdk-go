@@ -9,16 +9,16 @@ import (
 )
 
 const (
-	// ActionSep is seperator of action.
+	// ActionSep is separator of action.
 	ActionSep = ":"
 
-	// OPSep is seperator of operation.
+	// OPSep is separator of operation.
 	OPSep = "|"
 
-	// KVSep is seperator of Key-Value.
+	// KVSep is separator of Key-Value.
 	KVSep = "_"
 
-	//KVPairSep is seperator of args.
+	//KVPairSep is separator of args.
 	KVPairSep = ","
 )
 
