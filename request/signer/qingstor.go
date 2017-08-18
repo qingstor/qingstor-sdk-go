@@ -122,12 +122,16 @@ func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires in
 
 // BuildStringToSign build the string to sign.
 func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, error) {
+	date := request.Header.Get("Date")
+	if request.Header.Get("X-QS-Date") != "" {
+		date = ""
+	}
 	stringToSign := fmt.Sprintf(
 		"%s\n%s\n%s\n%s\n",
 		request.Method,
 		request.Header.Get("Content-MD5"),
 		request.Header.Get("Content-Type"),
-		request.Header.Get("Date"),
+		date,
 	)
 
 	stringToSign += qss.buildCanonicalizedHeaders(request)
