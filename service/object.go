@@ -207,6 +207,9 @@ type CompleteMultipartUploadOutput struct {
 	StatusCode *int `location:"statusCode"`
 
 	RequestID *string `location:"requestID"`
+
+	// Encryption algorithm of the object
+	XQSEncryptionCustomerAlgorithm *string `json:"X-QS-Encryption-Customer-Algorithm,omitempty" name:"X-QS-Encryption-Customer-Algorithm" location:"headers"`
 }
 
 // DeleteObject does Delete the object.
@@ -361,7 +364,6 @@ type GetObjectOutput struct {
 	StatusCode *int `location:"statusCode"`
 
 	RequestID *string `location:"requestID"`
-
 	// The response body
 	Body io.ReadCloser `location:"body"`
 
@@ -558,7 +560,6 @@ type ImageProcessOutput struct {
 	StatusCode *int `location:"statusCode"`
 
 	RequestID *string `location:"requestID"`
-
 	// The response body
 	Body io.ReadCloser `location:"body"`
 
@@ -944,6 +945,11 @@ type PutObjectOutput struct {
 	StatusCode *int `location:"statusCode"`
 
 	RequestID *string `location:"requestID"`
+
+	// MD5sum of the object
+	ETag *string `json:"ETag,omitempty" name:"ETag" location:"headers"`
+	// Encryption algorithm of the object
+	XQSEncryptionCustomerAlgorithm *string `json:"X-QS-Encryption-Customer-Algorithm,omitempty" name:"X-QS-Encryption-Customer-Algorithm" location:"headers"`
 }
 
 // UploadMultipart does Upload object multipart.
@@ -1062,4 +1068,11 @@ type UploadMultipartOutput struct {
 	StatusCode *int `location:"statusCode"`
 
 	RequestID *string `location:"requestID"`
+
+	// MD5sum of the object
+	ETag *string `json:"ETag,omitempty" name:"ETag" location:"headers"`
+	// Range of response data content
+	XQSContentCopyRange *string `json:"X-QS-Content-Copy-Range,omitempty" name:"X-QS-Content-Copy-Range" location:"headers"`
+	// Encryption algorithm of the object
+	XQSEncryptionCustomerAlgorithm *string `json:"X-QS-Encryption-Customer-Algorithm,omitempty" name:"X-QS-Encryption-Customer-Algorithm" location:"headers"`
 }
