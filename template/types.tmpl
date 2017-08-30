@@ -30,7 +30,7 @@ import (
 // Properties presents the service properties.
 type Properties struct {
 	{{- template "RenderProperties" passThrough $service.Properties "" "" -}}
-	{{if $objectSubService}}
+	{{if $objectSubService -}}
 		{{range $_, $p := $objectSubService.Properties.Properties -}}
 			{{- if $p.Description -}}
 				// {{$p.Description}}

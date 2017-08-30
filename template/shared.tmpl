@@ -202,15 +202,15 @@
 			RequestMethod: "{{$operation.Request.Method}}",
 			RequestURI:    "{{$uri}}",
 			StatusCodes: []int{
-				{{- range $keyStatus, $valueStatus := $operation.Responses -}}
-					{{if $valueStatus.StatusCode -}}
+				{{range $keyStatus, $valueStatus := $operation.Responses -}}
+					{{- if $valueStatus.StatusCode -}}
 						{{$valueStatus.StatusCode.Code}}, // {{$valueStatus.StatusCode.Description}}
 					{{else}}
 						200, // OK
-					{{- end}}
+					{{end -}}
 				{{else}}
 					200, // OK
-				{{- end -}}
+				{{end -}}
 			},
 		}
 
