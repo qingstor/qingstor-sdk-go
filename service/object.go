@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/yunify/qingstor-sdk-go/config"
@@ -31,6 +32,7 @@ import (
 var _ fmt.State
 var _ io.Reader
 var _ http.Header
+var _ strings.Reader
 var _ time.Time
 var _ config.Config
 
