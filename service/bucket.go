@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/yunify/qingstor-sdk-go/config"
@@ -31,6 +32,7 @@ import (
 var _ fmt.State
 var _ io.Reader
 var _ http.Header
+var _ strings.Reader
 var _ time.Time
 var _ config.Config
 
@@ -42,6 +44,7 @@ type Bucket struct {
 
 // Bucket initializes a new bucket.
 func (s *Service) Bucket(bucketName string, zone string) (*Bucket, error) {
+	zone = strings.ToLower(zone)
 	properties := &Properties{
 		BucketName: &bucketName,
 		Zone:       &zone,
