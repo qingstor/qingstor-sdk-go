@@ -32,14 +32,14 @@ before_install:
       mv linux-amd64 glide-v0.12.3;
     fi
   - pushd glide-v0.12.3 && sudo cp glide /usr/local/bin && popd
-  - if [[ ! -d "./snips-v0.1.0" ]]; then
-      wget https://github.com/yunify/snips/releases/download/v0.1.0/snips-v0.1.0-linux_amd64.tar.gz &&
-      mkdir snips-v0.1.0 &&
-      pushd snips-v0.1.0 &&
-      tar -vxzf ../snips-v0.1.0-linux_amd64.tar.gz &&
+  - if [[ ! -d "./snips-v0.2.2" ]]; then
+      wget https://github.com/yunify/snips/releases/download/v0.2.2/snips-v0.2.2-linux_amd64.tar.gz &&
+      mkdir snips-v0.2.2 &&
+      pushd snips-v0.2.2 &&
+      tar -vxzf ../snips-v0.2.2-linux_amd64.tar.gz &&
       popd;
     fi
-  - pushd snips-v0.1.0 && sudo cp snips /usr/local/bin && popd
+  - pushd snips-v0.2.2 && sudo cp snips /usr/local/bin && popd
   - popd
   - /usr/local/bin/make --version
   - /usr/local/bin/glide --version
@@ -47,6 +47,7 @@ before_install:
 install:
   - go get -u github.com/golang/lint/golint;
   - glide install
+  - git submodule init
 
 before_script:
   - /usr/local/bin/make update

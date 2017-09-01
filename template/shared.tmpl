@@ -201,20 +201,17 @@
 			APIName:       "{{$operation.Name}}",
 			RequestMethod: "{{$operation.Request.Method}}",
 			RequestURI:    "{{$uri}}",
-			{{if $operation.Response.StatusCodes -}}
-				StatusCodes:   []int{
-					{{range $statusCodeNumber, $statusCode := $operation.Response.StatusCodes -}}
-						{{$statusCodeNumber}},
-						{{- if $statusCode.Description -}}
-							// {{$statusCode.Description}}
-						{{- end}}
+			StatusCodes: []int{
+				{{range $keyStatus, $valueStatus := $operation.Responses -}}
+					{{- if $valueStatus.StatusCode -}}
+						{{$valueStatus.StatusCode.Code}}, // {{$valueStatus.StatusCode.Description}}
+					{{else}}
+						200, // OK
 					{{end -}}
-				},
-			{{else}}
-				StatusCodes:   []int{
+				{{else}}
 					200, // OK
-				},
-			{{end -}}
+				{{end -}}
+			},
 		}
 
 		x := &{{$opID}}Output{}
@@ -272,27 +269,28 @@
 		StatusCode *int `location:"statusCode"`
 
 		RequestID *string `location:"requestID"`
+		{{range $keyStatus, $valueStatus := $operation.Responses -}}
+			{{if eq $valueStatus.Body.Type "string"}}
+				{{if $valueStatus.Body.Description -}}
+					// {{$valueStatus.Body.Description}}
+				{{- end}}
+				Body string `location:"body"`
+			{{else if eq $valueStatus.Body.Type "binary"}}
+				{{if $valueStatus.Body.Description -}}
+					// {{$valueStatus.Body.Description}}
+				{{- end}}
+				Body io.ReadCloser `location:"body"`
+			{{end}}
 
-		{{if eq $operation.Response.Body.Type "string"}}
-			{{if $operation.Response.Body.Description -}}
-				// {{$operation.Response.Body.Description}}
-			{{- end}}
-			Body string `location:"body"`
-		{{else if eq $operation.Response.Body.Type "binary"}}
-			{{if $operation.Response.Body.Description -}}
-				// {{$operation.Response.Body.Description}}
-			{{- end}}
-			Body io.ReadCloser `location:"body"`
-		{{end}}
+			{{if $valueStatus.Elements.Properties | len}}
+				{{$data := $valueStatus.Elements}}
+				{{template "RenderProperties" passThrough $data `location:"elements"` $operation.Name}}
+			{{end}}
 
-		{{if $operation.Response.Elements.Properties | len}}
-			{{$data := $operation.Response.Elements}}
-			{{template "RenderProperties" passThrough $data `location:"elements"` $operation.Name}}
-		{{end}}
-
-		{{if $operation.Response.Headers.Properties | len}}
-			{{$data := $operation.Response.Headers}}
-			{{template "RenderProperties" passThrough $data `location:"headers"` $operation.Name}}
+			{{if $valueStatus.Headers.Properties | len}}
+				{{$data := $valueStatus.Headers}}
+				{{template "RenderProperties" passThrough $data `location:"headers"` $operation.Name}}
+			{{end}}
 		{{end}}
 	}
 {{end}}
