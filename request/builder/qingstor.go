@@ -120,9 +120,9 @@ func (qb *QingStorBuilder) parseURL() error {
 		return err
 	}
 
-	if qb.baseBuilder.parsedParams != nil {
+	if qb.baseBuilder.parsedQuery != nil {
 		queryValue := requestURL.Query()
-		for key, value := range *qb.baseBuilder.parsedParams {
+		for key, value := range *qb.baseBuilder.parsedQuery {
 			queryValue.Set(key, value)
 		}
 		requestURL.RawQuery = queryValue.Encode()
