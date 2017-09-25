@@ -280,7 +280,7 @@ func (b *BaseBuilder) setupHeaders(httpRequest *http.Request) error {
 			body.Seek(0, 0)
 			length = end - start
 		default:
-			return errors.New("Can not get Content-Length")
+			return errors.New("can not get Content-Length")
 		}
 		if length > 0 {
 			httpRequest.ContentLength = length
