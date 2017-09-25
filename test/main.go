@@ -108,6 +108,8 @@ type testConfig struct {
 
 	RetryWaitTime int `json:"retry_wait_time" yaml:"retry_wait_time"`
 	MaxRetries    int `json:"max_retries" yaml:"max_retries"`
+
+	Concurrency int `json:"concurrency"`
 }
 
 func loadTestConfig() {
