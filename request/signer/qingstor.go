@@ -208,7 +208,7 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (st
 	parts := []string{}
 	for _, key := range keys {
 		values := query[key]
-		if qss.paramsToSign(key) {
+		if qss.queryToSign(key) {
 			if len(values) > 0 {
 				if values[0] != "" {
 					value := strings.TrimSpace(strings.Join(values, ""))
@@ -240,7 +240,7 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (st
 	return path, nil
 }
 
-func (qss *QingStorSigner) paramsToSign(key string) bool {
+func (qss *QingStorSigner) queryToSign(key string) bool {
 	keysMap := map[string]bool{
 		"acl":                          true,
 		"cors":                         true,

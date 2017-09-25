@@ -90,7 +90,7 @@ func (s *Bucket) AbortMultipartUploadRequest(objectKey string, input *AbortMulti
 // AbortMultipartUploadInput presents input for AbortMultipartUpload.
 type AbortMultipartUploadInput struct {
 	// Object multipart upload ID
-	UploadID *string `json:"upload_id" name:"upload_id" location:"params"` // Required
+	UploadID *string `json:"upload_id" name:"upload_id" location:"query"` // Required
 
 }
 
@@ -168,7 +168,7 @@ func (s *Bucket) CompleteMultipartUploadRequest(objectKey string, input *Complet
 // CompleteMultipartUploadInput presents input for CompleteMultipartUpload.
 type CompleteMultipartUploadInput struct {
 	// Object multipart upload ID
-	UploadID *string `json:"upload_id" name:"upload_id" location:"params"` // Required
+	UploadID *string `json:"upload_id" name:"upload_id" location:"query"` // Required
 
 	// MD5sum of the object part
 	ETag *string `json:"ETag,omitempty" name:"ETag" location:"headers"`
@@ -325,17 +325,17 @@ func (s *Bucket) GetObjectRequest(objectKey string, input *GetObjectInput) (*req
 // GetObjectInput presents input for GetObject.
 type GetObjectInput struct {
 	// Specified the Cache-Control response header
-	ResponseCacheControl *string `json:"response-cache-control,omitempty" name:"response-cache-control" location:"params"`
+	ResponseCacheControl *string `json:"response-cache-control,omitempty" name:"response-cache-control" location:"query"`
 	// Specified the Content-Disposition response header
-	ResponseContentDisposition *string `json:"response-content-disposition,omitempty" name:"response-content-disposition" location:"params"`
+	ResponseContentDisposition *string `json:"response-content-disposition,omitempty" name:"response-content-disposition" location:"query"`
 	// Specified the Content-Encoding response header
-	ResponseContentEncoding *string `json:"response-content-encoding,omitempty" name:"response-content-encoding" location:"params"`
+	ResponseContentEncoding *string `json:"response-content-encoding,omitempty" name:"response-content-encoding" location:"query"`
 	// Specified the Content-Language response header
-	ResponseContentLanguage *string `json:"response-content-language,omitempty" name:"response-content-language" location:"params"`
+	ResponseContentLanguage *string `json:"response-content-language,omitempty" name:"response-content-language" location:"query"`
 	// Specified the Content-Type response header
-	ResponseContentType *string `json:"response-content-type,omitempty" name:"response-content-type" location:"params"`
+	ResponseContentType *string `json:"response-content-type,omitempty" name:"response-content-type" location:"query"`
 	// Specified the Expires response header
-	ResponseExpires *string `json:"response-expires,omitempty" name:"response-expires" location:"params"`
+	ResponseExpires *string `json:"response-expires,omitempty" name:"response-expires" location:"query"`
 
 	// Check whether the ETag matches
 	IfMatch *string `json:"If-Match,omitempty" name:"If-Match" location:"headers"`
@@ -527,19 +527,19 @@ func (s *Bucket) ImageProcessRequest(objectKey string, input *ImageProcessInput)
 // ImageProcessInput presents input for ImageProcess.
 type ImageProcessInput struct {
 	// Image process action
-	Action *string `json:"action" name:"action" location:"params"` // Required
+	Action *string `json:"action" name:"action" location:"query"` // Required
 	// Specified the Cache-Control response header
-	ResponseCacheControl *string `json:"response-cache-control,omitempty" name:"response-cache-control" location:"params"`
+	ResponseCacheControl *string `json:"response-cache-control,omitempty" name:"response-cache-control" location:"query"`
 	// Specified the Content-Disposition response header
-	ResponseContentDisposition *string `json:"response-content-disposition,omitempty" name:"response-content-disposition" location:"params"`
+	ResponseContentDisposition *string `json:"response-content-disposition,omitempty" name:"response-content-disposition" location:"query"`
 	// Specified the Content-Encoding response header
-	ResponseContentEncoding *string `json:"response-content-encoding,omitempty" name:"response-content-encoding" location:"params"`
+	ResponseContentEncoding *string `json:"response-content-encoding,omitempty" name:"response-content-encoding" location:"query"`
 	// Specified the Content-Language response header
-	ResponseContentLanguage *string `json:"response-content-language,omitempty" name:"response-content-language" location:"params"`
+	ResponseContentLanguage *string `json:"response-content-language,omitempty" name:"response-content-language" location:"query"`
 	// Specified the Content-Type response header
-	ResponseContentType *string `json:"response-content-type,omitempty" name:"response-content-type" location:"params"`
+	ResponseContentType *string `json:"response-content-type,omitempty" name:"response-content-type" location:"query"`
 	// Specified the Expires response header
-	ResponseExpires *string `json:"response-expires,omitempty" name:"response-expires" location:"params"`
+	ResponseExpires *string `json:"response-expires,omitempty" name:"response-expires" location:"query"`
 
 	// Check whether the object has been modified
 	IfModifiedSince *time.Time `json:"If-Modified-Since,omitempty" name:"If-Modified-Since" format:"RFC 822" location:"headers"`
@@ -711,11 +711,11 @@ func (s *Bucket) ListMultipartRequest(objectKey string, input *ListMultipartInpu
 // ListMultipartInput presents input for ListMultipart.
 type ListMultipartInput struct {
 	// Limit results count
-	Limit *int `json:"limit,omitempty" name:"limit" location:"params"`
+	Limit *int `json:"limit,omitempty" name:"limit" location:"query"`
 	// Object multipart upload part number
-	PartNumberMarker *int `json:"part_number_marker,omitempty" name:"part_number_marker" location:"params"`
+	PartNumberMarker *int `json:"part_number_marker,omitempty" name:"part_number_marker" location:"query"`
 	// Object multipart upload ID
-	UploadID *string `json:"upload_id" name:"upload_id" location:"params"` // Required
+	UploadID *string `json:"upload_id" name:"upload_id" location:"query"` // Required
 
 }
 
@@ -1010,9 +1010,9 @@ func (s *Bucket) UploadMultipartRequest(objectKey string, input *UploadMultipart
 // UploadMultipartInput presents input for UploadMultipart.
 type UploadMultipartInput struct {
 	// Object multipart upload part number
-	PartNumber *int `json:"part_number" name:"part_number" default:"0" location:"params"` // Required
+	PartNumber *int `json:"part_number" name:"part_number" default:"0" location:"query"` // Required
 	// Object multipart upload ID
-	UploadID *string `json:"upload_id" name:"upload_id" location:"params"` // Required
+	UploadID *string `json:"upload_id" name:"upload_id" location:"query"` // Required
 
 	// Object multipart content length
 	ContentLength *int64 `json:"Content-Length,omitempty" name:"Content-Length" location:"headers"`

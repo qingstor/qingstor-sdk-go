@@ -746,15 +746,15 @@ func (s *Bucket) ListMultipartUploadsRequest(input *ListMultipartUploadsInput) (
 // ListMultipartUploadsInput presents input for ListMultipartUploads.
 type ListMultipartUploadsInput struct {
 	// Put all keys that share a common prefix into a list
-	Delimiter *string `json:"delimiter,omitempty" name:"delimiter" location:"params"`
+	Delimiter *string `json:"delimiter,omitempty" name:"delimiter" location:"query"`
 	// Limit results returned from the first key after key_marker sorted by alphabetical order
-	KeyMarker *string `json:"key_marker,omitempty" name:"key_marker" location:"params"`
+	KeyMarker *string `json:"key_marker,omitempty" name:"key_marker" location:"query"`
 	// Results count limit
-	Limit *int `json:"limit,omitempty" name:"limit" location:"params"`
+	Limit *int `json:"limit,omitempty" name:"limit" location:"query"`
 	// Limits results to keys that begin with the prefix
-	Prefix *string `json:"prefix,omitempty" name:"prefix" location:"params"`
+	Prefix *string `json:"prefix,omitempty" name:"prefix" location:"query"`
 	// Limit results returned from the first uploading segment after upload_id_marker sorted by the time of upload_id
-	UploadIDMarker *string `json:"upload_id_marker,omitempty" name:"upload_id_marker" location:"params"`
+	UploadIDMarker *string `json:"upload_id_marker,omitempty" name:"upload_id_marker" location:"query"`
 }
 
 // Validate validates the input for ListMultipartUploads.
@@ -841,13 +841,13 @@ func (s *Bucket) ListObjectsRequest(input *ListObjectsInput) (*request.Request, 
 // ListObjectsInput presents input for ListObjects.
 type ListObjectsInput struct {
 	// Put all keys that share a common prefix into a list
-	Delimiter *string `json:"delimiter,omitempty" name:"delimiter" location:"params"`
+	Delimiter *string `json:"delimiter,omitempty" name:"delimiter" location:"query"`
 	// Results count limit
-	Limit *int `json:"limit,omitempty" name:"limit" location:"params"`
+	Limit *int `json:"limit,omitempty" name:"limit" location:"query"`
 	// Limit results to keys that start at this marker
-	Marker *string `json:"marker,omitempty" name:"marker" location:"params"`
+	Marker *string `json:"marker,omitempty" name:"marker" location:"query"`
 	// Limits results to keys that begin with the prefix
-	Prefix *string `json:"prefix,omitempty" name:"prefix" location:"params"`
+	Prefix *string `json:"prefix,omitempty" name:"prefix" location:"query"`
 }
 
 // Validate validates the input for ListObjects.
