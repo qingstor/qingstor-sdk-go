@@ -42,10 +42,11 @@ func main() {
 		ObjectFeatureContext(s)
 		ObjectMultipartFeatureContext(s)
 		ImageFeatureContext(s)
+		UploadFeatureContext(s)
 	}
 	options := godog.Options{
 		Format: "pretty",
-		Paths:  []string{"./features"},
+		Paths:  []string{"./features", "./local_features"},
 		Tags:   "",
 	}
 	status := godog.RunWithOptions("*", context, options)
