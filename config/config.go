@@ -26,6 +26,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 
+	"github.com/yunify/qingstor-sdk-go/utils"
 	"github.com/yunify/qingstor-sdk-go/logger"
 )
 
@@ -43,7 +44,35 @@ type Config struct {
 
 	LogLevel string `yaml:"log_level"`
 
+	HTTPSettings HTTPClientSettings
+
 	Connection *http.Client
+}
+
+// HTTPClientSettings is the http client settings.
+type HTTPClientSettings struct {
+	ConnectTimeout      time.Duration `yaml:"connect_timeout"`
+	ReadTimeout         time.Duration `yaml:"read_timeout"`
+	WriteTimeout        time.Duration `yaml:"write_timeout" `
+	TLSHandshakeTimeout time.Duration `yaml:"tls_timeout"`
+	IdleConnTimeout     time.Duration `yaml:"idle_timeout"`
+	TCPKeepAlive        time.Duration `yaml:"tcp_keepalive_time"`
+	DualStack           bool          `yaml:"dual_stack"`
+	MaxIdleConns        int           `yaml:"max_idle_conns"`
+	MaxIdleConnsPerHost int           `yaml:"max_idle_conns_per_host"`
+}
+
+// DefaultHTTPClientSettings is the default http client settings.
+var DefaultHTTPClientSettings = HTTPClientSettings{
+	ConnectTimeout:      time.Second * 30,
+	ReadTimeout:         time.Second * 30,
+	WriteTimeout:        time.Second * 30,
+	TLSHandshakeTimeout: time.Second * 10,
+	IdleConnTimeout:     time.Second * 20,
+	TCPKeepAlive:        0,
+	DualStack:           false,
+	MaxIdleConns:        100,
+	MaxIdleConnsPerHost: 10,
 }
 
 // New create a Config with given AccessKeyID and SecretAccessKey.
@@ -53,14 +82,12 @@ func New(accessKeyID, secretAccessKey string) (c *Config, err error) {
 		c = nil
 		return
 	}
-
 	c.AccessKeyID = accessKeyID
 	c.SecretAccessKey = secretAccessKey
 
-	c.Connection = &http.Client{
-		Timeout: time.Minute,
-	}
+	c.HTTPSettings = DefaultHTTPClientSettings
 
+	c.InitHTTPClient()
 	return
 }
 
@@ -72,10 +99,9 @@ func NewDefault() (c *Config, err error) {
 		c = nil
 		return
 	}
+	c.HTTPSettings = DefaultHTTPClientSettings
 
-	c.Connection = &http.Client{
-		Timeout: time.Minute,
-	}
+	c.InitHTTPClient()
 	return
 }
 
@@ -143,6 +169,7 @@ func (c *Config) LoadUserConfig() (err error) {
 		InstallDefaultUserConfig()
 	}
 
+	c.HTTPSettings = DefaultHTTPClientSettings
 	return c.LoadConfigFromFilePath(GetUserConfigFilePath())
 }
 
@@ -180,4 +207,35 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 
 	logger.SetLevel(c.LogLevel)
 	return
+}
+
+// InitHTTPClient will init the HTTP Client.
+func (c *Config) InitHTTPClient() {
+	dialer := utils.NewDialer(
+		c.HTTPSettings.ConnectTimeout,
+		c.HTTPSettings.ReadTimeout,
+		c.HTTPSettings.WriteTimeout,
+	)
+	dialer.KeepAlive = c.HTTPSettings.TCPKeepAlive
+	// XXX: DualStack enables RFC 6555-compliant "Happy Eyeballs" dialing
+	// when the network is "tcp" and the destination is a host name
+	// with both IPv4 and IPv6 addresses. This allows a client to
+	// tolerate networks where one address family is silently broken
+	dialer.DualStack = c.HTTPSettings.DualStack
+	c.Connection = &http.Client{
+		// We do not use the timeout in http client,
+		// because this timeout is for the whole http body read/write,
+		// it's unsuitable for various length of files and network condition.
+		// We provide a wraper in utils/conn.go of net.Dialer to make io timeout to the http connection
+		// for individual buffer I/O operation,
+		Timeout: 0,
+		Transport: &http.Transport{
+			DialContext:           dialer.DialContext,
+			MaxIdleConns:          c.HTTPSettings.MaxIdleConns,
+			MaxIdleConnsPerHost:   c.HTTPSettings.MaxIdleConnsPerHost,
+			IdleConnTimeout:       c.HTTPSettings.IdleConnTimeout,
+			TLSHandshakeTimeout:   c.HTTPSettings.TLSHandshakeTimeout, //Default
+			ExpectContinueTimeout: 2 * time.Second,
+		},
+	}
 }
