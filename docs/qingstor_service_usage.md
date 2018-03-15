@@ -136,7 +136,9 @@ if err != nil {
 		panic(err)
 	}
 	defer f.Close()
-	io.Copy(f, getOutput.Body)
+	if _, err = io.Copy(f, getOutput.Body); err != nil {
+		panic(err)
+	}
 }
 ```
 
