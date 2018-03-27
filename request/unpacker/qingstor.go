@@ -72,6 +72,7 @@ func (qu *QingStorUnpacker) parseError() error {
 				}
 			}
 			qsError.StatusCode = qu.baseUnpacker.httpResponse.StatusCode
+			qsError.RequestID = qu.baseUnpacker.httpResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
 
 			return qsError
 		}
