@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v2.2.11] - 2018-3-28
+
+### Changed
+
+- Inject request id for HEAD request
+
+### Fixed
+
+- Fix a read timeout bug introduced in v2.2.10
+
 ## [v2.2.10] - 2018-3-14
 
 ### Changed
@@ -134,6 +144,8 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v2.2.11]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.10...v2.2.11
+[v2.2.10]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.9...v2.2.10
 [v2.2.9]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.8...v2.2.9
 [v2.2.8]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.7...v2.2.8
 [v2.2.7]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.6...v2.2.7
