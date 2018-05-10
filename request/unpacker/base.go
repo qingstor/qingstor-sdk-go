@@ -71,7 +71,7 @@ func (b *BaseUnpacker) exposeStatusCode() error {
 		case *int:
 			logger.Infof(nil, fmt.Sprintf(
 				"QingStor response status code: [%d] %d",
-				convert.StringToUnixTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
+				convert.StringToTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
 				b.httpResponse.StatusCode,
 			))
 			value.Set(reflect.ValueOf(&b.httpResponse.StatusCode))
@@ -84,7 +84,7 @@ func (b *BaseUnpacker) exposeStatusCode() error {
 func (b *BaseUnpacker) parseResponseHeaders() error {
 	logger.Infof(nil, fmt.Sprintf(
 		"QingStor response headers: [%d] %s",
-		convert.StringToUnixTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
+		convert.StringToTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
 		fmt.Sprint(b.httpResponse.Header),
 	))
 
@@ -152,7 +152,7 @@ func (b *BaseUnpacker) parseResponseBody() error {
 
 				logger.Infof(nil, fmt.Sprintf(
 					"QingStor response body string: [%d] %s",
-					convert.StringToUnixTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
+					convert.StringToTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
 					string(buffer.Bytes()),
 				))
 
@@ -175,7 +175,7 @@ func (b *BaseUnpacker) parseResponseElements() error {
 
 			logger.Infof(nil, fmt.Sprintf(
 				"QingStor response body string: [%d] %s",
-				convert.StringToUnixTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
+				convert.StringToTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
 				string(buffer.Bytes()),
 			))
 
