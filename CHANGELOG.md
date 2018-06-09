@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v2.2.14] - 2018-6-9
+
+### Fixed
+
+- Fix head application/json file failed
+
 ## [v2.2.13] - 2018-5-31
 
 ### Added
@@ -156,6 +162,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v2.2.14]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.13...v2.2.14
 [v2.2.13]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.12...v2.2.13
 [v2.2.12]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.11...v2.2.12
 [v2.2.11]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.10...v2.2.11
