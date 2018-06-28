@@ -10,7 +10,7 @@ import (
 	qs "github.com/yunify/qingstor-sdk-go/service"
 )
 
-// BucketlifecycleFeatureContext provides feature context for bucket lifecycle.
+// BucketLifecycleFeatureContext provides feature context for bucket lifecycle.
 func BucketLifecycleFeatureContext(s *godog.Suite) {
 	s.Step(`^put bucket lifecycle:$`, putBucketLifecycle)
 	s.Step(`^put bucket lifecycle status code is (\d+)$`, putBucketLifecycleStatusCodeIs)
