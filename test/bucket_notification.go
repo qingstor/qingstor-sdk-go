@@ -11,7 +11,7 @@ import (
   qs "github.com/qiaoqiaolaile/qingstor-sdk-go/service"
 )
 
-// BucketnotificationFeatureContext provides feature context for bucket notification.
+// BucketNotificationFeatureContext provides feature context for bucket notification.
 func BucketNotificationFeatureContext(s *godog.Suite) {
 	s.Step(`^put bucket notification:$`, putBucketNotification)
 	s.Step(`^put bucket notification status code is (\d+)$`, putBucketNotificationStatusCodeIs)
