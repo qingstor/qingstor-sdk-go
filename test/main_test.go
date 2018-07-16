@@ -20,6 +20,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
+	"testing"
 	"time"
 
 	"github.com/DATA-DOG/godog"
@@ -29,7 +30,7 @@ import (
 	qs "github.com/yunify/qingstor-sdk-go/service"
 )
 
-func main() {
+func TestMain(m *testing.M) {
 	setUp()
 
 	context := func(s *godog.Suite) {
