@@ -1,9 +1,34 @@
-hash: a498153ecdb880e9d2a81849ffae311e03bf11570e30d28f64d396d532a066c6
-updated: 2017-05-22T13:59:32.427609656+08:00
-imports:
+hash: abf4da8ff02bb79afefc7dd586738afbbfdb29ccae9ec7bc8cdac45a9c710c94
+updated: 2018-07-16T14:42:59.824123+08:00
+imports: []
+testImports:
 - name: github.com/DATA-DOG/godog
   version: 623ff9946e5c72834c19a019a153b8e3a338a52c
   subpackages:
   - colors
   - gherkin
-testImports: []
+- name: github.com/pengsrc/go-shared
+  version: b98065a377794d577e2a0e32869378b9ce4b8952
+  subpackages:
+  - buffer
+  - check
+  - convert
+  - log
+  - reopen
+- name: github.com/yunify/qingstor-sdk-go
+  version: 51fa3b6bb3c24f4d646eefff251cd2e6ba716600
+  subpackages:
+  - client/upload
+  - config
+  - logger
+  - request
+  - request/builder
+  - request/data
+  - request/errors
+  - request/signer
+  - request/unpacker
+  - service
+  - utils
+- name: gopkg.in/yaml.v2
+  version: 287cf08546ab5e7e37d55a84f7ed3fd1db036de5
+  repo: https://github.com/go-yaml/yaml.git

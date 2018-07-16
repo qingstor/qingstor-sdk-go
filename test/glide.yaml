@@ -1,4 +1,5 @@
 package: github.com/yunify/qingstor-sdk-go/test
-import:
+testImport:
+
 - package: github.com/DATA-DOG/godog
   version: v0.6.0
