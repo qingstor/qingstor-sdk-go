@@ -6,9 +6,8 @@ services:
 language: go
 go:
   - master
-  - 1.9
-  - 1.8
-  - 1.7
+  - "1.12"
+  - "1.11"
 
 cache:
   directories:
@@ -41,7 +40,7 @@ before_install:
   - /usr/local/bin/glide --version
 
 install:
-  - go get -u github.com/golang/lint/golint;
+  - go get -u golang.org/x/lint/golint;
   - glide install
   - git submodule init
 

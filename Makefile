@@ -2,7 +2,6 @@ SHELL := /bin/bash
 
 PREFIX=qingstor-sdk-go
 VERSION=$(shell cat version.go | grep "Version\ =" | sed -e s/^.*\ //g | sed -e s/\"//g)
-DIRS_TO_CHECK=$(shell ls -d */ | grep -vE "vendor|test")
 PKGS_TO_CHECK=$(shell go list ./... | grep -v "/vendor/")
 PKGS_TO_RELEASE=$(shell go list ./... | grep -vE "/vendor/|/test")
 FILES_TO_RELEASE=$(shell find . -name "*.go" | grep -vE "/vendor/|/test|.*_test.go")
@@ -39,7 +38,7 @@ format:
 .PHONY: vet
 vet:
 	@echo "Go tool vet, skipping vendor packages"
-	@go tool vet -all ${DIRS_TO_CHECK}
+	@for pkg in ${PKGS_TO_RELEASE}; do go vet -all $${pkg}; done;
 	@echo "Done"
 
 .PHONY: lint

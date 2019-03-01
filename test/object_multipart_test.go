@@ -22,8 +22,6 @@ import (
 
 	"github.com/DATA-DOG/godog"
 
-	"fmt"
-	"github.com/yunify/qingstor-sdk-go/request/errors"
 	qs "github.com/yunify/qingstor-sdk-go/service"
 )
 
@@ -186,6 +184,7 @@ func listMultipartObjectPartsCountIs(count int) error {
 // --------------------------------------------------------------------------
 
 var completeMultipartUploadOutput *qs.CompleteMultipartUploadOutput
+var abortMultipartUploadOutput *qs.AbortMultipartUploadOutput
 
 func completeMultipartUploadWithKey(objectKey string) error {
 	completeMultipartUploadOutput, err = bucket.CompleteMultipartUpload(
@@ -206,22 +205,17 @@ func completeMultipartUploadStatusCodeIs(statusCode int) error {
 // --------------------------------------------------------------------------
 
 func abortMultipartUploadWithKey(objectKey string) error {
-	_, err = bucket.AbortMultipartUpload(
+	abortMultipartUploadOutput, err = bucket.AbortMultipartUpload(
 		objectKey,
 		&qs.AbortMultipartUploadInput{
 			UploadID: initiateMultipartUploadOutput.UploadID,
 		},
 	)
-	return nil
+	return err
 }
 
 func abortMultipartUploadStatusCodeIs(statusCode int) error {
-	switch e := err.(type) {
-	case *errors.QingStorError:
-		return checkEqual(e.StatusCode, statusCode)
-	}
-
-	return fmt.Errorf("abort multipart upload should get \"%d\"", statusCode)
+	return checkEqual(qs.IntValue(abortMultipartUploadOutput.StatusCode), statusCode)
 }
 
 // --------------------------------------------------------------------------
