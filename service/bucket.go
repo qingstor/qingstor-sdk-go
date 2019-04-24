@@ -1094,6 +1094,8 @@ type ListObjectsOutput struct {
 	Owner *OwnerType `json:"owner,omitempty" name:"owner" location:"elements"`
 	// Prefix that specified in request parameters
 	Prefix *string `json:"prefix,omitempty" name:"prefix" location:"elements"`
+	// HasMore if has next page
+	HasMore *bool `json:"has_more,omitempty" name:"has_more" location:"elements"`
 }
 
 // Put does Create a new bucket.

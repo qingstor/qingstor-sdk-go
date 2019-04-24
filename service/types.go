@@ -343,6 +343,8 @@ type KeyType struct {
 	Modified *int `json:"modified,omitempty" name:"modified"`
 	// Object content size
 	Size *int64 `json:"size,omitempty" name:"size"`
+	// StorageClass storage class "STANDARD" or "STANDARD_IA"
+	StorageClass *string `json:"storage_class,omitempty" name:"storage_class" location:"elements"`
 }
 
 // Validate validates the Key.
