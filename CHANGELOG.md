@@ -1,6 +1,20 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v2.3.0] - 2019-4-25
+
+### Added
+
+- Add Content-Encoding header to put and post requests
+- Add object cache control header
+- Add `storage_class` in response element of API spec
+
+## [v2.2.15] - 2018-8-19
+
+### Changed
+
+- Remove object content type detection
+
 ## [v2.2.14] - 2018-6-9
 
 ### Fixed
@@ -162,6 +176,8 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v2.3.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.15...v2.3.0
+[v2.2.15]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.14...v2.2.15
 [v2.2.14]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.13...v2.2.14
 [v2.2.13]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.12...v2.2.13
 [v2.2.12]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.11...v2.2.12
