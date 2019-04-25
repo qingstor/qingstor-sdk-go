@@ -516,7 +516,7 @@ func optionsObjectWithMethodAndOrigin(objectKey, method, origin string) error {
 				fmt.Sprintf("%s-%d", objectKey, index),
 				&qs.OptionsObjectInput{
 					AccessControlRequestMethod: qs.String(method),
-					Origin: qs.String(origin),
+					Origin:                     qs.String(origin),
 				},
 			)
 			if err != nil {
