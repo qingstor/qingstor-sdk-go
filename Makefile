@@ -5,7 +5,6 @@ VERSION=$(shell cat version.go | grep "Version\ =" | sed -e s/^.*\ //g | sed -e 
 PKGS_TO_CHECK=$(shell go list ./... | grep -v "/vendor/")
 PKGS_TO_RELEASE=$(shell go list ./... | grep -vE "/vendor/|/test")
 FILES_TO_RELEASE=$(shell find . -name "*.go" | grep -vE "/vendor/|/test|.*_test.go")
-FILES_TO_RELEASE_WITH_VENDOR=$(shell find . -name "*.go" | grep -vE "/test|.*_test.go")
 
 .PHONY: help
 help:
@@ -20,7 +19,6 @@ help:
 	@echo "  test-race         to run test with race"
 	@echo "  integration-test  to run integration test"
 	@echo "  release           to build and release current version"
-	@echo "  release-source    to pack the source code"
 	@echo "  clean             to clean the coverage files"
 
 .PHONY: all
@@ -101,20 +99,10 @@ integration-test:
 	@echo "Done"
 
 .PHONY: release
-release: release-source release-source-with-vendor
-
-.PHONY: release-source
-release-source:
+release:
 	@echo "Pack the source code"
 	mkdir -p "release"
 	zip -FS "release/${PREFIX}-source-v${VERSION}.zip" ${FILES_TO_RELEASE}
-	@echo "Done"
-
-.PHONY: release-source-with-vendor
-release-source-with-vendor:
-	@echo "Pack the source code with vendor"
-	mkdir -p "release"
-	zip -FS "release/${PREFIX}-source-with-vendor-v${VERSION}.zip" ${FILES_TO_RELEASE_WITH_VENDOR}
 	@echo "Done"
 
 .PHONY: clean
