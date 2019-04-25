@@ -963,6 +963,10 @@ func (s *Bucket) PutObjectRequest(objectKey string, input *PutObjectInput) (*req
 
 // PutObjectInput presents input for PutObject.
 type PutObjectInput struct {
+	// Object cache control
+	CacheControl *string `json:"Cache-Control,omitempty" name:"Cache-Control" location:"headers"`
+	// Object content encoding
+	ContentEncoding *string `json:"Content-Encoding,omitempty" name:"Content-Encoding" location:"headers"`
 	// Object content size
 	ContentLength *int64 `json:"Content-Length" name:"Content-Length" location:"headers"` // Required
 	// Object MD5sum
