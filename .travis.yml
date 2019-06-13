@@ -5,7 +5,6 @@ services:
 
 language: go
 go:
-  - master
   - "1.12"
 
 env:
