@@ -36,5 +36,4 @@ before_script:
 
 script:
   - make check
-  - make release
   - make build test test-coverage
