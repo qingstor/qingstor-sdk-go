@@ -22,7 +22,7 @@ import (
 
 	"github.com/DATA-DOG/godog"
 
-	qs "github.com/yunify/qingstor-sdk-go/service"
+	qs "github.com/yunify/qingstor-sdk-go/v3/service"
 )
 
 // ObjectMultipartFeatureContext provides feature context for object multipart.

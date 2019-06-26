@@ -23,7 +23,7 @@ import (
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 
-	qs "github.com/yunify/qingstor-sdk-go/service"
+	qs "github.com/yunify/qingstor-sdk-go/v3/service"
 )
 
 // BucketACLFeatureContext provides feature context for bucket ACL.

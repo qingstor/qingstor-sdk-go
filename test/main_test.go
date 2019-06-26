@@ -25,9 +25,9 @@ import (
 
 	"github.com/DATA-DOG/godog"
 
-	"github.com/yunify/qingstor-sdk-go/config"
-	qsErrors "github.com/yunify/qingstor-sdk-go/request/errors"
-	qs "github.com/yunify/qingstor-sdk-go/service"
+	"github.com/yunify/qingstor-sdk-go/v3/config"
+	qsErrors "github.com/yunify/qingstor-sdk-go/v3/request/errors"
+	qs "github.com/yunify/qingstor-sdk-go/v3/service"
 )
 
 func TestMain(m *testing.M) {

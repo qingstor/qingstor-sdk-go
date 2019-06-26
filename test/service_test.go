@@ -21,7 +21,7 @@ import (
 
 	"github.com/DATA-DOG/godog"
 
-	qs "github.com/yunify/qingstor-sdk-go/service"
+	qs "github.com/yunify/qingstor-sdk-go/v3/service"
 )
 
 // ServiceFeatureContext provides feature context for service.
