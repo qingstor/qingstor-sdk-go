@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v3.0.0] - 2019-6-26
+
+### Changed
+
+- Use correct go module version
+- From this release, go sdk will only provided by module, not zip anymore
+
 ## [v2.3.0] - 2019-4-25
 
 ### Added
@@ -176,6 +183,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v3.0.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.3.0...v3.0.0
 [v2.3.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.15...v2.3.0
 [v2.2.15]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.14...v2.2.15
 [v2.2.14]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.13...v2.2.14
