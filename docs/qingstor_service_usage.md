@@ -10,9 +10,9 @@ You can use a specified version of a service by import a service package with a 
 ``` go
 import (
 	// Import the latest version API
-	"github.com/yunify/qingstor-sdk-go/config"
-	qs "github.com/yunify/qingstor-sdk-go/service"
-	qsErrors "github.com/yunify/qingstor-sdk-go/request/errors"
+	"github.com/yunify/qingstor-sdk-go/v3/config"
+	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+	qsErrors "github.com/yunify/qingstor-sdk-go/v3/request/errors"
 )
 ```
 
