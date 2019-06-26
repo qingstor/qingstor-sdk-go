@@ -18,7 +18,6 @@ help:
 	@echo "  test-coverage     to run test with coverage"
 	@echo "  test-race         to run test with race"
 	@echo "  integration-test  to run integration test"
-	@echo "  release           to build and release current version"
 	@echo "  clean             to clean the coverage files"
 
 .PHONY: all
@@ -96,13 +95,6 @@ test-race:
 integration-test:
 	@echo "Run integration test"
 	pushd "./test"; go test; popd
-	@echo "Done"
-
-.PHONY: release
-release:
-	@echo "Pack the source code"
-	mkdir -p "release"
-	zip -FS "release/${PREFIX}-source-v${VERSION}.zip" ${FILES_TO_RELEASE}
 	@echo "Done"
 
 .PHONY: clean
