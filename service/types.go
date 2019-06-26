@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/yunify/qingstor-sdk-go/request/errors"
+	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
 )
 
 // Properties presents the service properties.

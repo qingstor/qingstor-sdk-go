@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/yunify/qingstor-sdk-go/service"
+	"github.com/yunify/qingstor-sdk-go/v3/service"
 )
 
 const (

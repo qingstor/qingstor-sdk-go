@@ -22,8 +22,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/yunify/qingstor-sdk-go/config"
-	"github.com/yunify/qingstor-sdk-go/request/data"
+	"github.com/yunify/qingstor-sdk-go/v3/config"
+	"github.com/yunify/qingstor-sdk-go/v3/request/data"
 )
 
 type ObjectSubServiceProperties struct {

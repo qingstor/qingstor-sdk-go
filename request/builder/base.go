@@ -29,8 +29,8 @@ import (
 
 	"github.com/pengsrc/go-shared/convert"
 
-	"github.com/yunify/qingstor-sdk-go/request/data"
-	"github.com/yunify/qingstor-sdk-go/utils"
+	"github.com/yunify/qingstor-sdk-go/v3/request/data"
+	"github.com/yunify/qingstor-sdk-go/v3/utils"
 )
 
 // BaseBuilder is the base builder for all services.

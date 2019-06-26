@@ -22,8 +22,8 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/yunify/qingstor-sdk-go/request/data"
-	"github.com/yunify/qingstor-sdk-go/request/errors"
+	"github.com/yunify/qingstor-sdk-go/v3/request/data"
+	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
 )
 
 // QingStorUnpacker is the response unpacker for QingStor service.

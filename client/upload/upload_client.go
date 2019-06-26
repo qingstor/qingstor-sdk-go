@@ -2,8 +2,8 @@ package upload
 
 import (
 	"errors"
-	"github.com/yunify/qingstor-sdk-go/logger"
-	"github.com/yunify/qingstor-sdk-go/service"
+	"github.com/yunify/qingstor-sdk-go/v3/logger"
+	"github.com/yunify/qingstor-sdk-go/v3/service"
 	"io"
 )
 

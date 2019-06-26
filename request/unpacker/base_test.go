@@ -25,7 +25,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/yunify/qingstor-sdk-go/request/data"
+	"github.com/yunify/qingstor-sdk-go/v3/request/data"
 )
 
 func StringValue(v *string) string {
