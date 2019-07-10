@@ -124,6 +124,15 @@ func (b *BaseBuilder) parseRequestQueryAndHeaders() error {
 			switch value := fields.Field(i).Interface().(type) {
 			case *string:
 				if value != nil {
+					if tagName=="X-QS-MetaData"{
+
+						meta_pairs := strings.Split(*value,"ã€‡")
+						for i:=0;i<len(meta_pairs)-1;i++{
+							pair := strings.Split(meta_pairs[i],":")
+							maps[tagLocation][pair[0]] = pair[1]
+						}
+						break
+					}
 					maps[tagLocation][tagName] = *value
 				}
 			case *int:
