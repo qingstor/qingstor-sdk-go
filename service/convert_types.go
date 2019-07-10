@@ -304,7 +304,7 @@ func check(meta *map[string]string)  {
 func mapToString(meta *map[string]string) *string{
 	meta_string := ""
 	for k,v := range *meta{
-		meta_string+=k+":"+v+"ã€‡"
+		meta_string+=k+":"+v+"〇"
 	}
 	return &meta_string
 }

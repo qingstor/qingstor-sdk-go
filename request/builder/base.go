@@ -126,7 +126,7 @@ func (b *BaseBuilder) parseRequestQueryAndHeaders() error {
 				if value != nil {
 					if tagName=="X-QS-MetaData"{
 
-						meta_pairs := strings.Split(*value,"ã€‡")
+						meta_pairs := strings.Split(*value,"〇")
 						for i:=0;i<len(meta_pairs)-1;i++{
 							pair := strings.Split(meta_pairs[i],":")
 							maps[tagLocation][pair[0]] = pair[1]
