@@ -35,8 +35,8 @@
         {{template "Type" passThrough $property.ExtraType $disablePointer}}
     {{- else if eq $property.Type "array" -}}
         []{{template "Type" passThrough $property.ExtraType $disablePointer}}
-    {{- else if eq $property.Type "map" -}}
-        map[string]{{template "Type" passThrough $property.ExtraType $disablePointer}}
+    {{- else if eq $property.Type "map[string]string" -}}
+        *map[string]string 
     {{- else if eq $property.Type "any" -}}
         {{template "Type" passThrough $property.Type $disablePointer}}
     {{- else -}}

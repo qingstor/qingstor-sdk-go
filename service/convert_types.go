@@ -18,7 +18,6 @@ package service
 
 import (
 	"time"
-	"strings"
 )
 
 // String returns a pointer to the given string value.
@@ -267,11 +266,8 @@ func TimeValueMap(src map[string]*time.Time) map[string]time.Time {
 }
 //ConvMetatoStr check user's input metadata whether follow the pattern in API document
 // then converts the map whic stores metadata to string for reflect
-func ConvMetatoStr(meta *map[string]string) *string{
-	check(meta)
-	return mapToString(meta)
-}
-func check(meta *map[string]string)  {
+
+func CheckMeta(meta *map[string]string)  {
 	metadataValuelength := 0
 	metadataKeylength :=0
 	for k,v :=range *meta{
@@ -300,11 +296,4 @@ func check(meta *map[string]string)  {
 			panic("length of metadata-value should be less than 2048 bytes")
 		}
 	}
-}
-func mapToString(meta *map[string]string) *string{
-	meta_string := ""
-	for k,v := range *meta{
-		meta_string+=k+":"+v+"〇"
-	}
-	return &meta_string
 }
