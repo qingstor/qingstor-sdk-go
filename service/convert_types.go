@@ -265,8 +265,7 @@ func TimeValueMap(src map[string]*time.Time) map[string]time.Time {
 	}
 	return dst
 }
-//ConvMetatoStr check user's input metadata whether follow the pattern in API document
-// then converts the map whic stores metadata to string for reflect
+//CheckMeta will check whether user-defined metadata follows the rule in  API document
 func CheckMeta(meta *map[string]string) {
 	metadataValuelength := 0
 	metadataKeylength := 0
