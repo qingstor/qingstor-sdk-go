@@ -148,3 +148,25 @@ func TestQingStorUnpacker_UnpackHeadHTTPRequestWithError(t *testing.T) {
 		assert.Equal(t, "aa08cf7a43f611e5886952542e6ce14b", e.RequestID)
 	}
 }
+
+func TestQingStorUnpacker_UnpackHTTPRequestWithEmptyError(t *testing.T) {
+	type ListBucketsOutput struct {
+		StatusCode *int `location:"statusCode"`
+		Error      *errors.QingStorError
+		RequestID  *string `location:"requestID"`
+	}
+
+	httpResponse := &http.Response{Header: http.Header{}}
+	httpResponse.StatusCode = 400
+	httpResponse.Body = ioutil.NopCloser(strings.NewReader(""))
+
+	output := &ListBucketsOutput{}
+	outputValue := reflect.ValueOf(output)
+	unpacker := QingStorUnpacker{}
+	err := unpacker.UnpackHTTPRequest(&data.Operation{}, httpResponse, &outputValue)
+	assert.NotNil(t, err)
+	switch e := err.(type) {
+	case *errors.QingStorError:
+		assert.Equal(t, 400, e.StatusCode)
+	}
+}
