@@ -1035,6 +1035,70 @@ func (v *PutObjectInput) Validate() error {
 		}
 	}
 
+	XQSMetaDataIsValid := true
+	wrongKey := ""
+	wrongValue := ""
+	if *v.XQSMetaData!= nil {
+		metadataValuelength := 0
+		metadataKeylength := 0
+
+		for k,v := range *v.XQSMetaData {
+
+			metadataKeylength += len(k)
+			metadataValuelength += len(v)
+			startstr:=strings.Split(k,"-")
+
+			if startstr[0]!="x"||startstr[1]!="qs"||startstr[2]!="meta"{
+				wrongKey = k
+				wrongValue = v
+				XQSMetaDataIsValid = false
+				break
+			}
+
+			for i := 0; i < len(k); i++ {
+				ch := k[i]
+				if!(ch>=65&&ch<=90||ch>=97&&ch<=122||ch<=57&&ch>=48||ch==45||ch==46){
+					wrongKey = k
+					wrongValue = v
+					XQSMetaDataIsValid = false
+					break
+				}
+			}
+			for i := 0; i < len(v); i++ {
+				ch := v[i]
+				if(ch<32||ch>126){
+					wrongKey = k
+					wrongValue = v
+					XQSMetaDataIsValid = false
+					break
+				}
+			}
+
+			if metadataKeylength > 512{
+				wrongKey = k
+				wrongValue = v
+				XQSMetaDataIsValid = false
+				break
+			}
+			if metadataValuelength > 2048{
+				wrongKey = k
+				wrongValue = v
+				XQSMetaDataIsValid = false
+				break
+			}
+		}
+	}
+	if !XQSMetaDataIsValid {
+		return errors.ParameterValueNotAllowedError{
+			ParameterName: "XQSMetaData",
+			ParameterValue: "map["+wrongKey+"]="+wrongValue,
+			AllowedValues: []string{"https://docs.qingcloud.com/qingstor/api/common/metadata.html"},
+		}
+	}
+
+
+
+
 	return nil
 }
 
