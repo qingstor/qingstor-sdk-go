@@ -18,7 +18,6 @@ package service
 
 import (
 	"time"
-	"strings"
 )
 
 // String returns a pointer to the given string value.
