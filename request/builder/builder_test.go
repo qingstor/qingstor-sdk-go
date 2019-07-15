@@ -17,6 +17,7 @@
 package builder
 
 import (
+	"github.com/pengsrc/go-shared/convert"
 	"reflect"
 	"testing"
 	"time"
@@ -52,15 +53,15 @@ func TestQingStorBuilder_BuildHTTPRequest(t *testing.T) {
 	tz, err := time.LoadLocation("Asia/Shanghai")
 	assert.Nil(t, err)
 
-	qsBuilder := &QingStorBuilder{}
+	qsBuilder := &Builder{}
 	operation := &data.Operation{
 		Config:      conf,
 		APIName:     "GET Object",
 		ServiceName: "QingStor",
 		Properties: &ObjectSubServiceProperties{
-			BucketName: String("test"),
-			ObjectKey:  String("path/to/key.txt"),
-			Zone:       String("beta"),
+			BucketName: convert.String("test"),
+			ObjectKey:  convert.String("path/to/key.txt"),
+			Zone:       convert.String("beta"),
 		},
 		RequestMethod: "GET",
 		RequestURI:    "/<bucket-name>/<object-key>",
@@ -69,8 +70,8 @@ func TestQingStorBuilder_BuildHTTPRequest(t *testing.T) {
 		},
 	}
 	inputValue := reflect.ValueOf(&GetObjectInput{
-		IfModifiedSince: Time(time.Date(2016, 9, 1, 15, 30, 0, 0, tz)),
-		Range:           String("100-"),
+		IfModifiedSince: convert.Time(time.Date(2016, 9, 1, 15, 30, 0, 0, tz)),
+		Range:           convert.String("100-"),
 	})
 	httpRequest, err := qsBuilder.BuildHTTPRequest(operation, &inputValue)
 	assert.Nil(t, err)
