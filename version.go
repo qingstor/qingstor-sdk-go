@@ -20,4 +20,4 @@
 package sdk
 
 // Version number.
-const Version = "3.0.1"
+const Version = "3.0.2"
