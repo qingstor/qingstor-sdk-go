@@ -265,34 +265,3 @@ func TimeValueMap(src map[string]*time.Time) map[string]time.Time {
 	}
 	return dst
 }
-//CheckMeta will check whether user-defined metadata follows the rule in  API document
-func CheckMeta(meta *map[string]string) {
-	metadataValuelength := 0
-	metadataKeylength := 0
-	for k,v := range *meta {
-		metadataKeylength += len(k)
-		metadataValuelength += len(v)
-		startstr:=strings.Split(k,"-")
-		if startstr[0]!="x"||startstr[1]!="qs"||startstr[2]!="meta"{
-			panic("metadata-key should start with 'x-qs-meta-' ")
-		}
-		for i := 0; i < len(k); i++ {
-			ch := k[i]
-			if!(ch>=65&&ch<=90||ch>=97&&ch<=122||ch<=57&&ch>=48||ch==45||ch==46){
-				panic("metadata-key should only use [0-9][a-z][A-Z] '-' and '.'")
-			}
-		}
-		for i := 0; i < len(v); i++ {
-			ch := v[i]
-			if(ch<32||ch>126){
-				panic("metadata-value should only use ascii code in [32,126]")
-			}
-		}
-		if metadataKeylength > 512{
-			panic("length of metadata-key should be less than 512 bytes")
-		}
-		if metadataValuelength > 2048{
-			panic("length of metadata-value should be less than 2048 bytes")
-		}
-	}
-}
