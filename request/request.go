@@ -168,7 +168,7 @@ func (r *Request) check() error {
 }
 
 func (r *Request) build() error {
-	b := &builder.QingStorBuilder{}
+	b := &builder.Builder{}
 	httpRequest, err := b.BuildHTTPRequest(r.Operation, r.Input)
 	if err != nil {
 		return err
