@@ -1034,10 +1034,11 @@ func (v *PutObjectInput) Validate() error {
 			}
 		}
 	}
-
-	XQSMetaDataerr := IsMetaDataValid(v.XQSMetaData)
-	if XQSMetaDataerr != nil {
-		return XQSMetaDataerr
+	if v.XQSMetaData != nil {
+		XQSMetaDataerr := IsMetaDataValid(v.XQSMetaData)
+		if XQSMetaDataerr != nil {
+			return XQSMetaDataerr
+		}
 	}
 
 

@@ -148,9 +148,11 @@ func (b *BaseBuilder) parseRequestQueryAndHeaders() error {
 					maps[tagLocation][tagName] = convert.TimeToString(*value, format)
 				}
 			case *map[string]string:
-				meta := *(fields.Field(i).Interface().(*map[string]string))
-				for k,v := range meta{
-					maps[tagLocation][k]=v
+				if value != nil {
+					meta := *(fields.Field(i).Interface().(*map[string]string))
+					for k,v := range meta{
+						maps[tagLocation][k]=v
+					}
 				}
 			}
 		}
