@@ -3,7 +3,7 @@ import (
 	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
 	"strings"
 )
-
+// IsMetaDataValid check whether the metadata-KV follows rule in API document
 func IsMetaDataValid(XQSMetaData *map[string]string) error {
 	XQSMetaDataIsValid := true
 	wrongKey := ""
