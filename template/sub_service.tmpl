@@ -30,6 +30,7 @@ import (
     "github.com/yunify/qingstor-sdk-go/request"
     "github.com/yunify/qingstor-sdk-go/request/data"
     "github.com/yunify/qingstor-sdk-go/request/errors"
+    "github.com/yunify/qingstor-sdk-go/utils"
 )
 
 var _ fmt.State
@@ -38,6 +39,7 @@ var _ http.Header
 var _ strings.Reader
 var _ time.Time
 var _ config.Config
+var _ utils.Conn
 
 {{if ne $subService.Name "Object"}}
     // {{$subService.ID | camelCase}} presents {{$subService.ID | snakeCase}}.

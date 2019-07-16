@@ -362,7 +362,7 @@
             {{if eq $property.Type "map[string]string"}}
                 {{if eq $property.ID "X-QS-MetaData" }}
                     if v.XQSMetaData != nil {
-		                XQSMetaDataerr := IsMetaDataValid(v.XQSMetaData)
+		                XQSMetaDataerr := utils.IsMetaDataValid(v.XQSMetaData)
 		                if XQSMetaDataerr != nil {
 			                return XQSMetaDataerr
 		                }

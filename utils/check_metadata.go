@@ -1,4 +1,4 @@
-package service
+package utils
 import (
 	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
 	"strings"
