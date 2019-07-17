@@ -27,6 +27,7 @@ import (
 	"github.com/yunify/qingstor-sdk-go/v3/request"
 	"github.com/yunify/qingstor-sdk-go/v3/request/data"
 	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
+	"github.com/yunify/qingstor-sdk-go/v3/utils"
 )
 
 var _ fmt.State
@@ -1006,7 +1007,8 @@ type PutObjectInput struct {
 	// Specify the storage class for object
 	// XQSStorageClass's available values: STANDARD, STANDARD_IA
 	XQSStorageClass *string `json:"X-QS-Storage-Class,omitempty" name:"X-QS-Storage-Class" location:"headers"`
-
+	// User-defined metadata
+	XQSMetaData *map[string]string `json:"X-QS-MetaData,omitempty" name:"X-QS-MetaData" location:"headers"`
 	// The request body
 	Body io.Reader `location:"body"`
 }
@@ -1031,6 +1033,12 @@ func (v *PutObjectInput) Validate() error {
 				ParameterValue: xQSStorageClassParameterValue,
 				AllowedValues:  xQSStorageClassValidValues,
 			}
+		}
+	}
+	if v.XQSMetaData != nil {
+		XQSMetaDataerr := utils.IsMetaDataValid(v.XQSMetaData)
+		if XQSMetaDataerr != nil {
+			return XQSMetaDataerr
 		}
 	}
 

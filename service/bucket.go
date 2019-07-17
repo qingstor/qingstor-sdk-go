@@ -27,8 +27,10 @@ import (
 	"github.com/yunify/qingstor-sdk-go/v3/request"
 	"github.com/yunify/qingstor-sdk-go/v3/request/data"
 	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
+	"github.com/yunify/qingstor-sdk-go/v3/utils"
 )
 
+var _ utils.Conn
 var _ fmt.State
 var _ io.Reader
 var _ http.Header
