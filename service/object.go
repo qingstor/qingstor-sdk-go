@@ -28,7 +28,6 @@ import (
 	"github.com/yunify/qingstor-sdk-go/v3/request/data"
 	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
 	"github.com/yunify/qingstor-sdk-go/v3/utils"
-
 )
 
 var _ fmt.State
@@ -1042,7 +1041,6 @@ func (v *PutObjectInput) Validate() error {
 			return XQSMetaDataerr
 		}
 	}
-
 
 	return nil
 }
