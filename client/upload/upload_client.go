@@ -2,9 +2,10 @@ package upload
 
 import (
 	"errors"
+	"io"
+
 	"github.com/yunify/qingstor-sdk-go/v3/logger"
 	"github.com/yunify/qingstor-sdk-go/v3/service"
-	"io"
 )
 
 // Uploader struct provides a struct to upload
@@ -25,6 +26,19 @@ func Init(bucket *service.Bucket, partSize int) *Uploader {
 
 // Upload uploads multi parts of large object
 func (u *Uploader) Upload(fd io.Reader, objectKey string) error {
+	length, err := getFileSize(fd)
+	if err != nil {
+		logger.Errorf(nil, "Get file size error")
+		return err
+	}
+	if length < int64(smallestPartSize) {
+		_, err := u.bucket.PutObject(objectKey, &service.PutObjectInput{Body: fd})
+		if err != nil {
+			logger.Errorf(nil, "Autoswitched to putobject and upload failed")
+			return err
+		}
+		return nil
+	}
 	if u.partSize < smallestPartSize {
 		logger.Errorf(nil, "Part size error")
 		return errors.New("the part size is too small")
@@ -107,4 +121,22 @@ func (u *Uploader) complete(objectKey string, uploadID *string, partNumbers []*s
 		return err
 	}
 	return nil
+}
+
+func getFileSize(fd io.Reader) (int64, error) {
+	var length int64
+	switch r := fd.(type) {
+	case io.Seeker:
+		pos, _ := r.Seek(0, 1)
+		defer r.Seek(pos, 0)
+
+		n, err := r.Seek(0, 2)
+		if err != nil {
+			return length, err
+		}
+		length = n
+
+	}
+	return length, nil
+
 }
