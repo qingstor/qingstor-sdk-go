@@ -30,13 +30,13 @@ import (
 	"github.com/yunify/qingstor-sdk-go/v3/utils"
 )
 
-var _ utils.Conn
 var _ fmt.State
 var _ io.Reader
 var _ http.Header
 var _ strings.Reader
 var _ time.Time
 var _ config.Config
+var _ utils.Conn
 
 // Bucket presents bucket.
 type Bucket struct {

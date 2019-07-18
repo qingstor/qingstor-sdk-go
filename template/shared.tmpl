@@ -19,7 +19,7 @@
     {{- else if eq $typeName "object" -}}
         interface{}
     {{- else if eq $typeName "map" -}}
-        interface{}
+        *map[string]string
     {{- else if eq $typeName "any" -}}
         interface{}
     {{- else -}}
@@ -35,7 +35,7 @@
         {{template "Type" passThrough $property.ExtraType $disablePointer}}
     {{- else if eq $property.Type "array" -}}
         []{{template "Type" passThrough $property.ExtraType $disablePointer}}
-    {{- else if eq $property.Type "map[string]string" -}}
+    {{- else if eq $property.Type "map" -}}
         *map[string]string 
     {{- else if eq $property.Type "any" -}}
         {{template "Type" passThrough $property.Type $disablePointer}}
@@ -359,7 +359,7 @@
                 {{end}}
             {{end}}
 
-            {{if eq $property.Type "map[string]string"}}
+            {{if eq $property.Type "map"}}
                 {{if eq $property.ID "X-QS-MetaData" }}
                     if v.XQSMetaData != nil {
 		                XQSMetaDataerr := utils.IsMetaDataValid(v.XQSMetaData)

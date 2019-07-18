@@ -36,6 +36,7 @@ var _ http.Header
 var _ strings.Reader
 var _ time.Time
 var _ config.Config
+var _ utils.Conn
 
 // AbortMultipartUpload does Abort multipart upload.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/abort_multipart_upload.html
@@ -1002,19 +1003,27 @@ type PutObjectInput struct {
 	XQSFetchIfUnmodifiedSince *time.Time `json:"X-QS-Fetch-If-Unmodified-Since,omitempty" name:"X-QS-Fetch-If-Unmodified-Since" format:"RFC 822" location:"headers"`
 	// Fetch source, should be a valid url
 	XQSFetchSource *string `json:"X-QS-Fetch-Source,omitempty" name:"X-QS-Fetch-Source" location:"headers"`
+	// User-defined metadata
+	XQSMetaData *map[string]string `json:"X-QS-MetaData,omitempty" name:"X-QS-MetaData" location:"headers"`
 	// Move source, format (/<bucket-name>/<object-key>)
 	XQSMoveSource *string `json:"X-QS-Move-Source,omitempty" name:"X-QS-Move-Source" location:"headers"`
 	// Specify the storage class for object
 	// XQSStorageClass's available values: STANDARD, STANDARD_IA
 	XQSStorageClass *string `json:"X-QS-Storage-Class,omitempty" name:"X-QS-Storage-Class" location:"headers"`
-	// User-defined metadata
-	XQSMetaData *map[string]string `json:"X-QS-MetaData,omitempty" name:"X-QS-MetaData" location:"headers"`
+
 	// The request body
 	Body io.Reader `location:"body"`
 }
 
 // Validate validates the input for PutObject.
 func (v *PutObjectInput) Validate() error {
+
+	if v.XQSMetaData != nil {
+		XQSMetaDataerr := utils.IsMetaDataValid(v.XQSMetaData)
+		if XQSMetaDataerr != nil {
+			return XQSMetaDataerr
+		}
+	}
 
 	if v.XQSStorageClass != nil {
 		xQSStorageClassValidValues := []string{"STANDARD", "STANDARD_IA"}
@@ -1033,12 +1042,6 @@ func (v *PutObjectInput) Validate() error {
 				ParameterValue: xQSStorageClassParameterValue,
 				AllowedValues:  xQSStorageClassValidValues,
 			}
-		}
-	}
-	if v.XQSMetaData != nil {
-		XQSMetaDataerr := utils.IsMetaDataValid(v.XQSMetaData)
-		if XQSMetaDataerr != nil {
-			return XQSMetaDataerr
 		}
 	}
 
