@@ -124,7 +124,7 @@ func (u *Uploader) complete(objectKey string, uploadID *string, partNumbers []*s
 }
 
 func getFileSize(fd io.Reader) (int64, error) {
-	var length int64
+	var length int64 = -1
 	switch r := fd.(type) {
 	case io.Seeker:
 		pos, _ := r.Seek(0, 1)
@@ -135,6 +135,9 @@ func getFileSize(fd io.Reader) (int64, error) {
 			return length, err
 		}
 		length = n
+	}
+	if length == -1 {
+		return length,errors.New("The file is not seekable.")
 	}
 	return length, nil
 }
