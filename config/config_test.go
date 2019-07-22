@@ -25,19 +25,17 @@ import (
 
 func TestConfig(t *testing.T) {
 	c := Config{
-		AccessKeyID:       "AccessKeyID",
-		SecretAccessKey:   "SecretAccessKey",
-		Host:              "qingstor.dev",
-		Port:              443,
-		Protocol:          "https",
-		ConnectionRetries: 10,
-		LogLevel:          "warn",
+		AccessKeyID:     "AccessKeyID",
+		SecretAccessKey: "SecretAccessKey",
+		Host:            "qingstor.dev",
+		Port:            443,
+		Protocol:        "https",
+		LogLevel:        "warn",
 	}
 
 	assert.Equal(t, "AccessKeyID", c.AccessKeyID)
 	assert.Equal(t, "SecretAccessKey", c.SecretAccessKey)
 	assert.Equal(t, "qingstor.dev", c.Host)
-	assert.Equal(t, 10, c.ConnectionRetries)
 	assert.Equal(t, "warn", c.LogLevel)
 
 	c.AdditionalUserAgent = `"`
@@ -94,7 +92,6 @@ func TestNewDefault(t *testing.T) {
 	assert.Equal(t, "", config.SecretAccessKey)
 	assert.Equal(t, "https", config.Protocol)
 	assert.Equal(t, "qingstor.com", config.Host)
-	assert.Equal(t, 3, config.ConnectionRetries)
 }
 
 func TestNew(t *testing.T) {
