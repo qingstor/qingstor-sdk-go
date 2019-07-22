@@ -137,7 +137,7 @@ func getFileSize(fd io.Reader) (int64, error) {
 		length = n
 	}
 	if length == -1 {
-		return length,errors.New("The file is not seekable.")
+		return length, errors.New("The file is not seekable")
 	}
 	return length, nil
 }
