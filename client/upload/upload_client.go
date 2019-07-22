@@ -135,8 +135,6 @@ func getFileSize(fd io.Reader) (int64, error) {
 			return length, err
 		}
 		length = n
-
 	}
 	return length, nil
-
 }
