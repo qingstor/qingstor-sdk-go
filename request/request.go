@@ -220,7 +220,6 @@ func (r *Request) send() error {
 	))
 
 	response, err = r.Operation.Config.Connection.Do(r.HTTPRequest)
-
 	if err != nil {
 		return err
 	}
