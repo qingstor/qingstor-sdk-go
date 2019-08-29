@@ -989,6 +989,8 @@ type ListMultipartUploadsOutput struct {
 	CommonPrefixes []*string `json:"common_prefixes,omitempty" name:"common_prefixes" location:"elements"`
 	// Delimiter that specified in request parameters
 	Delimiter *string `json:"delimiter,omitempty" name:"delimiter" location:"elements"`
+	// Indicate if these are more results in the next page
+	HasMore *bool `json:"has_more,omitempty" name:"has_more" location:"elements"`
 	// Limit that specified in request parameters
 	Limit *int `json:"limit,omitempty" name:"limit" location:"elements"`
 	// Marker that specified in request parameters
