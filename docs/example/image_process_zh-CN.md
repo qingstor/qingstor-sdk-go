@@ -1,83 +1,94 @@
-# QingStor Image Processing Usage Guide
+# 基本图片处理
 
-For processing the image stored in QingStor by a variety of basic operations, such as format, crop, watermark and so on.
-Please see [QingStor Image API](https://docs.qingcloud.com/qingstor/data_process/image_process/index.html).
+用于对用户存储于 QingStor 对象存储上的图片进行各种基本处理，例如格式转换，裁剪，翻转，水印等。
 
-## Usage
-Before using the image service, you need to initialize the [Configuration](https://github.com/yunify/qingstor-sdk-go/blob/master/docs/configuration.md) and [QingStor Service](https://github.com/yunify/qingstor-sdk-go/blob/master/docs/qingstor_service_usage.md).
+目前支持的图片格式有:
 
-``` go
-//Import the latest version API
+- png
+- tiff
+- webp
+- jpeg
+- pdf
+- gif
+- svg
+
+> 目前不支持对加密过后的图片进行处理，单张图片最大为 10M 。
+
+具体文档说明参考 [API Docs](https://docs.qingcloud.com/qingstor/data_process/image_process) 。
+
+## 代码片段
+
+使用您的 AccessKeyID 和 SecretAccessKey 初始化 Qingstor 对象。
+
+```go
 import (
 	"github.com/yunify/qingstor-sdk-go/v3/config"
-	"github.com/yunify/qingstor-sdk-go/v3/client/image"
-	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+	"github.com/yunify/qingstor-sdk-go/v3/service"
 )
+
+var conf, _ = config.New("YOUR-ACCESS-KEY-ID", "YOUR--SECRET-ACCESS-KEY")
+var qingStor, _ = service.Init(conf)
 ```
 
-## Code Snippet
+然后根据要操作的 bucket 信息（zone, bucket name）来初始化 Bucket。
 
-Create configuration from Access Key and Initialize the QingStor service with a configuration.
-``` go
-// Initialize the QingStor service with a configuration
-config, _ := config.New("ACCESS_KEY_ID", "SECRET_ACCESS_KEY")
-service, _ := qs.Init(config)
+```go
+	bucketName := "your-bucket-name"
+	zoneName := "pek3b"
+	bucketService, _ := qingStor.Bucket(bucketName, zoneName)
 ```
-Initialize a QingStor bucket.
-``` go
-bucket, _ := service.Bucket("bucketName", "zoneID")
-```
-Initialize a image.
-``` go
+
+初始化一张图片
+```go
 img := image.Init(bucket, "imageName")
 ```
 
-Now you can use the the high level APIs or basic image process API to do the image operation.
+现在，您可以使用高级API或基本图像处理API来执行图像操作。
 
-Get the information of the image
-``` go
+获取图像的信息
+```go
 imageProcessOutput, _ := img.Info().Process()
 ```
 
-Crop the image.
-``` go
+裁剪图像。
+```go
 imageProcessOutput, _  := img.Crop(&image.CropParam{
 	...operation_param...
 }).Process()
 ```
 
-Rotate the image.
-``` go
+旋转图像。
+```go
 imageProcessOutput, _ := img.Rotate(&image.RotateParam{
 	...operation_param...
 }).Process()
 ```
-Resize the image.
-``` go
+调整图像大小。
+```go
 imageProcessOutput, _ := img.Resize(&image.ResizeParam{
 	...operation_param...
 }).Process()
 ```
-Watermark the image.
-``` go
+为图像添加水印。
+```go
 imageProcessOutput, _ := img.WaterMark(&image.WaterMarkParam{
 	...operation_param...
 }).Process()
 ```
-WaterMarkImage the image.
-``` go
+WaterMarkImage图像。
+```go
 imageProcessOutput, _ : = img.WaterMarkImage(&image.WaterMarkImageParam{
 	...operation_param...
 }).Process()
 ```
-Format the image.
-``` go
+格式化图像。
+```go
 imageProcessOutput, _ := img.Format(&image.Format{
 	...operation_param...
 }).Process()
 ```
-Operation pipline, the image will be processed by order. The maximum number of operations in the pipeline is 10.
-``` go
+操作管道，图像将按顺序处理。 管道中的最大操作数为10。
+```go
 // Rotate and then resize the image
 imageProcessOutput, _ := img.Rotate(&image.RotateParam{
 	... operation_param...
@@ -85,15 +96,15 @@ imageProcessOutput, _ := img.Rotate(&image.RotateParam{
 	... operation_param...
 }).Process()
 ```
-Use the original basic API to rotate the image 90 angles.
-``` go
+使用原始基本API将图像旋转90度角。
+```go
 operation := "rotate:a_90"
 imageProcessOutput, err := bucket.ImageProcess("imageName", &qs.ImageProcessInput{
 	Action: &operation})
 ```
 
-`operation_param` is the image operation param, which definined in `qingstor-sdk-go/client/image/image.go`.
-``` go
+`operation_param`是图像操作参数，它在`qingstor-sdk-go / client / image / image.go`中定义。
+```go
 import "github.com/yunify/qingstor-sdk-go/v3/service"
 // client/image/image.go
 type Image struct {
@@ -158,11 +169,11 @@ type FormatParam struct {
 
 ```
 
-__Quick Start Code Example:__
+__快速入门代码示例:__
 
-Include a complete example, but the code needs to fill in your own information
+包含一个完整的示例，但代码需要填写您自己的信息。
 
-``` go
+```go
 package main
 
 import (
