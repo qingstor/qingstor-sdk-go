@@ -38,6 +38,82 @@ var _ time.Time
 var _ config.Config
 var _ utils.Conn
 
+// BucketInterface is the method set for Bucket sub service.
+type BucketInterface interface {
+
+	// Delete does Delete a bucket.
+	Delete() (*DeleteBucketOutput, error)
+
+	// DeleteCORS does Delete CORS information of the bucket.
+	DeleteCORS() (*DeleteBucketCORSOutput, error)
+
+	// DeleteExternalMirror does Delete external mirror of the bucket.
+	DeleteExternalMirror() (*DeleteBucketExternalMirrorOutput, error)
+
+	// DeleteLifecycle does Delete Lifecycle information of the bucket.
+	DeleteLifecycle() (*DeleteBucketLifecycleOutput, error)
+
+	// DeleteNotification does Delete Notification information of the bucket.
+	DeleteNotification() (*DeleteBucketNotificationOutput, error)
+
+	// DeletePolicy does Delete policy information of the bucket.
+	DeletePolicy() (*DeleteBucketPolicyOutput, error)
+
+	// DeleteMultipleObjects does Delete multiple objects from the bucket.
+	DeleteMultipleObjects(input *DeleteMultipleObjectsInput) (*DeleteMultipleObjectsOutput, error)
+
+	// GetACL does Get ACL information of the bucket.
+	GetACL() (*GetBucketACLOutput, error)
+
+	// GetCORS does Get CORS information of the bucket.
+	GetCORS() (*GetBucketCORSOutput, error)
+
+	// GetExternalMirror does Get external mirror of the bucket.
+	GetExternalMirror() (*GetBucketExternalMirrorOutput, error)
+
+	// GetLifecycle does Get Lifecycle information of the bucket.
+	GetLifecycle() (*GetBucketLifecycleOutput, error)
+
+	// GetNotification does Get Notification information of the bucket.
+	GetNotification() (*GetBucketNotificationOutput, error)
+
+	// GetPolicy does Get policy information of the bucket.
+	GetPolicy() (*GetBucketPolicyOutput, error)
+
+	// GetStatistics does Get statistics information of the bucket.
+	GetStatistics() (*GetBucketStatisticsOutput, error)
+
+	// Head does Check whether the bucket exists and available.
+	Head() (*HeadBucketOutput, error)
+
+	// ListMultipartUploads does List multipart uploads in the bucket.
+	ListMultipartUploads(input *ListMultipartUploadsInput) (*ListMultipartUploadsOutput, error)
+
+	// ListObjects does Retrieve the object list in a bucket.
+	ListObjects(input *ListObjectsInput) (*ListObjectsOutput, error)
+
+	// Put does Create a new bucket.
+	Put() (*PutBucketOutput, error)
+
+	// PutACL does Set ACL information of the bucket.
+	PutACL(input *PutBucketACLInput) (*PutBucketACLOutput, error)
+
+	// PutCORS does Set CORS information of the bucket.
+	PutCORS(input *PutBucketCORSInput) (*PutBucketCORSOutput, error)
+
+	// PutExternalMirror does Set external mirror of the bucket.
+	PutExternalMirror(input *PutBucketExternalMirrorInput) (*PutBucketExternalMirrorOutput, error)
+
+	// PutLifecycle does Set Lifecycle information of the bucket.
+	PutLifecycle(input *PutBucketLifecycleInput) (*PutBucketLifecycleOutput, error)
+
+	// PutNotification does Set Notification information of the bucket.
+	PutNotification(input *PutBucketNotificationInput) (*PutBucketNotificationOutput, error)
+
+	// PutPolicy does Set policy information of the bucket.
+	PutPolicy(input *PutBucketPolicyInput) (*PutBucketPolicyOutput, error)
+}
+
 // Bucket presents bucket.
 type Bucket struct {
 	Config     *config.Config

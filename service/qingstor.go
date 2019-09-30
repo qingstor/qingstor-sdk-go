@@ -27,6 +27,24 @@ import (
 
 var _ http.Header
 
+// QingStorInterface composes all service and sub service interfaces.
+type QingStorInterface interface {
+	QingStorServiceInterface
+
+	BucketInterface
+
+	ObjectInterface
+}
+
+// QingStorServiceInterface is the method set for QingStor service.
+type QingStorServiceInterface interface {
+	// Bucket initializes a new bucket.
+	Bucket(bucketName string, zone string) (*Bucket, error)
+
+	// ListBuckets does Retrieve the bucket list.
+	ListBuckets(input *ListBucketsInput) (*ListBucketsOutput, error)
+}
+
 // Service QingStor provides low-cost and reliable online storage service with unlimited storage space, high read and write performance, high reliability and data safety, fine-grained access control, and easy to use API.
 type Service struct {
 	Config *config.Config

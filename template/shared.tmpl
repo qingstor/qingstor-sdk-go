@@ -306,6 +306,42 @@
     {{end}}
 {{end}}
 
+{{define "RenderOperationInterface"}}
+    {{$service := index . 0}}
+    {{$operation := index . 1}}
+
+    {{$belongs := replace $service.Name "QingStor" "Service" -1}}
+    {{$belongs := replace $belongs "Object" "Bucket" -1}}
+    {{$opID := $operation.ID | camelCase}}
+
+    {{$isBucket := eq $service.Name "Bucket"}}
+    {{$isObject := eq $service.Name "Object"}}
+
+    {{$hasQuery := gt (len $operation.Request.Query.Properties) 0}}
+    {{$hasHeaders := gt (len $operation.Request.Headers.Properties) 0}}
+    {{$hasElements := gt (len $operation.Request.Elements.Properties) 0}}
+    {{$hasStringBody := eq $operation.Request.Body.Type "string"}}
+    {{$hasBinaryBody := eq $operation.Request.Body.Type "binary"}}
+    {{$hasInput := or $hasQuery $hasHeaders $hasElements $hasStringBody $hasBinaryBody}}
+    {{- if $operation.Description -}}
+        {{if eq $belongs "Bucket" -}}
+            // {{replace $opID "Bucket" "" -1}} does {{$operation.Description}}
+        {{else -}}
+            // {{$opID}} does {{$operation.Description}}
+        {{end -}}
+    {{- end -}}
+    {{- if eq $belongs "Bucket" -}}
+        {{replace $opID "Bucket" "" -1 -}}(
+            {{- if $isObject}}objectKey string,{{end -}}
+            {{- if $hasInput}}input *{{$opID}}Input{{end -}}
+        ) (*{{$opID}}Output, error)
+    {{- else -}}
+        {{$opID}}(
+            {{- if $hasInput}}input *{{$opID}}Input{{end -}}
+        ) (*{{$opID}}Output, error)
+    {{- end -}}
+{{- end }}
+
 {{define "SubServiceInitParams"}}
     {{- $customizedType := index . 0 -}}
     {{- $disablePointer := index . 1 -}}
