@@ -215,6 +215,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v3.1.0]: https://github.com/yunify/qingstor-sdk-go/compare/v3.0.2...v3.1.0
 [v3.0.2]: https://github.com/yunify/qingstor-sdk-go/compare/v3.0.1...v3.0.2
 [v3.0.1]: https://github.com/yunify/qingstor-sdk-go/compare/v3.0.0...v3.0.1
 [v3.0.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.3.0...v3.0.0
