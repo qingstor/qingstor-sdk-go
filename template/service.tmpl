@@ -15,7 +15,6 @@
 // +-------------------------------------------------------------------------
 
 {{$service := .Data.Service}}
-{{$subService := index .Data.SubServices "Bucket"}}
 
 // Package service provides {{$service.Name}} Service API (API Version {{$service.APIVersion}})
 package service
@@ -29,27 +28,6 @@ import (
 )
 
 var _ http.Header
-
-// {{ $service.Name }}Interface composes all service and sub service interfaces.
-type {{ $service.Name }}Interface interface {
-    {{ $service.Name }}ServiceInterface
-    {{range $_, $sub := .Data.SubServices}}
-    {{ $sub.Name }}Interface
-    {{end}}
-}
-
-// {{ $service.Name }}ServiceInterface is the method set for {{ $service.Name }} service.
-type {{ $service.Name }}ServiceInterface interface {
-    {{- if ne $subService.Name "Object" }}
-        // {{$subService.ID | camelCase}} initializes a new {{$subService.ID | snakeCase}}.
-        {{$subService.ID | camelCase}}(
-            {{- template "SubServiceInitParams" passThrough $subService.Properties true -}}
-            ) (*{{$subService.ID | camelCase}}, error)
-    {{- end }}
-    {{range $_, $operation := $service.Operations}}
-        {{template "RenderOperationInterface" passThrough $service $operation}}
-    {{end}}
-}
 
 {{if $service.Description}}// Service {{$service.Description}}{{end}}
 type Service struct {

@@ -38,43 +38,6 @@ var _ time.Time
 var _ config.Config
 var _ utils.Conn
 
-// ObjectInterface is the method set for Object sub service.
-type ObjectInterface interface {
-
-	// AbortMultipartUpload does Abort multipart upload.
-	AbortMultipartUpload(objectKey string, input *AbortMultipartUploadInput) (*AbortMultipartUploadOutput, error)
-
-	// CompleteMultipartUpload does Complete multipart upload.
-	CompleteMultipartUpload(objectKey string, input *CompleteMultipartUploadInput) (*CompleteMultipartUploadOutput, error)
-
-	// DeleteObject does Delete the object.
-	DeleteObject(objectKey string) (*DeleteObjectOutput, error)
-
-	// GetObject does Retrieve the object.
-	GetObject(objectKey string, input *GetObjectInput) (*GetObjectOutput, error)
-
-	// HeadObject does Check whether the object exists and available.
-	HeadObject(objectKey string, input *HeadObjectInput) (*HeadObjectOutput, error)
-
-	// ImageProcess does Image process with the action on the object
-	ImageProcess(objectKey string, input *ImageProcessInput) (*ImageProcessOutput, error)
-
-	// InitiateMultipartUpload does Initial multipart upload on the object.
-	InitiateMultipartUpload(objectKey string, input *InitiateMultipartUploadInput) (*InitiateMultipartUploadOutput, error)
-
-	// ListMultipart does List object parts.
-	ListMultipart(objectKey string, input *ListMultipartInput) (*ListMultipartOutput, error)
-
-	// OptionsObject does Check whether the object accepts a origin with method and header.
-	OptionsObject(objectKey string, input *OptionsObjectInput) (*OptionsObjectOutput, error)
-
-	// PutObject does Upload the object.
-	PutObject(objectKey string, input *PutObjectInput) (*PutObjectOutput, error)
-
-	// UploadMultipart does Upload object multipart.
-	UploadMultipart(objectKey string, input *UploadMultipartInput) (*UploadMultipartOutput, error)
-}
-
 // AbortMultipartUpload does Abort multipart upload.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/abort_multipart_upload.html
 func (s *Bucket) AbortMultipartUpload(objectKey string, input *AbortMultipartUploadInput) (*AbortMultipartUploadOutput, error) {

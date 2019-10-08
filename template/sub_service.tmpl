@@ -41,13 +41,6 @@ var _ time.Time
 var _ config.Config
 var _ utils.Conn
 
-// {{ $subService.Name }}Interface is the method set for {{ $subService.Name }} sub service.
-type {{ $subService.Name }}Interface interface {
-{{range $_, $operation := $subService.Operations}}
-    {{template "RenderOperationInterface" passThrough $subService $operation}}
-{{end}}
-}
-
 {{if ne $subService.Name "Object"}}
     // {{$subService.ID | camelCase}} presents {{$subService.ID | snakeCase}}.
     type {{$subService.ID | camelCase}} struct {
