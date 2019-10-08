@@ -17,24 +17,8 @@
 package qsiface
 
 import (
-	"fmt"
-	"io"
-	"net/http"
-	"strings"
-	"time"
-
-	"github.com/yunify/qingstor-sdk-go/v3/config"
 	"github.com/yunify/qingstor-sdk-go/v3/service"
-	"github.com/yunify/qingstor-sdk-go/v3/utils"
 )
-
-var _ fmt.State
-var _ io.Reader
-var _ http.Header
-var _ strings.Reader
-var _ time.Time
-var _ config.Config
-var _ utils.Conn
 
 // Bucket is the method set for Bucket sub service.
 type Bucket interface {

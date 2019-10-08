@@ -18,12 +18,8 @@
 package qsiface
 
 import (
-	"net/http"
-
 	"github.com/yunify/qingstor-sdk-go/v3/service"
 )
-
-var _ http.Header
 
 // Service is the method set for QingStor service.
 type Service interface {
