@@ -14,14 +14,14 @@
 // | limitations under the License.
 // +-------------------------------------------------------------------------
 
-// Package qsiface provides QingStor Service API interface (API Version 2016-01-06)
-package qsiface
+// Package iface provides QingStor Service API interface (API Version 2016-01-06)
+package iface
 
 import (
 	"github.com/yunify/qingstor-sdk-go/v3/service"
 )
 
-// Service is the method set for QingStor service.
+// Service is the method set for all public API service.
 type Service interface {
 	// Bucket initializes a new bucket.
 	Bucket(bucketName string, zone string) (*Bucket, error)
@@ -29,7 +29,9 @@ type Service interface {
 	// ListBuckets does Retrieve the bucket list.
 	ListBuckets(input *service.ListBucketsInput) (*service.ListBucketsOutput, error)
 
+	// Bucket is the method set for Bucket sub service.
 	Bucket
 
+	// Object is the method set for Object sub service.
 	Object
 }

@@ -14,7 +14,7 @@
 // | limitations under the License.
 // +-------------------------------------------------------------------------
 
-package qsiface
+package iface
 
 import (
 	"github.com/yunify/qingstor-sdk-go/v3/service"

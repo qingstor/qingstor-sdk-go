@@ -17,14 +17,14 @@
 {{$service := .Data.Service}}
 {{$subService := index .Data.SubServices "Bucket"}}
 
-// Package qsiface provides {{$service.Name}} Service API interface (API Version {{$service.APIVersion}})
-package qsiface
+// Package iface provides {{$service.Name}} Service API interface (API Version {{$service.APIVersion}})
+package iface
 
 import (
     "github.com/yunify/qingstor-sdk-go/v3/service"
 )
 
-// Service is the method set for {{ $service.Name }} service.
+// Service is the method set for all public API service.
 type Service interface {
     {{- if ne $subService.Name "Object" }}
         // {{$subService.ID | camelCase}} initializes a new {{$subService.ID | snakeCase}}.
@@ -37,6 +37,7 @@ type Service interface {
     {{end}}
 
     {{range $_, $sub := .Data.SubServices}}
+    // {{ $sub.Name }} is the method set for {{ $sub.Name }} sub service.
     {{ $sub.Name }}
     {{end}}
 }
