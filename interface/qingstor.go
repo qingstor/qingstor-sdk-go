@@ -21,17 +21,21 @@ import (
 	"github.com/yunify/qingstor-sdk-go/v3/service"
 )
 
-// Service is the method set for all public API service.
+// Service is the method set for all public service API.
 type Service interface {
 	// Bucket initializes a new bucket.
-	Bucket(bucketName string, zone string) (*Bucket, error)
+	Bucket(bucketName string, zone string) (*service.Bucket, error)
 
 	// ListBuckets does Retrieve the bucket list.
 	ListBuckets(input *service.ListBucketsInput) (*service.ListBucketsOutput, error)
+}
 
-	// Bucket is the method set for Bucket sub service.
-	Bucket
+// Bucket is the method set for all public bucket API.
+type Bucket interface {
 
-	// Object is the method set for Object sub service.
-	Object
+	// bucket is the method set for bucket sub service.
+	bucket
+
+	// object is the method set for object sub service.
+	object
 }

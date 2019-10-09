@@ -16,16 +16,17 @@
 
 {{$service := .Data.Service}}
 {{$subService := index .Data.SubServices .CurrentSubServiceID}}
+{{$servicePackage := "service" }}
 
 package iface
 
 import (
-    "github.com/yunify/qingstor-sdk-go/v3/service"
+    "github.com/yunify/qingstor-sdk-go/v3/{{$servicePackage}}"
 )
 
-// {{ $subService.Name }} is the method set for {{ $subService.Name }} sub service.
-type {{ $subService.Name }} interface {
+// {{ $subService.Name | lower }} is the method set for {{ $subService.Name | lower }} sub service.
+type {{ $subService.Name | lower }} interface {
 {{range $_, $operation := $subService.Operations}}
-    {{template "RenderOperationInterface" passThrough $subService $operation}}
+    {{template "RenderOperationInterface" passThrough $subService $operation $servicePackage}}
 {{end}}
 }
