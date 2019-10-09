@@ -47,6 +47,7 @@
 {{define "RenderOperationInterface"}}
     {{$service := index . 0}}
     {{$operation := index . 1}}
+    {{$servicePackage := index . 2}}
 
     {{$belongs := replace $service.Name "QingStor" "Service" -1}}
     {{$belongs := replace $belongs "Object" "Bucket" -1}}
@@ -71,12 +72,12 @@
     {{- if eq $belongs "Bucket" -}}
         {{replace $opID "Bucket" "" -1 -}}(
             {{- if $isObject}}objectKey string,{{end -}}
-            {{- if $hasInput}}input *service.{{$opID}}Input{{end -}}
-        ) (*service.{{$opID}}Output, error)
+            {{- if $hasInput}}input *{{$servicePackage}}.{{$opID}}Input{{end -}}
+        ) (*{{$servicePackage}}.{{$opID}}Output, error)
     {{- else -}}
         {{$opID}}(
-            {{- if $hasInput}}input *service.{{$opID}}Input{{end -}}
-        ) (*service.{{$opID}}Output, error)
+            {{- if $hasInput}}input *{{$servicePackage}}.{{$opID}}Input{{end -}}
+        ) (*{{$servicePackage}}.{{$opID}}Output, error)
     {{- end -}}
 {{- end }}
 

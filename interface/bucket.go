@@ -20,8 +20,8 @@ import (
 	"github.com/yunify/qingstor-sdk-go/v3/service"
 )
 
-// Bucket is the method set for Bucket sub service.
-type Bucket interface {
+// bucket is the method set for bucket sub service.
+type bucket interface {
 
 	// Delete does Delete a bucket.
 	Delete() (*service.DeleteBucketOutput, error)

@@ -20,8 +20,8 @@ import (
 	"github.com/yunify/qingstor-sdk-go/v3/service"
 )
 
-// Object is the method set for Object sub service.
-type Object interface {
+// object is the method set for object sub service.
+type object interface {
 
 	// AbortMultipartUpload does Abort multipart upload.
 	AbortMultipartUpload(objectKey string, input *service.AbortMultipartUploadInput) (*service.AbortMultipartUploadOutput, error)
