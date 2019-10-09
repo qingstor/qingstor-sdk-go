@@ -401,6 +401,8 @@ type GetObjectOutput struct {
 	LastModified *time.Time `json:"Last-Modified,omitempty" name:"Last-Modified" format:"RFC 822" location:"headers"`
 	// Encryption algorithm of the object
 	XQSEncryptionCustomerAlgorithm *string `json:"X-QS-Encryption-Customer-Algorithm,omitempty" name:"X-QS-Encryption-Customer-Algorithm" location:"headers"`
+	// User-defined metadata
+	XQSMetaData *map[string]string `json:"X-QS-MetaData,omitempty" name:"X-QS-MetaData" location:"headers"`
 	// Storage class of the object
 	XQSStorageClass *string `json:"X-QS-Storage-Class,omitempty" name:"X-QS-Storage-Class" location:"headers"`
 }
@@ -503,6 +505,8 @@ type HeadObjectOutput struct {
 	LastModified *time.Time `json:"Last-Modified,omitempty" name:"Last-Modified" format:"RFC 822" location:"headers"`
 	// Encryption algorithm of the object
 	XQSEncryptionCustomerAlgorithm *string `json:"X-QS-Encryption-Customer-Algorithm,omitempty" name:"X-QS-Encryption-Customer-Algorithm" location:"headers"`
+	// User-defined metadata
+	XQSMetaData *map[string]string `json:"X-QS-MetaData,omitempty" name:"X-QS-MetaData" location:"headers"`
 	// Storage class of the object
 	XQSStorageClass *string `json:"X-QS-Storage-Class,omitempty" name:"X-QS-Storage-Class" location:"headers"`
 }
@@ -675,6 +679,8 @@ type InitiateMultipartUploadInput struct {
 	XQSEncryptionCustomerKey *string `json:"X-QS-Encryption-Customer-Key,omitempty" name:"X-QS-Encryption-Customer-Key" location:"headers"`
 	// MD5sum of encryption key
 	XQSEncryptionCustomerKeyMD5 *string `json:"X-QS-Encryption-Customer-Key-MD5,omitempty" name:"X-QS-Encryption-Customer-Key-MD5" location:"headers"`
+	// User-defined metadata
+	XQSMetaData *map[string]string `json:"X-QS-MetaData,omitempty" name:"X-QS-MetaData" location:"headers"`
 	// Specify the storage class for object
 	// XQSStorageClass's available values: STANDARD, STANDARD_IA
 	XQSStorageClass *string `json:"X-QS-Storage-Class,omitempty" name:"X-QS-Storage-Class" location:"headers"`
@@ -682,6 +688,13 @@ type InitiateMultipartUploadInput struct {
 
 // Validate validates the input for InitiateMultipartUpload.
 func (v *InitiateMultipartUploadInput) Validate() error {
+
+	if v.XQSMetaData != nil {
+		XQSMetaDataerr := utils.IsMetaDataValid(v.XQSMetaData)
+		if XQSMetaDataerr != nil {
+			return XQSMetaDataerr
+		}
+	}
 
 	if v.XQSStorageClass != nil {
 		xQSStorageClassValidValues := []string{"STANDARD", "STANDARD_IA"}
