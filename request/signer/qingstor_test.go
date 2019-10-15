@@ -17,7 +17,10 @@
 package signer
 
 import (
+	"fmt"
+	"github.com/yunify/qingstor-sdk-go/v3/utils"
 	"net/http"
+	"net/url"
 	"testing"
 	"time"
 
@@ -123,5 +126,28 @@ func TestQingStorSignerWriteQuerySignatureWithXQSDate(t *testing.T) {
 	assert.Nil(t, err)
 
 	targetURL := "https://qingstor.com/?acl&upload_id=fde133b5f6d932cd9c79bac3c7318da1&part_number=0&access_key_id=ENV_ACCESS_KEY_ID&expires=3600&signature=plFxMFP1EzKVtdF%2BbApT8rhW9AUAIWfmZcOGH3m27t0="
+	assert.Equal(t, httpRequest.URL.String(), targetURL)
+}
+
+func TestQingStorSigner_WriteQuerySignatureWithDisposition(t *testing.T) {
+	objKey := "中文.jpg"
+	dlName := utils.URLQueryEscape(objKey)
+	disposition := fmt.Sprintf("attachment; filename=\"%s\"; filename*=utf-8''%s", dlName, dlName)
+	// Let's start with a base url
+	u, _ := url.Parse("https://qingstor.com")
+	params := u.Query()
+	params.Set("response-content-disposition", disposition)
+	u.RawQuery = params.Encode()
+	httpRequest, _ := http.NewRequest("GET", u.String(), nil)
+	httpRequest.Header.Set("Date", convert.TimeToString(time.Time{}, convert.RFC822))
+
+	s := QingStorSigner{
+		AccessKeyID:     "ENV_ACCESS_KEY_ID",
+		SecretAccessKey: "ENV_SECRET_ACCESS_KEY",
+	}
+
+	err := s.WriteQuerySignature(httpRequest, 3600)
+	assert.Nil(t, err)
+	targetURL := "https://qingstor.com?response-content-disposition=attachment%3B+filename%3D%22%25E4%25B8%25AD%25E6%2596%2587.jpg%22%3B+filename%2A%3Dutf-8%27%27%25E4%25B8%25AD%25E6%2596%2587.jpg&access_key_id=ENV_ACCESS_KEY_ID&expires=3600&signature=8mZxt4VXwmiiERhfytHyuySjWZD/VPMC3kAy%2BANwHoI="
 	assert.Equal(t, httpRequest.URL.String(), targetURL)
 }
