@@ -82,3 +82,42 @@ func TestQingStorBuilder_BuildHTTPRequest(t *testing.T) {
 	assert.Equal(t, "100-", httpRequest.Header.Get("Range"))
 	assert.Equal(t, "https://beta.qingstor.dev:443/test/path/to/key.txt", httpRequest.URL.String())
 }
+
+func TestQingStorBuilder_BuildHTTPRequestWithDisableURICleaning(t *testing.T) {
+	conf, err := config.NewDefault()
+	conf.DisableURICleaning = true
+	assert.Nil(t, err)
+	conf.Host = "qingstor.dev"
+
+	tz, err := time.LoadLocation("Asia/Shanghai")
+	assert.Nil(t, err)
+
+	qsBuilder := &Builder{}
+	operation := &data.Operation{
+		Config:      conf,
+		APIName:     "GET Object",
+		ServiceName: "QingStor",
+		Properties: &ObjectSubServiceProperties{
+			BucketName: convert.String("test"),
+			ObjectKey:  convert.String("path//to//key.txt"),
+			Zone:       convert.String("beta"),
+		},
+		RequestMethod: "GET",
+		RequestURI:    "/<bucket-name>/<object-key>",
+		StatusCodes: []int{
+			201,
+		},
+	}
+	inputValue := reflect.ValueOf(&GetObjectInput{
+		IfModifiedSince: convert.Time(time.Date(2016, 9, 1, 15, 30, 0, 0, tz)),
+		Range:           convert.String("100-"),
+	})
+	httpRequest, err := qsBuilder.BuildHTTPRequest(operation, &inputValue)
+	assert.Nil(t, err)
+	assert.NotNil(t, httpRequest.Header.Get("Date"))
+	assert.Equal(t, "0", httpRequest.Header.Get("Content-Length"))
+	assert.Equal(t, "", httpRequest.Header.Get("If-Match"))
+	assert.Equal(t, "Thu, 01 Sep 2016 07:30:00 GMT", httpRequest.Header.Get("If-Modified-Since"))
+	assert.Equal(t, "100-", httpRequest.Header.Get("Range"))
+	assert.Equal(t, "https://beta.qingstor.dev:443/test/path//to//key.txt", httpRequest.URL.String())
+}
