@@ -85,6 +85,11 @@ func (s *Service) ListBucketsRequest(input *ListBucketsInput) (*request.Request,
 
 // ListBucketsInput presents input for ListBuckets.
 type ListBucketsInput struct {
+	// Results count limit
+	Limit *int `json:"limit,omitempty" name:"limit" location:"query"`
+	// Limit results to keys that start at this offset
+	Offset *int `json:"offset,omitempty" name:"offset" location:"query"`
+
 	// Limits results to buckets that in the location
 	Location *string `json:"Location,omitempty" name:"Location" location:"headers"`
 }
