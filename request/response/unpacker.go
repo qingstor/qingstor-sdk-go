@@ -14,12 +14,13 @@
 // | limitations under the License.
 // +-------------------------------------------------------------------------
 
-package unpacker
+package response
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -30,21 +31,27 @@ import (
 
 	"github.com/yunify/qingstor-sdk-go/v3/logger"
 	"github.com/yunify/qingstor-sdk-go/v3/request/data"
+	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
 )
 
-// BaseUnpacker is the base unpacker for all services.
-type BaseUnpacker struct {
-	operation    *data.Operation
-	httpResponse *http.Response
-	output       *reflect.Value
+// unpacker is the response unpacker for QingStor service.
+type unpacker struct {
+	operation *data.Operation
+	resp      *http.Response
+	output    *reflect.Value
 }
 
-// UnpackHTTPRequest unpacks http response with an operation and an output.
-func (b *BaseUnpacker) UnpackHTTPRequest(o *data.Operation, r *http.Response, x *reflect.Value) error {
-	b.operation = o
-	b.httpResponse = r
-	b.output = x
+// UnpackToOutput unpack the http response with an operation, http response and an output.
+func UnpackToOutput(o *data.Operation, r *http.Response, x *reflect.Value) error {
+	u := &unpacker{
+		operation: o,
+		resp:      r,
+		output:    x,
+	}
+	return u.unpackResponse()
+}
 
+func (b *unpacker) unpackResponse() error {
 	err := b.exposeStatusCode()
 	if err != nil {
 		return err
@@ -61,32 +68,46 @@ func (b *BaseUnpacker) UnpackHTTPRequest(o *data.Operation, r *http.Response, x 
 	if err != nil {
 		return err
 	}
+	err = b.parseError()
+	if err != nil {
+		return err
+	}
+
+	// Close body for every API except GetObject and ImageProcess.
+	if b.operation.APIName != "GET Object" && b.operation.APIName != "Image Process" && b.resp.Body != nil {
+		err = b.resp.Body.Close()
+		if err != nil {
+			return err
+		}
+
+		b.resp.Body = nil
+	}
 
 	return nil
 }
 
-func (b *BaseUnpacker) exposeStatusCode() error {
+func (b *unpacker) exposeStatusCode() error {
 	value := b.output.Elem().FieldByName("StatusCode")
 	if value.IsValid() {
 		switch value.Interface().(type) {
 		case *int:
 			logger.Infof(nil, fmt.Sprintf(
 				"QingStor response status code: [%d] %d",
-				convert.StringToTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
-				b.httpResponse.StatusCode,
+				convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822),
+				b.resp.StatusCode,
 			))
-			value.Set(reflect.ValueOf(&b.httpResponse.StatusCode))
+			value.Set(reflect.ValueOf(&b.resp.StatusCode))
 		}
 	}
 
 	return nil
 }
 
-func (b *BaseUnpacker) parseResponseHeaders() error {
+func (b *unpacker) parseResponseHeaders() error {
 	logger.Infof(nil, fmt.Sprintf(
 		"QingStor response headers: [%d] %s",
-		convert.StringToTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
-		fmt.Sprint(b.httpResponse.Header),
+		convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822),
+		fmt.Sprint(b.resp.Header),
 	))
 
 	if !b.isResponseRight() {
@@ -97,9 +118,9 @@ func (b *BaseUnpacker) parseResponseHeaders() error {
 		field := fields.Field(i)
 		fieldTagName := fields.Type().Field(i).Tag.Get("name")
 		fieldTagLocation := fields.Type().Field(i).Tag.Get("location")
-		if fieldTagName == "X-QS-MetaData" {
+		if fieldTagName == "X-QS-MetaData" { // handle situation that custom metadata exists
 			m := make(map[string]string)
-			for k, v := range b.httpResponse.Header {
+			for k, v := range b.resp.Header {
 				kLower := strings.ToLower(k)
 				if strings.HasPrefix(kLower, "x-qs-meta-") {
 					if len(v) > 0 {
@@ -113,7 +134,7 @@ func (b *BaseUnpacker) parseResponseHeaders() error {
 			continue
 		}
 
-		fieldStringValue := b.httpResponse.Header.Get(fieldTagName)
+		fieldStringValue := b.resp.Header.Get(fieldTagName)
 
 		// Empty value should be ignored.
 		if fieldStringValue == "" {
@@ -157,25 +178,25 @@ func (b *BaseUnpacker) parseResponseHeaders() error {
 	return nil
 }
 
-func (b *BaseUnpacker) parseResponseBody() error {
+func (b *unpacker) parseResponseBody() error {
 	if b.isResponseRight() {
 		value := b.output.Elem().FieldByName("Body")
 		if value.IsValid() {
 			switch value.Type().String() {
 			case "string":
 				buffer := &bytes.Buffer{}
-				buffer.ReadFrom(b.httpResponse.Body)
-				b.httpResponse.Body.Close()
+				buffer.ReadFrom(b.resp.Body)
+				b.resp.Body.Close()
 
 				logger.Infof(nil, fmt.Sprintf(
 					"QingStor response body string: [%d] %s",
-					convert.StringToTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
+					convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822),
 					string(buffer.Bytes()),
 				))
 
 				value.SetString(string(buffer.Bytes()))
 			case "io.ReadCloser":
-				value.Set(reflect.ValueOf(b.httpResponse.Body))
+				value.Set(reflect.ValueOf(b.resp.Body))
 			}
 		}
 	}
@@ -183,7 +204,7 @@ func (b *BaseUnpacker) parseResponseBody() error {
 	return nil
 }
 
-func (b *BaseUnpacker) parseResponseElements() error {
+func (b *unpacker) parseResponseElements() error {
 	if !b.isResponseRight() {
 		return nil
 	}
@@ -194,13 +215,13 @@ func (b *BaseUnpacker) parseResponseElements() error {
 		return nil
 	}
 
-	if !strings.Contains(b.httpResponse.Header.Get("Content-Type"), "application/json") {
+	if !strings.Contains(b.resp.Header.Get("Content-Type"), "application/json") {
 		return nil
 	}
 
 	buffer := &bytes.Buffer{}
-	buffer.ReadFrom(b.httpResponse.Body)
-	b.httpResponse.Body.Close()
+	buffer.ReadFrom(b.resp.Body)
+	b.resp.Body.Close()
 
 	if buffer.Len() == 0 {
 		return nil
@@ -208,7 +229,7 @@ func (b *BaseUnpacker) parseResponseElements() error {
 
 	logger.Infof(nil, fmt.Sprintf(
 		"QingStor response body string: [%d] %s",
-		convert.StringToTimestamp(b.httpResponse.Header.Get("Date"), convert.RFC822),
+		convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822),
 		string(buffer.Bytes()),
 	))
 
@@ -220,7 +241,7 @@ func (b *BaseUnpacker) parseResponseElements() error {
 	return nil
 }
 
-func (b *BaseUnpacker) isResponseRight() bool {
+func (b *unpacker) isResponseRight() bool {
 	rightStatusCodes := b.operation.StatusCodes
 	if len(rightStatusCodes) == 0 {
 		rightStatusCodes = append(rightStatusCodes, 200)
@@ -228,10 +249,52 @@ func (b *BaseUnpacker) isResponseRight() bool {
 
 	flag := false
 	for _, statusCode := range rightStatusCodes {
-		if statusCode == b.httpResponse.StatusCode {
+		if statusCode == b.resp.StatusCode {
 			flag = true
 		}
 	}
 
 	return flag
+}
+
+func (b *unpacker) parseError() error {
+	if b.isResponseRight() {
+		return nil
+	}
+
+	// QingStor nginx could refuse user's request directly and only return status code.
+	// We should handle this and build a qingstor error with message.
+	if !strings.Contains(b.resp.Header.Get("Content-Type"), "application/json") {
+		qsError := &errors.QingStorError{
+			StatusCode: b.resp.StatusCode,
+			Message:    http.StatusText(b.resp.StatusCode),
+		}
+		return qsError
+	}
+
+	buffer := &bytes.Buffer{}
+	_, err := io.Copy(buffer, b.resp.Body)
+	if err != nil {
+		logger.Errorf(nil, "Copy from error response body failed for %v", err)
+		return err
+	}
+	err = b.resp.Body.Close()
+	if err != nil {
+		logger.Errorf(nil, "Close error response body failed for %v", err)
+		return err
+	}
+
+	qsError := &errors.QingStorError{}
+	if buffer.Len() > 0 {
+		err := json.Unmarshal(buffer.Bytes(), qsError)
+		if err != nil {
+			return err
+		}
+	}
+	qsError.StatusCode = b.resp.StatusCode
+	if qsError.RequestID == "" {
+		qsError.RequestID = b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	}
+
+	return qsError
 }
