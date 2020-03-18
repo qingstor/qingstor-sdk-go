@@ -116,6 +116,112 @@ type AbortMultipartUploadOutput struct {
 	RequestID *string `location:"requestID"`
 }
 
+// AppendObject does Append the Object.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/append.html
+func (s *Bucket) AppendObject(objectKey string, input *AppendObjectInput) (*AppendObjectOutput, error) {
+	r, x, err := s.AppendObjectRequest(objectKey, input)
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// AppendObjectRequest creates request and output object of AppendObject.
+func (s *Bucket) AppendObjectRequest(objectKey string, input *AppendObjectInput) (*request.Request, *AppendObjectOutput, error) {
+
+	if input == nil {
+		input = &AppendObjectInput{}
+	}
+
+	properties := *s.Properties
+
+	properties.ObjectKey = &objectKey
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "Append Object",
+		RequestMethod: "POST",
+		RequestURI:    "/<bucket-name>/<object-key>?append",
+		StatusCodes: []int{
+			200, // Object appended
+		},
+	}
+
+	x := &AppendObjectOutput{}
+	r, err := request.New(o, input, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// AppendObjectInput presents input for AppendObject.
+type AppendObjectInput struct {
+	// Object append position
+	Position *int64 `json:"position" name:"position" location:"query"` // Required
+
+	// Object content size
+	ContentLength *int64 `json:"Content-Length" name:"Content-Length" location:"headers"` // Required
+	// Object MD5sum
+	ContentMD5 *string `json:"Content-MD5,omitempty" name:"Content-MD5" location:"headers"`
+	// Object content type
+	ContentType *string `json:"Content-Type,omitempty" name:"Content-Type" location:"headers"`
+	// Specify the storage class for object
+	// XQSStorageClass's available values: STANDARD, STANDARD_IA
+	XQSStorageClass *string `json:"X-QS-Storage-Class,omitempty" name:"X-QS-Storage-Class" location:"headers"`
+
+	// The request body
+	Body io.Reader `location:"body"`
+}
+
+// Validate validates the input for AppendObject.
+func (v *AppendObjectInput) Validate() error {
+
+	if v.XQSStorageClass != nil {
+		xQSStorageClassValidValues := []string{"STANDARD", "STANDARD_IA"}
+		xQSStorageClassParameterValue := fmt.Sprint(*v.XQSStorageClass)
+
+		xQSStorageClassIsValid := false
+		for _, value := range xQSStorageClassValidValues {
+			if value == xQSStorageClassParameterValue {
+				xQSStorageClassIsValid = true
+			}
+		}
+
+		if !xQSStorageClassIsValid {
+			return errors.ParameterValueNotAllowedError{
+				ParameterName:  "XQSStorageClass",
+				ParameterValue: xQSStorageClassParameterValue,
+				AllowedValues:  xQSStorageClassValidValues,
+			}
+		}
+	}
+
+	return nil
+}
+
+// AppendObjectOutput presents output for AppendObject.
+type AppendObjectOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+
+	// next position when append data to this object
+	XQSNextAppendPosition *int64 `json:"X-QS-Next-Append-Position,omitempty" name:"X-QS-Next-Append-Position" location:"headers"`
+}
+
 // CompleteMultipartUpload does Complete multipart upload.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/object/complete_multipart_upload.html
 func (s *Bucket) CompleteMultipartUpload(objectKey string, input *CompleteMultipartUploadInput) (*CompleteMultipartUploadOutput, error) {
@@ -507,6 +613,10 @@ type HeadObjectOutput struct {
 	XQSEncryptionCustomerAlgorithm *string `json:"X-QS-Encryption-Customer-Algorithm,omitempty" name:"X-QS-Encryption-Customer-Algorithm" location:"headers"`
 	// User-defined metadata
 	XQSMetaData *map[string]string `json:"X-QS-MetaData,omitempty" name:"X-QS-MetaData" location:"headers"`
+	// Next position when append data to this object, only returns when object type is appendable
+	XQSNextAppendPosition *int64 `json:"X-QS-Next-Append-Position,omitempty" name:"X-QS-Next-Append-Position" location:"headers"`
+	// Object type of this object, only returns when object type is appendable
+	XQSObjectType *string `json:"X-QS-Object-Type,omitempty" name:"X-QS-Object-Type" location:"headers"`
 	// Storage class of the object
 	XQSStorageClass *string `json:"X-QS-Storage-Class,omitempty" name:"X-QS-Storage-Class" location:"headers"`
 }
