@@ -29,8 +29,8 @@ import (
 	"github.com/yunify/qingstor-sdk-go/v3/logger"
 	"github.com/yunify/qingstor-sdk-go/v3/request/builder"
 	"github.com/yunify/qingstor-sdk-go/v3/request/data"
+	"github.com/yunify/qingstor-sdk-go/v3/request/response"
 	"github.com/yunify/qingstor-sdk-go/v3/request/signer"
-	"github.com/yunify/qingstor-sdk-go/v3/request/unpacker"
 )
 
 // A Request can build, sign, send and unpack API request.
@@ -205,7 +205,7 @@ func (r *Request) signQuery(expires int) error {
 }
 
 func (r *Request) send() error {
-	var response *http.Response
+	var resp *http.Response
 	var err error
 
 	if r.Operation.Config.Connection == nil {
@@ -219,19 +219,18 @@ func (r *Request) send() error {
 		r.HTTPRequest.Host,
 	))
 
-	response, err = r.Operation.Config.Connection.Do(r.HTTPRequest)
+	resp, err = r.Operation.Config.Connection.Do(r.HTTPRequest)
 	if err != nil {
 		return err
 	}
 
-	r.HTTPResponse = response
+	r.HTTPResponse = resp
 
 	return nil
 }
 
 func (r *Request) unpack() error {
-	u := &unpacker.QingStorUnpacker{}
-	err := u.UnpackHTTPRequest(r.Operation, r.HTTPResponse, r.Output)
+	err := response.UnpackToOutput(r.Operation, r.HTTPResponse, r.Output)
 	if err != nil {
 		return err
 	}
