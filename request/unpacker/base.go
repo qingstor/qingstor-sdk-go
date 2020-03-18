@@ -89,55 +89,71 @@ func (b *BaseUnpacker) parseResponseHeaders() error {
 		fmt.Sprint(b.httpResponse.Header),
 	))
 
-	if b.isResponseRight() {
-		fields := b.output.Elem()
-		for i := 0; i < fields.NumField(); i++ {
-			field := fields.Field(i)
-			fieldTagName := fields.Type().Field(i).Tag.Get("name")
-			fieldTagLocation := fields.Type().Field(i).Tag.Get("location")
-			fieldStringValue := b.httpResponse.Header.Get(fieldTagName)
-
-			// Empty value should be ignored.
-			if fieldStringValue == "" {
-				continue
-			}
-
-			if fieldTagName != "" && fieldTagLocation == "headers" {
-				switch field.Interface().(type) {
-				case *string:
-					field.Set(reflect.ValueOf(&fieldStringValue))
-				case *int:
-					intValue, err := strconv.Atoi(fieldStringValue)
-					if err != nil {
-						return err
+	if !b.isResponseRight() {
+		return nil
+	}
+	fields := b.output.Elem()
+	for i := 0; i < fields.NumField(); i++ {
+		field := fields.Field(i)
+		fieldTagName := fields.Type().Field(i).Tag.Get("name")
+		fieldTagLocation := fields.Type().Field(i).Tag.Get("location")
+		if fieldTagName == "X-QS-MetaData" {
+			m := make(map[string]string)
+			for k, v := range b.httpResponse.Header {
+				kLower := strings.ToLower(k)
+				if strings.HasPrefix(kLower, "x-qs-meta-") {
+					if len(v) > 0 {
+						m[k] = v[0]
 					}
-					field.Set(reflect.ValueOf(&intValue))
-				case *int64:
-					int64Value, err := strconv.ParseInt(fieldStringValue, 10, 64)
-					if err != nil {
-						return err
-					}
-					field.Set(reflect.ValueOf(&int64Value))
-				case *bool:
-				case *time.Time:
-					formatString := fields.Type().Field(i).Tag.Get("format")
-					format := ""
-					switch formatString {
-					case "RFC 822":
-						format = convert.RFC822
-					case "ISO 8601":
-						format = convert.ISO8601
-					}
-					timeValue, err := convert.StringToTime(fieldStringValue, format)
-					if err != nil {
-						return err
-					}
-					field.Set(reflect.ValueOf(&timeValue))
 				}
+			}
+			if len(m) > 0 {
+				field.Set(reflect.ValueOf(&m))
+			}
+			continue
+		}
+
+		fieldStringValue := b.httpResponse.Header.Get(fieldTagName)
+
+		// Empty value should be ignored.
+		if fieldStringValue == "" {
+			continue
+		}
+
+		if fieldTagName != "" && fieldTagLocation == "headers" {
+			switch field.Interface().(type) {
+			case *string:
+				field.Set(reflect.ValueOf(&fieldStringValue))
+			case *int:
+				intValue, err := strconv.Atoi(fieldStringValue)
+				if err != nil {
+					return err
+				}
+				field.Set(reflect.ValueOf(&intValue))
+			case *int64:
+				int64Value, err := strconv.ParseInt(fieldStringValue, 10, 64)
+				if err != nil {
+					return err
+				}
+				field.Set(reflect.ValueOf(&int64Value))
+			case *bool:
+			case *time.Time:
+				formatString := fields.Type().Field(i).Tag.Get("format")
+				format := ""
+				switch formatString {
+				case "RFC 822":
+					format = convert.RFC822
+				case "ISO 8601":
+					format = convert.ISO8601
+				}
+				timeValue, err := convert.StringToTime(fieldStringValue, format)
+				if err != nil {
+					return err
+				}
+				field.Set(reflect.ValueOf(&timeValue))
 			}
 		}
 	}
-
 	return nil
 }
 
