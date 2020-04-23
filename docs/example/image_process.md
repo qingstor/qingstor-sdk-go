@@ -21,9 +21,9 @@ Please see [QingStor Image API](https://docs.qingcloud.com/qingstor/data_process
 ```go
 //Import the latest version API
 import (
-	"github.com/yunify/qingstor-sdk-go/v3/config"
-	"github.com/yunify/qingstor-sdk-go/v3/client/image"
-	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+	"github.com/qingstor/qingstor-sdk-go/v4/config"
+	"github.com/qingstor/qingstor-sdk-go/v4/client/image"
+	qs "github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 ```
 
@@ -106,7 +106,7 @@ imageProcessOutput, err := bucket.ImageProcess("imageName", &qs.ImageProcessInpu
 
 `operation_param` is the image operation param, which definined in `qingstor-sdk-go/client/image/image.go`.
 ```go
-import "github.com/yunify/qingstor-sdk-go/v3/service"
+import "github.com/qingstor/qingstor-sdk-go/v4/service"
 // client/image/image.go
 type Image struct {
 	key    *string
@@ -180,9 +180,9 @@ package main
 import (
 	"log"
 
-	"github.com/yunify/qingstor-sdk-go/v3/client/image"
-	"github.com/yunify/qingstor-sdk-go/v3/config"
-	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+	"github.com/qingstor/qingstor-sdk-go/v4/client/image"
+	"github.com/qingstor/qingstor-sdk-go/v4/config"
+	qs "github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 func main() {
@@ -269,7 +269,7 @@ func main() {
 	testOutput(imageProcessOutput)
 }
 
-// *qs.ImageProcessOutput: github.com/yunify/qingstor-sdk-go/v3/service/object.go
+// *qs.ImageProcessOutput: github.com/qingstor/qingstor-sdk-go/v4/service/object.go
 func testOutput(out *qs.ImageProcessOutput) {
 	log.Println(*out.StatusCode)
 	log.Println(*out.RequestID)

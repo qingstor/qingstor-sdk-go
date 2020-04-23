@@ -29,8 +29,8 @@ import (
 
 	"github.com/DATA-DOG/godog"
 
-	"github.com/yunify/qingstor-sdk-go/v3/request"
-	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+	"github.com/qingstor/qingstor-sdk-go/v4/request"
+	qs "github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 // ObjectFeatureContext provides feature context for object.

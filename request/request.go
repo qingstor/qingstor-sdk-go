@@ -26,11 +26,11 @@ import (
 
 	"github.com/pengsrc/go-shared/convert"
 
-	"github.com/yunify/qingstor-sdk-go/v3/logger"
-	"github.com/yunify/qingstor-sdk-go/v3/request/builder"
-	"github.com/yunify/qingstor-sdk-go/v3/request/data"
-	"github.com/yunify/qingstor-sdk-go/v3/request/response"
-	"github.com/yunify/qingstor-sdk-go/v3/request/signer"
+	"github.com/qingstor/qingstor-sdk-go/v4/logger"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/builder"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/response"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/signer"
 )
 
 // A Request can build, sign, send and unpack API request.

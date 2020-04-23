@@ -18,7 +18,7 @@
 package iface
 
 import (
-	"github.com/yunify/qingstor-sdk-go/v3/service"
+	"github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 // Service is the method set for all public service API.

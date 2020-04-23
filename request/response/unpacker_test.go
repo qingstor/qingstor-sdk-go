@@ -27,8 +27,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/yunify/qingstor-sdk-go/v3/request/data"
-	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 )
 
 func StringValue(v *string) string {

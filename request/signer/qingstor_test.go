@@ -18,15 +18,15 @@ package signer
 
 import (
 	"fmt"
-	"github.com/yunify/qingstor-sdk-go/v3/utils"
 	"net/http"
 	"net/url"
 	"testing"
 	"time"
 
 	"github.com/pengsrc/go-shared/convert"
-
 	"github.com/stretchr/testify/assert"
+
+	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
 
 func TestQingStorSignerWriteSignature(t *testing.T) {

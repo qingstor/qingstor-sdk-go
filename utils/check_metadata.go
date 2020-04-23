@@ -3,7 +3,7 @@ package utils
 import (
 	"strings"
 
-	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 )
 
 // IsMetaDataValid check whether the metadata-KV follows rule in API document

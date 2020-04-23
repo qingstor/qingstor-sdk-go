@@ -20,7 +20,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/yunify/qingstor-sdk-go/v3/logger"
+
+	"github.com/qingstor/qingstor-sdk-go/v4/logger"
 )
 
 func TestConfig(t *testing.T) {

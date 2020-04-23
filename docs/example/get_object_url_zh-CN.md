@@ -6,9 +6,9 @@
 
 ```go
 import (
-	"github.com/yunify/qingstor-sdk-go/v3/config"
-	"github.com/yunify/qingstor-sdk-go/v3/service"
-	"github.com/yunify/qingstor-sdk-go/v3/utils"
+	"github.com/qingstor/qingstor-sdk-go/v4/config"
+	"github.com/qingstor/qingstor-sdk-go/v4/service"
+	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
 
 var conf, _ = config.New("YOUR-ACCESS-KEY-ID", "YOUR--SECRET-ACCESS-KEY")

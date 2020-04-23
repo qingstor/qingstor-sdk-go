@@ -23,7 +23,7 @@ import (
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 
-	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+	qs "github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 // BucketPolicyFeatureContext provides feature context for bucket policy.

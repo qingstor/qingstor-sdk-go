@@ -25,10 +25,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/yunify/qingstor-sdk-go/v3/config"
-	"github.com/yunify/qingstor-sdk-go/v3/logger"
-	"github.com/yunify/qingstor-sdk-go/v3/request/data"
-	"github.com/yunify/qingstor-sdk-go/v3/request/errors"
+	"github.com/qingstor/qingstor-sdk-go/v4/config"
+	"github.com/qingstor/qingstor-sdk-go/v4/logger"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 )
 
 type SomeActionProperties struct {

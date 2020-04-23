@@ -2,7 +2,7 @@
 
 ## Overview
 
-This SDK uses a structure called "Config" to store and manage configuration, read comments of public functions in ["config/config.go"](https://github.com/yunify/qingstor-sdk-go/blob/master/config/config.go) for details.
+This SDK uses a structure called "Config" to store and manage configuration, read comments of public functions in ["config/config.go"](https://github.com/qingstor/qingstor-sdk-go/blob/master/config/config.go) for details.
 
 Except for Access Key, you can also configure the API endpoint for private cloud usage scenario. All available configurable items are listed in the default configuration file.
 

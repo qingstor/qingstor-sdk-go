@@ -7,7 +7,7 @@ import (
 
 	"github.com/DATA-DOG/godog"
 
-	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+	qs "github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 // ImageFeatureContext provides feature context for image.

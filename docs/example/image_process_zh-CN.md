@@ -22,8 +22,8 @@
 
 ```go
 import (
-	"github.com/yunify/qingstor-sdk-go/v3/config"
-	"github.com/yunify/qingstor-sdk-go/v3/service"
+	"github.com/qingstor/qingstor-sdk-go/v4/config"
+	"github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 var conf, _ = config.New("YOUR-ACCESS-KEY-ID", "YOUR--SECRET-ACCESS-KEY")
@@ -105,7 +105,7 @@ imageProcessOutput, err := bucket.ImageProcess("imageName", &qs.ImageProcessInpu
 
 `operation_param`是图像操作参数，它在`qingstor-sdk-go / client / image / image.go`中定义。
 ```go
-import "github.com/yunify/qingstor-sdk-go/v3/service"
+import "github.com/qingstor/qingstor-sdk-go/v4/service"
 // client/image/image.go
 type Image struct {
 	key    *string
@@ -179,9 +179,9 @@ package main
 import (
 	"log"
 
-	"github.com/yunify/qingstor-sdk-go/v3/client/image"
-	"github.com/yunify/qingstor-sdk-go/v3/config"
-	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+	"github.com/qingstor/qingstor-sdk-go/v4/client/image"
+	"github.com/qingstor/qingstor-sdk-go/v4/config"
+	qs "github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 func main() {
@@ -268,7 +268,7 @@ func main() {
 	testOutput(imageProcessOutput)
 }
 
-// *qs.ImageProcessOutput: github.com/yunify/qingstor-sdk-go/v3/service/object.go
+// *qs.ImageProcessOutput: github.com/qingstor/qingstor-sdk-go/v4/service/object.go
 func testOutput(out *qs.ImageProcessOutput) {
 	log.Println(*out.StatusCode)
 	log.Println(*out.RequestID)

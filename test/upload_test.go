@@ -6,7 +6,8 @@ import (
 	"os/exec"
 
 	"github.com/DATA-DOG/godog"
-	"github.com/yunify/qingstor-sdk-go/v3/client/upload"
+
+	"github.com/qingstor/qingstor-sdk-go/v4/client/upload"
 )
 
 var uploader *upload.Uploader

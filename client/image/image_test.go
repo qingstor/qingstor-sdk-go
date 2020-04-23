@@ -4,7 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+
+	qs "github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 var image *Image

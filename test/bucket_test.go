@@ -24,8 +24,8 @@ import (
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 
-	qsErrors "github.com/yunify/qingstor-sdk-go/v3/request/errors"
-	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+	qsErrors "github.com/qingstor/qingstor-sdk-go/v4/request/errors"
+	qs "github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 // BucketFeatureContext provides feature context for bucket.

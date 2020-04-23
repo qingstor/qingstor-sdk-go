@@ -37,10 +37,10 @@ import (
 
 	"github.com/pengsrc/go-shared/convert"
 
-	"github.com/yunify/qingstor-sdk-go/v3"
-	"github.com/yunify/qingstor-sdk-go/v3/logger"
-	"github.com/yunify/qingstor-sdk-go/v3/request/data"
-	"github.com/yunify/qingstor-sdk-go/v3/utils"
+	"github.com/qingstor/qingstor-sdk-go/v4"
+	"github.com/qingstor/qingstor-sdk-go/v4/logger"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
+	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
 
 // Builder is the request builder for QingStor service.
