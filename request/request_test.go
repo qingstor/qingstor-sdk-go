@@ -122,6 +122,7 @@ func TestRequestSend(t *testing.T) {
 	  "url": "http://docs.qingcloud.com/object_storage/api/object/get.html"
 	}`
 	httpResponse.Body = ioutil.NopCloser(bytes.NewReader([]byte(responseString)))
+	httpResponse.ContentLength = int64(len(responseString))
 	assert.Nil(t, err)
 	r.HTTPResponse = httpResponse
 

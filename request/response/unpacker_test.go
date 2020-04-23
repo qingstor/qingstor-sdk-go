@@ -74,6 +74,7 @@ func TestSimpleUnpackHTTPRequest(t *testing.T) {
 	httpResponse.Header.Set("Content-Type", "application/json")
 	responseString := `{"a": "el_a", "b": "el_b", "cd": 1024, "ef": 2048}`
 	httpResponse.Body = ioutil.NopCloser(bytes.NewReader([]byte(responseString)))
+	httpResponse.ContentLength = int64(len(responseString))
 
 	output := &FakeOutput{}
 	outputValue := reflect.ValueOf(output)
@@ -137,6 +138,7 @@ func TestUnpackHTTPRequest(t *testing.T) {
 	  ]
 	}`
 	httpResponse.Body = ioutil.NopCloser(bytes.NewReader([]byte(responseString)))
+	httpResponse.ContentLength = int64(len(responseString))
 
 	output := &ListBucketsOutput{}
 	outputValue := reflect.ValueOf(output)
@@ -168,6 +170,7 @@ func TestUnpackHTTPRequestWithError(t *testing.T) {
 	  "url": "http://docs.qingcloud.com/object_storage/api/bucket/get.html"
 	}`
 	httpResponse.Body = ioutil.NopCloser(bytes.NewReader([]byte(responseString)))
+	httpResponse.ContentLength = int64(len(responseString))
 
 	output := &ListBucketsOutput{}
 	outputValue := reflect.ValueOf(output)
