@@ -215,6 +215,7 @@ func TestUnpackHTTPRequestWithEmptyError(t *testing.T) {
 	httpResponse := &http.Response{Header: http.Header{}}
 	httpResponse.StatusCode = 400
 	httpResponse.Body = ioutil.NopCloser(strings.NewReader(""))
+	httpResponse.Header.Set("X-QS-Request-ID", "aa08cf7a43f611e5886952542e6ce14b")
 
 	output := &ListBucketsOutput{}
 	outputValue := reflect.ValueOf(output)
@@ -224,5 +225,6 @@ func TestUnpackHTTPRequestWithEmptyError(t *testing.T) {
 	switch e := err.(type) {
 	case *errors.QingStorError:
 		assert.Equal(t, 400, e.StatusCode)
+		assert.Equal(t, "aa08cf7a43f611e5886952542e6ce14b", e.RequestID)
 	}
 }
