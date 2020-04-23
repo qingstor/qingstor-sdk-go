@@ -215,7 +215,7 @@ func (b *unpacker) parseResponseElements() error {
 		return nil
 	}
 
-	if !strings.Contains(b.resp.Header.Get("Content-Type"), "application/json") {
+	if !strings.HasPrefix(b.resp.Header.Get("Content-Type"), "application/json") {
 		return nil
 	}
 
@@ -272,7 +272,7 @@ func (b *unpacker) parseError() error {
 	if b.resp.ContentLength <= 0 {
 		return qsError
 	}
-	if !strings.Contains(b.resp.Header.Get("Content-Type"), "application/json") {
+	if !strings.HasPrefix(b.resp.Header.Get("Content-Type"), "application/json") {
 		return qsError
 	}
 
