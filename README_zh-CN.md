@@ -1,9 +1,9 @@
 # QingStor SDK for Go
 
-[![Build Status](https://travis-ci.org/yunify/qingstor-sdk-go.svg?branch=master)](https://travis-ci.org/yunify/qingstor-sdk-go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/yunify/qingstor-sdk-go)](https://goreportcard.com/report/github.com/yunify/qingstor-sdk-go)
+[![Build Status](https://travis-ci.org/qingstor/qingstor-sdk-go.svg?branch=master)](https://travis-ci.org/qingstor/qingstor-sdk-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/qingstor/qingstor-sdk-go)](https://goreportcard.com/report/github.com/qingstor/qingstor-sdk-go)
 [![API Reference](http://img.shields.io/badge/api-reference-green.svg)](http://docs.qingcloud.com/qingstor/)
-[![License](http://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/yunify/qingstor-sdk-go/blob/master/LICENSE)
+[![License](http://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/qingstor/qingstor-sdk-go/blob/master/LICENSE)
 
 [English](README.md) | 中文
 
@@ -23,7 +23,7 @@ Go 语言版本的 QingStor 官方 SDK.
 - [初始化服务](./docs/service_zh-CN.md)
 - [代码示例](./docs/examples_zh-CN.md)
 
-查看我们的 [发布历史](https://github.com/yunify/qingstor-sdk-go/releases) 和 [更改日志](./CHANGELOG.md) 获取最新的特性和 bug 修复。
+查看我们的 [发布历史](https://github.com/qingstor/qingstor-sdk-go/releases) 和 [更改日志](./CHANGELOG.md) 获取最新的特性和 bug 修复。
 
 ## 参考文档
 
@@ -33,7 +33,7 @@ Go 语言版本的 QingStor 官方 SDK.
 
 ## 贡献
 
-1. Fork 仓库 ( https://github.com/yunify/qingstor-sdk-go/fork )
+1. Fork 仓库 ( https://github.com/qingstor/qingstor-sdk-go/fork )
 2. 创建您的 feature 分支 (`git checkout -b new-feature`)
 3. 提交您的修改 (`git commit -asm 'Add some feature'`)
 4. 推送到您的 origin 仓库 (`git push origin new-feature`)

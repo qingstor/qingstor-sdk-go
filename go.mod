@@ -1,4 +1,4 @@
-module github.com/yunify/qingstor-sdk-go/v3
+module github.com/qingstor/qingstor-sdk-go/v4
 
 go 1.12
 

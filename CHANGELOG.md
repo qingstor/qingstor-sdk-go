@@ -1,6 +1,19 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v4.0.0] - 2020-4-23
+
+### Added
+
+- service: Support list buckets by limit and offset (#97)
+- Add AppendObject support (#98)
+- Add metadata response support (#99)
+
+### Fixed
+
+- Fix requestID not return while body is empty (#102)
+- request: Fix content type check (#103)
+
 ## [v3.2.0] - 2020-2-13
 
 ### Added
@@ -233,31 +246,32 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
-[v3.2.0]: https://github.com/yunify/qingstor-sdk-go/compare/v3.1.1...v3.2.0
-[v3.1.1]: https://github.com/yunify/qingstor-sdk-go/compare/v3.1.0...v3.1.1
-[v3.1.0]: https://github.com/yunify/qingstor-sdk-go/compare/v3.0.2...v3.1.0
-[v3.0.2]: https://github.com/yunify/qingstor-sdk-go/compare/v3.0.1...v3.0.2
-[v3.0.1]: https://github.com/yunify/qingstor-sdk-go/compare/v3.0.0...v3.0.1
-[v3.0.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.3.0...v3.0.0
-[v2.3.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.15...v2.3.0
-[v2.2.15]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.14...v2.2.15
-[v2.2.14]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.13...v2.2.14
-[v2.2.13]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.12...v2.2.13
-[v2.2.12]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.11...v2.2.12
-[v2.2.11]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.10...v2.2.11
-[v2.2.10]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.9...v2.2.10
-[v2.2.9]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.8...v2.2.9
-[v2.2.8]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.7...v2.2.8
-[v2.2.7]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.6...v2.2.7
-[v2.2.6]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.5...v2.2.6
-[v2.2.5]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.4...v2.2.5
-[v2.2.4]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.3...v2.2.4
-[v2.2.3]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.2...v2.2.3
-[v2.2.2]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.1...v2.2.2
-[v2.2.1]: https://github.com/yunify/qingstor-sdk-go/compare/v2.2.0...v2.2.1
-[v2.2.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.1.2...v2.2.0
-[v2.1.2]: https://github.com/yunify/qingstor-sdk-go/compare/v2.1.1...v2.1.2
-[v2.1.1]: https://github.com/yunify/qingstor-sdk-go/compare/v2.1.0...v2.1.1
-[v2.1.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.0.1...v2.1.0
-[v2.0.1]: https://github.com/yunify/qingstor-sdk-go/compare/v2.0.0...v2.0.1
-[v2.0.0]: https://github.com/yunify/qingstor-sdk-go/compare/v2.0.0...v2.0.0
+[v4.0.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.2.0...v4.0.0
+[v3.2.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.1.1...v3.2.0
+[v3.1.1]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.1.0...v3.1.1
+[v3.1.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.0.2...v3.1.0
+[v3.0.2]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.0.1...v3.0.2
+[v3.0.1]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.0.0...v3.0.1
+[v3.0.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.3.0...v3.0.0
+[v2.3.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.15...v2.3.0
+[v2.2.15]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.14...v2.2.15
+[v2.2.14]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.13...v2.2.14
+[v2.2.13]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.12...v2.2.13
+[v2.2.12]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.11...v2.2.12
+[v2.2.11]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.10...v2.2.11
+[v2.2.10]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.9...v2.2.10
+[v2.2.9]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.8...v2.2.9
+[v2.2.8]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.7...v2.2.8
+[v2.2.7]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.6...v2.2.7
+[v2.2.6]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.5...v2.2.6
+[v2.2.5]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.4...v2.2.5
+[v2.2.4]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.3...v2.2.4
+[v2.2.3]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.2...v2.2.3
+[v2.2.2]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.1...v2.2.2
+[v2.2.1]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.2.0...v2.2.1
+[v2.2.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.1.2...v2.2.0
+[v2.1.2]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.1.1...v2.1.2
+[v2.1.1]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.1.0...v2.1.1
+[v2.1.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.0.1...v2.1.0
+[v2.0.1]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.0.0...v2.0.1
+[v2.0.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v2.0.0...v2.0.0

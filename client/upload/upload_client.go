@@ -4,8 +4,8 @@ import (
 	"errors"
 	"io"
 
-	"github.com/yunify/qingstor-sdk-go/v3/logger"
-	"github.com/yunify/qingstor-sdk-go/v3/service"
+	"github.com/qingstor/qingstor-sdk-go/v4/logger"
+	"github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 // Uploader struct provides a struct to upload
@@ -16,7 +16,7 @@ type Uploader struct {
 
 const smallestPartSize int = 1024 * 1024 * 4
 
-//Init creates a uploader struct
+// Init creates a uploader struct
 func Init(bucket *service.Bucket, partSize int) *Uploader {
 	return &Uploader{
 		bucket:   bucket,

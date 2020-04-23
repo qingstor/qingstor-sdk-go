@@ -4,8 +4,8 @@ First, we need to initialize a QingStor service to call the services provided by
 
 ```go
 import (
-	"github.com/yunify/qingstor-sdk-go/v3/config"
-	"github.com/yunify/qingstor-sdk-go/v3/service"
+	"github.com/qingstor/qingstor-sdk-go/v4/config"
+	"github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 const accessKeyId = "YOUR-ACCESS-KEY-ID"

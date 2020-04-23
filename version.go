@@ -16,8 +16,8 @@
 
 // Package sdk is the official QingStor SDK for the Go programming language.
 //
-// https://github.com/yunify/qingstor-sdk-go
+// https://github.com/qingstor/qingstor-sdk-go
 package sdk
 
 // Version number.
-const Version = "3.2.0"
+const Version = "4.0.0"

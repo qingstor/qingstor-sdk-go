@@ -1,9 +1,9 @@
 # QingStor SDK for Go
 
-[![Build Status](https://travis-ci.org/yunify/qingstor-sdk-go.svg?branch=master)](https://travis-ci.org/yunify/qingstor-sdk-go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/yunify/qingstor-sdk-go)](https://goreportcard.com/report/github.com/yunify/qingstor-sdk-go)
+[![Build Status](https://travis-ci.org/qingstor/qingstor-sdk-go.svg?branch=master)](https://travis-ci.org/qingstor/qingstor-sdk-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/qingstor/qingstor-sdk-go)](https://goreportcard.com/report/github.com/qingstor/qingstor-sdk-go)
 [![API Reference](http://img.shields.io/badge/api-reference-green.svg)](http://docs.qingcloud.com/qingstor/)
-[![License](http://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/yunify/qingstor-sdk-go/blob/master/LICENSE)
+[![License](http://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/qingstor/qingstor-sdk-go/blob/master/LICENSE)
 
 English | [中文](README_zh-CN.md)
 
@@ -23,7 +23,7 @@ Now you are ready to code. You can read the detailed guides in the list below to
 - [Service Initialization](./docs/service.md)
 - [Code Examples](./docs/examples.md)
 
-Checkout our [releases](https://github.com/yunify/qingstor-sdk-go/releases) and [change log](./CHANGELOG.md) for information about the latest features, bug fixes and new ideas.
+Checkout our [releases](https://github.com/qingstor/qingstor-sdk-go/releases) and [change log](./CHANGELOG.md) for information about the latest features, bug fixes and new ideas.
 
 ## Reference Documentations
 
@@ -33,7 +33,7 @@ Checkout our [releases](https://github.com/yunify/qingstor-sdk-go/releases) and 
 
 ## Contributing
 
-1. Fork it ( https://github.com/yunify/qingstor-sdk-go/fork )
+1. Fork it ( https://github.com/qingstor/qingstor-sdk-go/fork )
 2. Create your feature branch (`git checkout -b new-feature`)
 3. Commit your changes (`git commit -asm 'Add some feature'`)
 4. Push to the branch (`git push origin new-feature`)

@@ -2,7 +2,7 @@
 
 ## 总览
 
-SDK 封装一个 `Config` struct 用于存储和管理配置信息，您可以通过 ["config/config.go"](https://github.com/yunify/qingstor-sdk-go/blob/master/config/config.go) 来获取它的详细信息（如内部成员和导出方法等）。
+SDK 封装一个 `Config` struct 用于存储和管理配置信息，您可以通过 ["config/config.go"](https://github.com/qingstor/qingstor-sdk-go/blob/master/config/config.go) 来获取它的详细信息（如内部成员和导出方法等）。
 
 除 `ACCESS_KEY_ID` 和 `SECRET_ACCESS_KEY` 之外，您还可以配置 `API服务器` 以进行私有云使用场景。 所有可用的可配置项目都列在默认配置文件中。
 

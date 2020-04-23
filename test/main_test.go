@@ -17,17 +17,17 @@
 package main
 
 import (
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
 	"testing"
 	"time"
 
 	"github.com/DATA-DOG/godog"
+	"gopkg.in/yaml.v2"
 
-	"github.com/yunify/qingstor-sdk-go/v3/config"
-	qsErrors "github.com/yunify/qingstor-sdk-go/v3/request/errors"
-	qs "github.com/yunify/qingstor-sdk-go/v3/service"
+	"github.com/qingstor/qingstor-sdk-go/v4/config"
+	qsErrors "github.com/qingstor/qingstor-sdk-go/v4/request/errors"
+	qs "github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
 func TestMain(m *testing.M) {
@@ -52,7 +52,7 @@ func TestMain(m *testing.M) {
 	}
 	status := godog.RunWithOptions("*", context, options)
 
-	//tearDown()
+	// tearDown()
 
 	os.Exit(status)
 }
@@ -68,11 +68,11 @@ func setUp() {
 	err = theBucketIsInitialized()
 	checkErrorForExit(err)
 
-	//err = putBucket()
-	//checkError(err)
+	// err = putBucket()
+	// checkError(err)
 
-	//err = putBucketStatusCodeIs(201)
-	//checkError(err)
+	// err = putBucketStatusCodeIs(201)
+	// checkError(err)
 }
 
 func tearDown() {

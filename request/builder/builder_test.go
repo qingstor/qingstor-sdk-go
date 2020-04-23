@@ -17,14 +17,15 @@
 package builder
 
 import (
-	"github.com/pengsrc/go-shared/convert"
 	"reflect"
 	"testing"
 	"time"
 
+	"github.com/pengsrc/go-shared/convert"
 	"github.com/stretchr/testify/assert"
-	"github.com/yunify/qingstor-sdk-go/v3/config"
-	"github.com/yunify/qingstor-sdk-go/v3/request/data"
+
+	"github.com/qingstor/qingstor-sdk-go/v4/config"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
 )
 
 type ObjectSubServiceProperties struct {
