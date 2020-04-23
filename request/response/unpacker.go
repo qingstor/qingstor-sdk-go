@@ -262,15 +262,15 @@ func (b *unpacker) parseError() error {
 		return nil
 	}
 
-	qsError := &errors.QingStorError{}
+	qsError := &errors.QingStorError{
+		StatusCode: b.resp.StatusCode,
+		RequestID:  b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID")),
+	}
 
 	// QingStor nginx could refuse user's request directly and only return status code.
 	// We should handle this and build a qingstor error with message.
 	if !strings.Contains(b.resp.Header.Get("Content-Type"), "application/json") {
-		qsError.StatusCode = b.resp.StatusCode
 		qsError.Message = http.StatusText(b.resp.StatusCode)
-		// add request ID for not-json-type response
-		qsError.RequestID = b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
 		return qsError
 	}
 
@@ -292,11 +292,5 @@ func (b *unpacker) parseError() error {
 			return err
 		}
 	}
-	// rewrite the body-parsed-error with statusCode and requestID
-	qsError.StatusCode = b.resp.StatusCode
-	if qsError.RequestID == "" {
-		qsError.RequestID = b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
-	}
-
 	return qsError
 }
