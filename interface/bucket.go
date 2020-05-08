@@ -26,6 +26,9 @@ type bucket interface {
 	// Delete does Delete a bucket.
 	Delete() (*service.DeleteBucketOutput, error)
 
+	// DeleteCNAME does Delete bucket CNAME setting of the bucket.
+	DeleteCNAME(input *service.DeleteBucketCNAMEInput) (*service.DeleteBucketCNAMEOutput, error)
+
 	// DeleteCORS does Delete CORS information of the bucket.
 	DeleteCORS() (*service.DeleteBucketCORSOutput, error)
 
@@ -49,6 +52,9 @@ type bucket interface {
 
 	// GetACL does Get ACL information of the bucket.
 	GetACL() (*service.GetBucketACLOutput, error)
+
+	// GetCNAME does Get bucket CNAME setting of the bucket.
+	GetCNAME(input *service.GetBucketCNAMEInput) (*service.GetBucketCNAMEOutput, error)
 
 	// GetCORS does Get CORS information of the bucket.
 	GetCORS() (*service.GetBucketCORSOutput, error)
@@ -85,6 +91,9 @@ type bucket interface {
 
 	// PutACL does Set ACL information of the bucket.
 	PutACL(input *service.PutBucketACLInput) (*service.PutBucketACLOutput, error)
+
+	// PutCNAME does Set bucket CNAME of the bucket.
+	PutCNAME(input *service.PutBucketCNAMEInput) (*service.PutBucketCNAMEOutput, error)
 
 	// PutCORS does Set CORS information of the bucket.
 	PutCORS(input *service.PutBucketCORSInput) (*service.PutBucketCORSOutput, error)

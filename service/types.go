@@ -147,6 +147,107 @@ func (v *CloudfuncArgsType) Validate() error {
 	return nil
 }
 
+// CnameType presents Cname.
+type CnameType struct {
+	// The domain name to be bound to the bucket. The domain name must have been registered and not bound to another bucket.
+	Domain *string `json:"domain" name:"domain"` // Required
+	// The purpose of the domain name to be bound. Currently supports two types, normal and website.
+	// Type's available values: normal, website
+	Type *string `json:"type,omitempty" name:"type"`
+}
+
+// Validate validates the Cname.
+func (v *CnameType) Validate() error {
+
+	if v.Domain == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "Domain",
+			ParentName:    "Cname",
+		}
+	}
+
+	if v.Type != nil {
+		typeValidValues := []string{"normal", "website"}
+		typeParameterValue := fmt.Sprint(*v.Type)
+
+		typeIsValid := false
+		for _, value := range typeValidValues {
+			if value == typeParameterValue {
+				typeIsValid = true
+			}
+		}
+
+		if !typeIsValid {
+			return errors.ParameterValueNotAllowedError{
+				ParameterName:  "Type",
+				ParameterValue: typeParameterValue,
+				AllowedValues:  typeValidValues,
+			}
+		}
+	}
+
+	return nil
+}
+
+// CnameRecordType presents CnameRecord.
+type CnameRecordType struct {
+	// the created time of this CNAME record.
+	Created *string `json:"created,omitempty" name:"created"`
+	// The domain name to be bound to the bucket. The domain name must have been registered and not bound to another bucket.
+	Domain *string `json:"domain,omitempty" name:"domain"`
+	// The purpose of the domain name to be bound. Currently supports two types, normal and website.
+	// Type's available values: normal, website
+	Type *string `json:"type,omitempty" name:"type"`
+}
+
+// Validate validates the CnameRecord.
+func (v *CnameRecordType) Validate() error {
+
+	if v.Type != nil {
+		typeValidValues := []string{"normal", "website"}
+		typeParameterValue := fmt.Sprint(*v.Type)
+
+		typeIsValid := false
+		for _, value := range typeValidValues {
+			if value == typeParameterValue {
+				typeIsValid = true
+			}
+		}
+
+		if !typeIsValid {
+			return errors.ParameterValueNotAllowedError{
+				ParameterName:  "Type",
+				ParameterValue: typeParameterValue,
+				AllowedValues:  typeValidValues,
+			}
+		}
+	}
+
+	return nil
+}
+
+// CnameRecordsType presents CnameRecords.
+type CnameRecordsType struct {
+	// the details of all eligible CNAME records.
+	CnameRecords []*CnameRecordType `json:"cname_records,omitempty" name:"cname_records"`
+	// the count of all eligible CNAME records.
+	Count *int `json:"count,omitempty" name:"count"`
+}
+
+// Validate validates the CnameRecords.
+func (v *CnameRecordsType) Validate() error {
+
+	if len(v.CnameRecords) > 0 {
+		for _, property := range v.CnameRecords {
+			if err := property.Validate(); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
 // ConditionType presents Condition.
 type ConditionType struct {
 	IPAddress     *IPAddressType     `json:"ip_address,omitempty" name:"ip_address"`
