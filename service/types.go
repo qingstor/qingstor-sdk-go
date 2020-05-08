@@ -369,6 +369,35 @@ func (v *KeyDeleteErrorType) Validate() error {
 	return nil
 }
 
+// LoggingType presents Logging.
+type LoggingType struct {
+	// The name of the bucket used to store logs. The user must be the owner of the bucket.
+	TargetBucket *string `json:"target_bucket" name:"target_bucket"` // Required
+	// generated log files' common prefix
+	TargetPrefix *string `json:"target_prefix" name:"target_prefix"` // Required
+
+}
+
+// Validate validates the Logging.
+func (v *LoggingType) Validate() error {
+
+	if v.TargetBucket == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "TargetBucket",
+			ParentName:    "Logging",
+		}
+	}
+
+	if v.TargetPrefix == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "TargetPrefix",
+			ParentName:    "Logging",
+		}
+	}
+
+	return nil
+}
+
 // NotIPAddressType presents NotIPAddress.
 type NotIPAddressType struct {
 	// Source IP

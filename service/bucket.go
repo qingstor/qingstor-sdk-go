@@ -263,6 +263,58 @@ type DeleteBucketLifecycleOutput struct {
 	RequestID *string `location:"requestID"`
 }
 
+// DeleteLogging does Delete bucket logging setting of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/delete_logging.html
+func (s *Bucket) DeleteLogging() (*DeleteBucketLoggingOutput, error) {
+	r, x, err := s.DeleteLoggingRequest()
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// DeleteLoggingRequest creates request and output object of DeleteBucketLogging.
+func (s *Bucket) DeleteLoggingRequest() (*request.Request, *DeleteBucketLoggingOutput, error) {
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "DELETE Bucket Logging",
+		RequestMethod: "DELETE",
+		RequestURI:    "/<bucket-name>?logging",
+		StatusCodes: []int{
+			204, // No content
+		},
+	}
+
+	x := &DeleteBucketLoggingOutput{}
+	r, err := request.New(o, nil, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// DeleteBucketLoggingOutput presents output for DeleteBucketLogging.
+type DeleteBucketLoggingOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+}
+
 // DeleteNotification does Delete Notification information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/notification/delete_notification.html
 func (s *Bucket) DeleteNotification() (*DeleteBucketNotificationOutput, error) {
@@ -678,6 +730,63 @@ type GetBucketLifecycleOutput struct {
 
 	// Bucket Lifecycle rule
 	Rule []*RuleType `json:"rule,omitempty" name:"rule" location:"elements"`
+}
+
+// GetLogging does Get bucket logging setting of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/get_logging.html
+func (s *Bucket) GetLogging() (*GetBucketLoggingOutput, error) {
+	r, x, err := s.GetLoggingRequest()
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// GetLoggingRequest creates request and output object of GetBucketLogging.
+func (s *Bucket) GetLoggingRequest() (*request.Request, *GetBucketLoggingOutput, error) {
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "GET Bucket Logging",
+		RequestMethod: "GET",
+		RequestURI:    "/<bucket-name>?logging",
+		StatusCodes: []int{
+			200, // OK
+		},
+	}
+
+	x := &GetBucketLoggingOutput{}
+	r, err := request.New(o, nil, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// GetBucketLoggingOutput presents output for GetBucketLogging.
+type GetBucketLoggingOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+
+	// The name of the bucket used to store logs. The user must be the owner of the bucket.
+	TargetBucket *string `json:"target_bucket,omitempty" name:"target_bucket" location:"elements"`
+	// generated log files' common prefix
+	TargetPrefix *string `json:"target_prefix,omitempty" name:"target_prefix" location:"elements"`
 }
 
 // GetNotification does Get Notification information of the bucket.
@@ -1477,6 +1586,91 @@ func (v *PutBucketLifecycleInput) Validate() error {
 
 // PutBucketLifecycleOutput presents output for PutBucketLifecycle.
 type PutBucketLifecycleOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+}
+
+// PutLogging does Set bucket logging of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/put_logging.html
+func (s *Bucket) PutLogging(input *PutBucketLoggingInput) (*PutBucketLoggingOutput, error) {
+	r, x, err := s.PutLoggingRequest(input)
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// PutLoggingRequest creates request and output object of PutBucketLogging.
+func (s *Bucket) PutLoggingRequest(input *PutBucketLoggingInput) (*request.Request, *PutBucketLoggingOutput, error) {
+
+	if input == nil {
+		input = &PutBucketLoggingInput{}
+	}
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "PUT Bucket Logging",
+		RequestMethod: "PUT",
+		RequestURI:    "/<bucket-name>?logging",
+		StatusCodes: []int{
+			200, // OK
+		},
+	}
+
+	x := &PutBucketLoggingOutput{}
+	r, err := request.New(o, input, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// PutBucketLoggingInput presents input for PutBucketLogging.
+type PutBucketLoggingInput struct {
+	// The name of the bucket used to store logs. The user must be the owner of the bucket.
+	TargetBucket *string `json:"target_bucket" name:"target_bucket" location:"elements"` // Required
+	// generated log files' common prefix
+	TargetPrefix *string `json:"target_prefix" name:"target_prefix" location:"elements"` // Required
+
+}
+
+// Validate validates the input for PutBucketLogging.
+func (v *PutBucketLoggingInput) Validate() error {
+
+	if v.TargetBucket == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "TargetBucket",
+			ParentName:    "PutBucketLoggingInput",
+		}
+	}
+
+	if v.TargetPrefix == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "TargetPrefix",
+			ParentName:    "PutBucketLoggingInput",
+		}
+	}
+
+	return nil
+}
+
+// PutBucketLoggingOutput presents output for PutBucketLogging.
+type PutBucketLoggingOutput struct {
 	StatusCode *int `location:"statusCode"`
 
 	RequestID *string `location:"requestID"`

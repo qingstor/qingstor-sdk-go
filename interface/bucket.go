@@ -35,6 +35,9 @@ type bucket interface {
 	// DeleteLifecycle does Delete Lifecycle information of the bucket.
 	DeleteLifecycle() (*service.DeleteBucketLifecycleOutput, error)
 
+	// DeleteLogging does Delete bucket logging setting of the bucket.
+	DeleteLogging() (*service.DeleteBucketLoggingOutput, error)
+
 	// DeleteNotification does Delete Notification information of the bucket.
 	DeleteNotification() (*service.DeleteBucketNotificationOutput, error)
 
@@ -55,6 +58,9 @@ type bucket interface {
 
 	// GetLifecycle does Get Lifecycle information of the bucket.
 	GetLifecycle() (*service.GetBucketLifecycleOutput, error)
+
+	// GetLogging does Get bucket logging setting of the bucket.
+	GetLogging() (*service.GetBucketLoggingOutput, error)
 
 	// GetNotification does Get Notification information of the bucket.
 	GetNotification() (*service.GetBucketNotificationOutput, error)
@@ -88,6 +94,9 @@ type bucket interface {
 
 	// PutLifecycle does Set Lifecycle information of the bucket.
 	PutLifecycle(input *service.PutBucketLifecycleInput) (*service.PutBucketLifecycleOutput, error)
+
+	// PutLogging does Set bucket logging of the bucket.
+	PutLogging(input *service.PutBucketLoggingInput) (*service.PutBucketLoggingOutput, error)
 
 	// PutNotification does Set Notification information of the bucket.
 	PutNotification(input *service.PutBucketNotificationInput) (*service.PutBucketNotificationOutput, error)
