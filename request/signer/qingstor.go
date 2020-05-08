@@ -253,6 +253,7 @@ func (qss *QingStorSigner) queryToSign(key string) bool {
 		"notification":                 true,
 		"lifecycle":                    true,
 		"logging":                      true,
+		"cname":                        true,
 		"response-expires":             true,
 		"response-cache-control":       true,
 		"response-content-type":        true,

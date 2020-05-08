@@ -107,6 +107,82 @@ type DeleteBucketOutput struct {
 	RequestID *string `location:"requestID"`
 }
 
+// DeleteCNAME does Delete bucket CNAME setting of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cname/delete_cname.html
+func (s *Bucket) DeleteCNAME(input *DeleteBucketCNAMEInput) (*DeleteBucketCNAMEOutput, error) {
+	r, x, err := s.DeleteCNAMERequest(input)
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// DeleteCNAMERequest creates request and output object of DeleteBucketCNAME.
+func (s *Bucket) DeleteCNAMERequest(input *DeleteBucketCNAMEInput) (*request.Request, *DeleteBucketCNAMEOutput, error) {
+
+	if input == nil {
+		input = &DeleteBucketCNAMEInput{}
+	}
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "DELETE Bucket CNAME",
+		RequestMethod: "DELETE",
+		RequestURI:    "/<bucket-name>?cname",
+		StatusCodes: []int{
+			204, // No content
+		},
+	}
+
+	x := &DeleteBucketCNAMEOutput{}
+	r, err := request.New(o, input, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// DeleteBucketCNAMEInput presents input for DeleteBucketCNAME.
+type DeleteBucketCNAMEInput struct {
+	// domain name
+	Domain *string `json:"domain" name:"domain" location:"elements"` // Required
+
+}
+
+// Validate validates the input for DeleteBucketCNAME.
+func (v *DeleteBucketCNAMEInput) Validate() error {
+
+	if v.Domain == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "Domain",
+			ParentName:    "DeleteBucketCNAMEInput",
+		}
+	}
+
+	return nil
+}
+
+// DeleteBucketCNAMEOutput presents output for DeleteBucketCNAME.
+type DeleteBucketCNAMEOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+}
+
 // DeleteCORS does Delete CORS information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/delete_cors.html
 func (s *Bucket) DeleteCORS() (*DeleteBucketCORSOutput, error) {
@@ -258,6 +334,58 @@ func (s *Bucket) DeleteLifecycleRequest() (*request.Request, *DeleteBucketLifecy
 
 // DeleteBucketLifecycleOutput presents output for DeleteBucketLifecycle.
 type DeleteBucketLifecycleOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+}
+
+// DeleteLogging does Delete bucket logging setting of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/delete_logging.html
+func (s *Bucket) DeleteLogging() (*DeleteBucketLoggingOutput, error) {
+	r, x, err := s.DeleteLoggingRequest()
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// DeleteLoggingRequest creates request and output object of DeleteBucketLogging.
+func (s *Bucket) DeleteLoggingRequest() (*request.Request, *DeleteBucketLoggingOutput, error) {
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "DELETE Bucket Logging",
+		RequestMethod: "DELETE",
+		RequestURI:    "/<bucket-name>?logging",
+		StatusCodes: []int{
+			204, // No content
+		},
+	}
+
+	x := &DeleteBucketLoggingOutput{}
+	r, err := request.New(o, nil, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// DeleteBucketLoggingOutput presents output for DeleteBucketLogging.
+type DeleteBucketLoggingOutput struct {
 	StatusCode *int `location:"statusCode"`
 
 	RequestID *string `location:"requestID"`
@@ -515,6 +643,100 @@ type GetBucketACLOutput struct {
 	Owner *OwnerType `json:"owner,omitempty" name:"owner" location:"elements"`
 }
 
+// GetCNAME does Get bucket CNAME setting of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cname/get_cname.html
+func (s *Bucket) GetCNAME(input *GetBucketCNAMEInput) (*GetBucketCNAMEOutput, error) {
+	r, x, err := s.GetCNAMERequest(input)
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// GetCNAMERequest creates request and output object of GetBucketCNAME.
+func (s *Bucket) GetCNAMERequest(input *GetBucketCNAMEInput) (*request.Request, *GetBucketCNAMEOutput, error) {
+
+	if input == nil {
+		input = &GetBucketCNAMEInput{}
+	}
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "GET Bucket CNAME",
+		RequestMethod: "GET",
+		RequestURI:    "/<bucket-name>?cname",
+		StatusCodes: []int{
+			200, // OK
+		},
+	}
+
+	x := &GetBucketCNAMEOutput{}
+	r, err := request.New(o, input, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// GetBucketCNAMEInput presents input for GetBucketCNAME.
+type GetBucketCNAMEInput struct {
+	// Limit the type used for query, normal will be recognized if empty.
+	// Type's available values: website, normal
+	Type *string `json:"type,omitempty" name:"type" location:"query"`
+}
+
+// Validate validates the input for GetBucketCNAME.
+func (v *GetBucketCNAMEInput) Validate() error {
+
+	if v.Type != nil {
+		typeValidValues := []string{"website", "normal"}
+		typeParameterValue := fmt.Sprint(*v.Type)
+
+		typeIsValid := false
+		for _, value := range typeValidValues {
+			if value == typeParameterValue {
+				typeIsValid = true
+			}
+		}
+
+		if !typeIsValid {
+			return errors.ParameterValueNotAllowedError{
+				ParameterName:  "Type",
+				ParameterValue: typeParameterValue,
+				AllowedValues:  typeValidValues,
+			}
+		}
+	}
+
+	return nil
+}
+
+// GetBucketCNAMEOutput presents output for GetBucketCNAME.
+type GetBucketCNAMEOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+
+	// the details of all eligible CNAME records.
+	CnameRecords []*CnameRecordType `json:"cname_records,omitempty" name:"cname_records" location:"elements"`
+	// the count of all eligible CNAME records.
+	Count *int `json:"count,omitempty" name:"count" location:"elements"`
+}
+
 // GetCORS does Get CORS information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/get_cors.html
 func (s *Bucket) GetCORS() (*GetBucketCORSOutput, error) {
@@ -678,6 +900,63 @@ type GetBucketLifecycleOutput struct {
 
 	// Bucket Lifecycle rule
 	Rule []*RuleType `json:"rule,omitempty" name:"rule" location:"elements"`
+}
+
+// GetLogging does Get bucket logging setting of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/get_logging.html
+func (s *Bucket) GetLogging() (*GetBucketLoggingOutput, error) {
+	r, x, err := s.GetLoggingRequest()
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// GetLoggingRequest creates request and output object of GetBucketLogging.
+func (s *Bucket) GetLoggingRequest() (*request.Request, *GetBucketLoggingOutput, error) {
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "GET Bucket Logging",
+		RequestMethod: "GET",
+		RequestURI:    "/<bucket-name>?logging",
+		StatusCodes: []int{
+			200, // OK
+		},
+	}
+
+	x := &GetBucketLoggingOutput{}
+	r, err := request.New(o, nil, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// GetBucketLoggingOutput presents output for GetBucketLogging.
+type GetBucketLoggingOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+
+	// The name of the bucket used to store logs. The user must be the owner of the bucket.
+	TargetBucket *string `json:"target_bucket,omitempty" name:"target_bucket" location:"elements"`
+	// generated log files' common prefix
+	TargetPrefix *string `json:"target_prefix,omitempty" name:"target_prefix" location:"elements"`
 }
 
 // GetNotification does Get Notification information of the bucket.
@@ -1238,6 +1517,104 @@ type PutBucketACLOutput struct {
 	RequestID *string `location:"requestID"`
 }
 
+// PutCNAME does Set bucket CNAME of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cname/put_cname.html
+func (s *Bucket) PutCNAME(input *PutBucketCNAMEInput) (*PutBucketCNAMEOutput, error) {
+	r, x, err := s.PutCNAMERequest(input)
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// PutCNAMERequest creates request and output object of PutBucketCNAME.
+func (s *Bucket) PutCNAMERequest(input *PutBucketCNAMEInput) (*request.Request, *PutBucketCNAMEOutput, error) {
+
+	if input == nil {
+		input = &PutBucketCNAMEInput{}
+	}
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "PUT Bucket CNAME",
+		RequestMethod: "PUT",
+		RequestURI:    "/<bucket-name>?cname",
+		StatusCodes: []int{
+			200, // OK
+		},
+	}
+
+	x := &PutBucketCNAMEOutput{}
+	r, err := request.New(o, input, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// PutBucketCNAMEInput presents input for PutBucketCNAME.
+type PutBucketCNAMEInput struct {
+	// The domain name to be bound to the bucket. The domain name must have been registered and not bound to another bucket.
+	Domain *string `json:"domain" name:"domain" location:"elements"` // Required
+	// The purpose of the domain name to be bound. Currently supports two types, normal and website.
+	// Type's available values: normal, website
+	Type *string `json:"type,omitempty" name:"type" location:"elements"`
+}
+
+// Validate validates the input for PutBucketCNAME.
+func (v *PutBucketCNAMEInput) Validate() error {
+
+	if v.Domain == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "Domain",
+			ParentName:    "PutBucketCNAMEInput",
+		}
+	}
+
+	if v.Type != nil {
+		typeValidValues := []string{"normal", "website"}
+		typeParameterValue := fmt.Sprint(*v.Type)
+
+		typeIsValid := false
+		for _, value := range typeValidValues {
+			if value == typeParameterValue {
+				typeIsValid = true
+			}
+		}
+
+		if !typeIsValid {
+			return errors.ParameterValueNotAllowedError{
+				ParameterName:  "Type",
+				ParameterValue: typeParameterValue,
+				AllowedValues:  typeValidValues,
+			}
+		}
+	}
+
+	return nil
+}
+
+// PutBucketCNAMEOutput presents output for PutBucketCNAME.
+type PutBucketCNAMEOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+}
+
 // PutCORS does Set CORS information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/put_cors.html
 func (s *Bucket) PutCORS(input *PutBucketCORSInput) (*PutBucketCORSOutput, error) {
@@ -1477,6 +1854,91 @@ func (v *PutBucketLifecycleInput) Validate() error {
 
 // PutBucketLifecycleOutput presents output for PutBucketLifecycle.
 type PutBucketLifecycleOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+}
+
+// PutLogging does Set bucket logging of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/put_logging.html
+func (s *Bucket) PutLogging(input *PutBucketLoggingInput) (*PutBucketLoggingOutput, error) {
+	r, x, err := s.PutLoggingRequest(input)
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.Send()
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// PutLoggingRequest creates request and output object of PutBucketLogging.
+func (s *Bucket) PutLoggingRequest(input *PutBucketLoggingInput) (*request.Request, *PutBucketLoggingOutput, error) {
+
+	if input == nil {
+		input = &PutBucketLoggingInput{}
+	}
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "PUT Bucket Logging",
+		RequestMethod: "PUT",
+		RequestURI:    "/<bucket-name>?logging",
+		StatusCodes: []int{
+			200, // OK
+		},
+	}
+
+	x := &PutBucketLoggingOutput{}
+	r, err := request.New(o, input, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// PutBucketLoggingInput presents input for PutBucketLogging.
+type PutBucketLoggingInput struct {
+	// The name of the bucket used to store logs. The user must be the owner of the bucket.
+	TargetBucket *string `json:"target_bucket" name:"target_bucket" location:"elements"` // Required
+	// generated log files' common prefix
+	TargetPrefix *string `json:"target_prefix" name:"target_prefix" location:"elements"` // Required
+
+}
+
+// Validate validates the input for PutBucketLogging.
+func (v *PutBucketLoggingInput) Validate() error {
+
+	if v.TargetBucket == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "TargetBucket",
+			ParentName:    "PutBucketLoggingInput",
+		}
+	}
+
+	if v.TargetPrefix == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "TargetPrefix",
+			ParentName:    "PutBucketLoggingInput",
+		}
+	}
+
+	return nil
+}
+
+// PutBucketLoggingOutput presents output for PutBucketLogging.
+type PutBucketLoggingOutput struct {
 	StatusCode *int `location:"statusCode"`
 
 	RequestID *string `location:"requestID"`

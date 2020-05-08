@@ -26,6 +26,9 @@ type object interface {
 	// AbortMultipartUpload does Abort multipart upload.
 	AbortMultipartUpload(objectKey string, input *service.AbortMultipartUploadInput) (*service.AbortMultipartUploadOutput, error)
 
+	// AppendObject does Append the Object.
+	AppendObject(objectKey string, input *service.AppendObjectInput) (*service.AppendObjectOutput, error)
+
 	// CompleteMultipartUpload does Complete multipart upload.
 	CompleteMultipartUpload(objectKey string, input *service.CompleteMultipartUploadInput) (*service.CompleteMultipartUploadOutput, error)
 
