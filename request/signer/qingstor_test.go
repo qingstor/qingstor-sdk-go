@@ -151,3 +151,23 @@ func TestQingStorSigner_WriteQuerySignatureWithDisposition(t *testing.T) {
 	targetURL := "https://qingstor.com?response-content-disposition=attachment%3B+filename%3D%22%25E4%25B8%25AD%25E6%2596%2587.jpg%22%3B+filename%2A%3Dutf-8%27%27%25E4%25B8%25AD%25E6%2596%2587.jpg&access_key_id=ENV_ACCESS_KEY_ID&expires=3600&signature=8mZxt4VXwmiiERhfytHyuySjWZD/VPMC3kAy%2BANwHoI="
 	assert.Equal(t, httpRequest.URL.String(), targetURL)
 }
+
+func TestQingStorSigner_WriteSignatureWithCname(t *testing.T) {
+	url := "https://qingstor.com/bucket-name?cname"
+	httpRequest, err := http.NewRequest("PUT", url, nil)
+	httpRequest.Header.Set("Date", convert.TimeToString(time.Time{}, convert.RFC822))
+	httpRequest.Header.Set("X-QS-Test-2", "Test 2")
+	httpRequest.Header.Set("X-QS-Test-1", "Test 1")
+	assert.Nil(t, err)
+
+	s := QingStorSigner{
+		AccessKeyID:     "ENV_ACCESS_KEY_ID",
+		SecretAccessKey: "ENV_SECRET_ACCESS_KEY",
+	}
+
+	err = s.WriteSignature(httpRequest)
+	assert.Nil(t, err)
+
+	signature := "QS ENV_ACCESS_KEY_ID:Kqc4/+6T7zfSrUPgkvswHbtL4ESch9vOVQP0nPwlkBs="
+	assert.Equal(t, signature, httpRequest.Header.Get("Authorization"))
+}
