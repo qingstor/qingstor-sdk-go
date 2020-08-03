@@ -37,6 +37,7 @@ import (
 	"unicode"
 
 	"github.com/pengsrc/go-shared/convert"
+	"github.com/qingstor/log"
 
 	"github.com/qingstor/qingstor-sdk-go/v4"
 	"github.com/qingstor/qingstor-sdk-go/v4/logger"
@@ -80,24 +81,24 @@ func (qb *Builder) BuildHTTPRequest(ctx context.Context, o *data.Operation, i *r
 
 	timestamp := convert.StringToTimestamp(httpRequest.Header.Get("Date"), convert.RFC822)
 
-	logger.Infof(nil, fmt.Sprintf(
-		"Built QingStor request: [%d] %s",
-		timestamp,
-		httpRequest.URL.String(),
-	))
+	logger.GetLogger().Info(
+		log.String("title", "Built QingStor request"),
+		log.Int("date", timestamp),
+		log.String("url", httpRequest.URL.String()),
+	)
 
-	logger.Infof(nil, fmt.Sprintf(
-		"QingStor request headers: [%d] %s",
-		timestamp,
-		fmt.Sprint(httpRequest.Header),
-	))
+	logger.GetLogger().Info(
+		log.String("title", "QingStor request headers"),
+		log.Int("date", timestamp),
+		log.String("header", fmt.Sprint(httpRequest.Header)),
+	)
 
 	if qb.parsedBodyString != "" {
-		logger.Infof(nil, fmt.Sprintf(
-			"QingStor request body string: [%d] %s",
-			timestamp,
-			qb.parsedBodyString,
-		))
+		logger.GetLogger().Info(
+			log.String("title", "QingStor request body string"),
+			log.Int("date", timestamp),
+			log.String("parsed_body_string", qb.parsedBodyString),
+		)
 	}
 
 	return httpRequest, nil

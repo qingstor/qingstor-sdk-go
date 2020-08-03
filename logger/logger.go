@@ -18,85 +18,75 @@
 package logger
 
 import (
-	"context"
+	"errors"
 	"fmt"
+	"os"
+	"strings"
+	"sync"
 
-	"github.com/pengsrc/go-shared/log"
+	"github.com/qingstor/log"
+	"github.com/qingstor/log/level"
 )
 
-// Logger is the interface of SDK logger.
-type Logger interface {
-	Debugf(ctx context.Context, format string, v ...interface{})
-	Infof(ctx context.Context, format string, v ...interface{})
-	Warnf(ctx context.Context, format string, v ...interface{})
-	Errorf(ctx context.Context, format string, v ...interface{})
-	Fatalf(ctx context.Context, format string, v ...interface{})
-	Panicf(ctx context.Context, format string, v ...interface{})
-}
+// ErrUnavailableLevel returns when level not available
+var ErrUnavailableLevel = errors.New("level not available")
+
+var mu = new(sync.Mutex)
+var tf log.Transformer
+var e log.Executor
 
 // CheckLevel checks whether the log level is valid.
-func CheckLevel(level string) error {
-	if _, err := log.ParseLevel(level); err != nil {
-		return fmt.Errorf(`log level not valid: "%s"`, level)
+func CheckLevel(l string) error {
+	if _, err := ParseLevel(l); err != nil {
+		return fmt.Errorf(`%w: "%s"`, ErrUnavailableLevel, l)
 	}
 	return nil
 }
 
-// GetLevel get the log level string.
-func GetLevel() string {
-	if l, ok := instance.(*log.Logger); ok {
-		return l.GetLevel()
+// ParseLevel parse level from string into level.Level
+func ParseLevel(l string) (level.Level, error) {
+	l = strings.ToLower(l)
+	for k, v := range level.Format[level.LowerCase] {
+		if v == l {
+			return level.Level(k), nil
+		}
 	}
-	return "UNKNOWN"
+	return level.Disable, ErrUnavailableLevel
 }
 
 // SetLevel sets the log level.
-// Valid levels are "debug", "info", "warn", "error", and "fatal".
-func SetLevel(level string) {
-	if l, ok := instance.(*log.Logger); ok {
-		err := l.SetLevel(level)
-		if err != nil {
-			Fatalf(nil, fmt.Sprintf(`log level not valid: "%s"`, level))
-		}
-	}
+// Valid levels are "debug", "info", "warn", "error".
+func SetLevel(l level.Level) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	e = log.ExecuteMatchWrite(
+		// Only print log that level is higher than Debug.
+		log.MatchHigherLevel(l),
+		// Write into stderr.
+		os.Stdout,
+	)
 }
 
-// SetLogger sets the a logger as SDK logger.
-func SetLogger(l Logger) {
-	instance = l
+// GetLogger new a log entry with given executor and transformer
+func GetLogger() *log.Logger {
+	return log.New().WithExecutor(e).WithTransformer(tf)
 }
-
-// Debugf logs a message with severity DEBUG.
-func Debugf(ctx context.Context, format string, v ...interface{}) {
-	instance.Debugf(ctx, format, v...)
-}
-
-// Infof logs a message with severity INFO.
-func Infof(ctx context.Context, format string, v ...interface{}) {
-	instance.Infof(ctx, format, v...)
-}
-
-// Warnf logs a message with severity WARN.
-func Warnf(ctx context.Context, format string, v ...interface{}) {
-	instance.Warnf(ctx, format, v...)
-}
-
-// Errorf logs a message with severity ERROR.
-func Errorf(ctx context.Context, format string, v ...interface{}) {
-	instance.Errorf(ctx, format, v...)
-}
-
-// Fatalf logs a message with severity ERROR followed by a call to os.Exit().
-func Fatalf(ctx context.Context, format string, v ...interface{}) {
-	instance.Fatalf(ctx, format, v...)
-}
-
-var instance Logger
 
 func init() {
-	l, err := log.NewTerminalLogger(log.WarnLevel.String())
+	var err error
+	tf, err = log.NewText(&log.TextConfig{
+		// Use unix timestamp nano for time
+		TimeFormat: log.TimeFormatUnixNano,
+		// Use upper case level
+		LevelFormat: level.UpperCase,
+		EntryFormat: "[{level}] - {time} {value}",
+	})
+
 	if err != nil {
 		panic(fmt.Sprintf("failed to initialize QingStor SDK logger: %v", err))
 	}
-	instance = l
+
+	// Only print warn and error logs in default
+	SetLevel(level.Info)
 }

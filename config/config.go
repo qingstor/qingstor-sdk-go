@@ -24,6 +24,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/qingstor/log"
+	"github.com/qingstor/log/level"
 	"gopkg.in/yaml.v2"
 
 	"github.com/qingstor/qingstor-sdk-go/v4/logger"
@@ -167,11 +169,14 @@ func (c *Config) LoadDefaultConfig() (err error) {
 
 	err = yaml.Unmarshal([]byte(DefaultConfigFileContent), c)
 	if err != nil {
-		logger.Errorf(nil, "Config parse error, %v.", err)
+		logger.GetLogger().Error(
+			log.String("config_parse_error", err.Error()),
+		)
 		return
 	}
 
-	logger.SetLevel(c.LogLevel)
+	lvl, _ := logger.ParseLevel(c.LogLevel)
+	logger.SetLevel(lvl)
 
 	c.InitHTTPClient()
 	return
@@ -182,7 +187,10 @@ func (c *Config) LoadDefaultConfig() (err error) {
 func (c *Config) LoadUserConfig() (err error) {
 	_, err = os.Stat(GetUserConfigFilePath())
 	if err != nil {
-		logger.Warnf(nil, "Installing default config file to %s.", GetUserConfigFilePath())
+		logger.GetLogger().Warn(
+			log.String("title", "Installing default config file"),
+			log.String("path", GetUserConfigFilePath()),
+		)
 		InstallDefaultUserConfig()
 	}
 
@@ -198,7 +206,10 @@ func (c *Config) LoadConfigFromFilePath(filePath string) (err error) {
 
 	yamlString, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		logger.Errorf(nil, "File not found: %s.", filePath)
+		logger.GetLogger().Error(
+			log.String("file_not_found", err.Error()),
+			log.String("path", filePath),
+		)
 		return err
 	}
 
@@ -212,7 +223,7 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 
 	err = yaml.Unmarshal(content, c)
 	if err != nil {
-		logger.Errorf(nil, "Config parse error, %v.", err)
+		logger.GetLogger().Error(log.String("config_parse_error", err.Error()))
 		return
 	}
 
@@ -221,7 +232,16 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 		return
 	}
 
-	logger.SetLevel(c.LogLevel)
+	var lvl level.Level
+	lvl, err = logger.ParseLevel(c.LogLevel)
+	if err != nil {
+		logger.GetLogger().Error(
+			log.String("parse_log_level_error", err.Error()),
+			log.String("level", c.LogLevel),
+		)
+		return
+	}
+	logger.SetLevel(lvl)
 
 	c.InitHTTPClient()
 	return

@@ -24,6 +24,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/qingstor/log/level"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/qingstor/qingstor-sdk-go/v4/config"
@@ -71,7 +72,7 @@ func Time(v time.Time) *time.Time {
 func TestRequestSend(t *testing.T) {
 	conf, err := config.New("ACCESS_KEY_ID", "SECRET_ACCESS_KEY")
 	assert.Nil(t, err)
-	logger.SetLevel("warn")
+	logger.SetLevel(level.Warn)
 
 	operation := &data.Operation{
 		Config: conf,
