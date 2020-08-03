@@ -38,7 +38,7 @@ var e log.Executor
 // CheckLevel checks whether the log level is valid.
 func CheckLevel(l string) error {
 	if _, err := ParseLevel(l); err != nil {
-		return fmt.Errorf(`%w: "%s"`, ErrUnavailableLevel, l)
+		return fmt.Errorf(`%v: "%s"`, ErrUnavailableLevel, l)
 	}
 	return nil
 }
