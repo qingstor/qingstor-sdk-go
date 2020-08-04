@@ -176,7 +176,7 @@ func (c *Config) LoadDefaultConfig() (err error) {
 	}
 
 	lvl, _ := logger.ParseLevel(c.LogLevel)
-	logger.SetLevel(lvl)
+	logger.SetLevelAndWriter(lvl, nil)
 
 	c.InitHTTPClient()
 	return
@@ -241,7 +241,7 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 		)
 		return
 	}
-	logger.SetLevel(lvl)
+	logger.SetLevelAndWriter(lvl, nil)
 
 	c.InitHTTPClient()
 	return

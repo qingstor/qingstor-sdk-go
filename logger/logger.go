@@ -20,6 +20,7 @@ package logger
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 	"sync"
@@ -54,18 +55,33 @@ func ParseLevel(l string) (level.Level, error) {
 	return level.Disable, ErrUnavailableLevel
 }
 
-// SetLevel sets the log level.
+// SetLevelAndWriter sets the log level and writer.
 // Valid levels are "debug", "info", "warn", "error".
-func SetLevel(l level.Level) {
+// Log with higher level will be written into writer.
+// If writer nil, use Stderr as default.
+func SetLevelAndWriter(l level.Level, w io.Writer) {
 	mu.Lock()
 	defer mu.Unlock()
 
+	var writer io.Writer = os.Stderr
+	if w != nil {
+		writer = w
+	}
 	e = log.ExecuteMatchWrite(
 		// Only print log that level is higher than Debug.
 		log.MatchHigherLevel(l),
 		// Write into stderr.
-		os.Stdout,
+		writer,
 	)
+}
+
+// SetMultipleExecutor sets log executor with multiple custom executor
+// Such as writer higher level into one file and lower level into another file
+func SetMultipleExecutor(ext ...log.Executor) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	e = log.ExecuteMultiple(ext...)
 }
 
 // GetLogger new a log entry with given executor and transformer
@@ -88,5 +104,5 @@ func init() {
 	}
 
 	// Only print warn and error logs in default
-	SetLevel(level.Info)
+	SetLevelAndWriter(level.Info, nil)
 }

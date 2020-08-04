@@ -72,7 +72,7 @@ func Time(v time.Time) *time.Time {
 func TestRequestSend(t *testing.T) {
 	conf, err := config.New("ACCESS_KEY_ID", "SECRET_ACCESS_KEY")
 	assert.Nil(t, err)
-	logger.SetLevel(level.Warn)
+	logger.SetLevelAndWriter(level.Warn, nil)
 
 	operation := &data.Operation{
 		Config: conf,
