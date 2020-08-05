@@ -27,7 +27,6 @@ import (
 	"github.com/pengsrc/go-shared/convert"
 	"github.com/qingstor/log"
 
-	"github.com/qingstor/qingstor-sdk-go/v4/logger"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/builder"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/response"
@@ -257,7 +256,7 @@ func (r *Request) send(ctx context.Context) error {
 		r.Operation.Config.InitHTTPClient()
 	}
 
-	logger.GetLogger().Info(
+	log.FromContext(ctx).Info(
 		log.String("title", "Sending request"),
 		log.Int("date", convert.StringToTimestamp(r.HTTPRequest.Header.Get("Date"), convert.RFC822)),
 		log.String("method", r.Operation.RequestMethod),

@@ -23,7 +23,6 @@ import (
 	"io"
 	"os"
 	"strings"
-	"sync"
 
 	"github.com/qingstor/log"
 	"github.com/qingstor/log/level"
@@ -31,10 +30,6 @@ import (
 
 // ErrUnavailableLevel returns when level not available
 var ErrUnavailableLevel = errors.New("level not available")
-
-var mu = new(sync.Mutex)
-var tf log.Transformer
-var e log.Executor
 
 // CheckLevel checks whether the log level is valid.
 func CheckLevel(l string) error {
@@ -55,54 +50,30 @@ func ParseLevel(l string) (level.Level, error) {
 	return level.Disable, ErrUnavailableLevel
 }
 
-// SetLevelAndWriter sets the log level and writer.
-// Valid levels are "debug", "info", "warn", "error".
-// Log with higher level will be written into writer.
-// If writer nil, use Stderr as default.
-func SetLevelAndWriter(l level.Level, w io.Writer) {
-	mu.Lock()
-	defer mu.Unlock()
+// GetLogger new a default logger
+func GetLogger() *log.Logger {
+	return log.New()
+}
 
+// GetLoggerWithLevelAndWriter new a logger with given level and writer
+func GetLoggerWithLevelAndWriter(l string, w io.Writer) *log.Logger {
+	lvl, _ := ParseLevel(l)
 	var writer io.Writer = os.Stderr
 	if w != nil {
 		writer = w
 	}
-	e = log.ExecuteMatchWrite(
+	e := log.ExecuteMatchWrite(
 		// Only print log that level is higher than Debug.
-		log.MatchHigherLevel(l),
+		log.MatchHigherLevel(lvl),
 		// Write into stderr.
 		writer,
 	)
-}
-
-// SetMultipleExecutor sets log executor with multiple custom executor
-// Such as writer higher level into one file and lower level into another file
-func SetMultipleExecutor(ext ...log.Executor) {
-	mu.Lock()
-	defer mu.Unlock()
-
-	e = log.ExecuteMultiple(ext...)
-}
-
-// GetLogger new a log entry with given executor and transformer
-func GetLogger() *log.Logger {
-	return log.New().WithExecutor(e).WithTransformer(tf)
-}
-
-func init() {
-	var err error
-	tf, err = log.NewText(&log.TextConfig{
+	tf, _ := log.NewText(&log.TextConfig{
 		// Use unix timestamp nano for time
 		TimeFormat: log.TimeFormatUnixNano,
 		// Use upper case level
 		LevelFormat: level.UpperCase,
 		EntryFormat: "[{level}] - {time} {value}",
 	})
-
-	if err != nil {
-		panic(fmt.Sprintf("failed to initialize QingStor SDK logger: %v", err))
-	}
-
-	// Only print warn and error logs in default
-	SetLevelAndWriter(level.Info, nil)
+	return log.New().WithExecutor(e).WithTransformer(tf)
 }

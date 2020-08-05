@@ -40,7 +40,6 @@ import (
 	"github.com/qingstor/log"
 
 	"github.com/qingstor/qingstor-sdk-go/v4"
-	"github.com/qingstor/qingstor-sdk-go/v4/logger"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
 	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
@@ -81,20 +80,20 @@ func (qb *Builder) BuildHTTPRequest(ctx context.Context, o *data.Operation, i *r
 
 	timestamp := convert.StringToTimestamp(httpRequest.Header.Get("Date"), convert.RFC822)
 
-	logger.GetLogger().Info(
+	log.FromContext(ctx).Info(
 		log.String("title", "Built QingStor request"),
 		log.Int("date", timestamp),
 		log.String("url", httpRequest.URL.String()),
 	)
 
-	logger.GetLogger().Info(
+	log.FromContext(ctx).Info(
 		log.String("title", "QingStor request headers"),
 		log.Int("date", timestamp),
 		log.String("header", fmt.Sprint(httpRequest.Header)),
 	)
 
 	if qb.parsedBodyString != "" {
-		logger.GetLogger().Info(
+		log.FromContext(ctx).Info(
 			log.String("title", "QingStor request body string"),
 			log.Int("date", timestamp),
 			log.String("parsed_body_string", qb.parsedBodyString),

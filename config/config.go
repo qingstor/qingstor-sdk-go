@@ -25,7 +25,6 @@ import (
 	"time"
 
 	"github.com/qingstor/log"
-	"github.com/qingstor/log/level"
 	"gopkg.in/yaml.v2"
 
 	"github.com/qingstor/qingstor-sdk-go/v4/logger"
@@ -153,11 +152,6 @@ func (c *Config) Check() (err error) {
 		}
 	}
 
-	err = logger.CheckLevel(c.LogLevel)
-	if err != nil {
-		return
-	}
-
 	return
 }
 
@@ -174,9 +168,6 @@ func (c *Config) LoadDefaultConfig() (err error) {
 		)
 		return
 	}
-
-	lvl, _ := logger.ParseLevel(c.LogLevel)
-	logger.SetLevelAndWriter(lvl, nil)
 
 	c.InitHTTPClient()
 	return
@@ -231,17 +222,6 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 	if err != nil {
 		return
 	}
-
-	var lvl level.Level
-	lvl, err = logger.ParseLevel(c.LogLevel)
-	if err != nil {
-		logger.GetLogger().Error(
-			log.String("parse_log_level_error", err.Error()),
-			log.String("level", c.LogLevel),
-		)
-		return
-	}
-	logger.SetLevelAndWriter(lvl, nil)
 
 	c.InitHTTPClient()
 	return
