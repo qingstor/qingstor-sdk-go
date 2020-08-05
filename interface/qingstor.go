@@ -18,6 +18,8 @@
 package iface
 
 import (
+	"context"
+
 	"github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
@@ -28,6 +30,7 @@ type Service interface {
 
 	// ListBuckets does Retrieve the bucket list.
 	ListBuckets(input *service.ListBucketsInput) (*service.ListBucketsOutput, error)
+	ListBucketsWithContext(ctx context.Context, input *service.ListBucketsInput) (*service.ListBucketsOutput, error)
 }
 
 // Bucket is the method set for all public bucket API.

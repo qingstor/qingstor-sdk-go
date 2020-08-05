@@ -17,6 +17,7 @@
 package request
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -35,6 +36,8 @@ import (
 
 // A Request can build, sign, send and unpack API request.
 type Request struct {
+	ctx context.Context
+
 	Operation *data.Operation
 	Input     *reflect.Value
 	Output    *reflect.Value
@@ -43,9 +46,17 @@ type Request struct {
 	HTTPResponse *http.Response
 }
 
+// Context always return a non-nil context
+func (r *Request) Context() context.Context {
+	if r.ctx == nil {
+		return context.Background()
+	}
+	return r.ctx
+}
+
 // New create a Request from given Operation, Input and Output.
 // It returns a Request.
-func New(o *data.Operation, i data.Input, x interface{}) (*Request, error) {
+func New(ctx context.Context, o *data.Operation, i data.Input, x interface{}) (*Request, error) {
 	input := reflect.ValueOf(i)
 	if input.IsValid() && input.Elem().IsValid() {
 		err := i.Validate()
@@ -56,6 +67,7 @@ func New(o *data.Operation, i data.Input, x interface{}) (*Request, error) {
 	output := reflect.ValueOf(x)
 
 	return &Request{
+		ctx:       ctx,
 		Operation: o,
 		Input:     &input,
 		Output:    &output,
@@ -169,7 +181,7 @@ func (r *Request) check() error {
 
 func (r *Request) build() error {
 	b := &builder.Builder{}
-	httpRequest, err := b.BuildHTTPRequest(r.Operation, r.Input)
+	httpRequest, err := b.BuildHTTPRequest(r.Context(), r.Operation, r.Input)
 	if err != nil {
 		return err
 	}
@@ -230,7 +242,7 @@ func (r *Request) send() error {
 }
 
 func (r *Request) unpack() error {
-	err := response.UnpackToOutput(r.Operation, r.HTTPResponse, r.Output)
+	err := response.UnpackToOutput(r.Context(), r.Operation, r.HTTPResponse, r.Output)
 	if err != nil {
 		return err
 	}

@@ -125,7 +125,18 @@
         // Documentation URL: {{$operation.DocumentationURL}}
     {{- end}}
     {{if eq $belongs "Bucket" -}}
-        func (s *{{$belongs}}) {{replace $opID "Bucket" "" -1 -}}(
+        {{$funcName := replace $opID "Bucket" "" -1 -}}
+        func (s *{{$belongs}}) {{$funcName}}(
+            {{- if $isObject}}objectKey string,{{end -}}
+            {{- if $hasInput}}input *{{$opID}}Input{{end -}}
+        ) (*{{$opID}}Output, error) {
+            return s.{{$funcName}}WithContext(context.Background(),
+            {{- if $isObject}}objectKey,{{end -}}
+            {{- if $hasInput}}input{{end -}})
+        }
+
+        // {{$funcName}}WithContext add context support for {{$funcName}}
+        func (s *{{$belongs}}) {{$funcName}}WithContext(ctx context.Context,
             {{- if $isObject}}objectKey string,{{end -}}
             {{- if $hasInput}}input *{{$opID}}Input{{end -}}
         ) (*{{$opID}}Output, error) {
@@ -133,14 +144,25 @@
         func (s *{{$belongs}}) {{$opID}}(
             {{- if $hasInput}}input *{{$opID}}Input{{end -}}
         ) (*{{$opID}}Output, error) {
+            return s.{{$opID}}WithContext(context.Background(), {{- if $hasInput}}input{{end -}})
+        }
+
+        // {{$opID}}WithContext add context support for {{$opID}}
+        func (s *{{$belongs}}) {{$opID}}WithContext(ctx context.Context,
+            {{- if $hasInput}}input *{{$opID}}Input{{end -}}
+        ) (*{{$opID}}Output, error) {
     {{end -}}
+        if ctx == nil {
+            ctx = context.Background()
+        }
+
         {{if eq $belongs "Bucket" -}}
-            r, x, err := s.{{replace $opID "Bucket" "" -1}}Request(
+            r, x, err := s.{{replace $opID "Bucket" "" -1}}Request(ctx,
                 {{- if $isObject}}objectKey,{{end -}}
                 {{- if $hasInput}}input{{end -}}
             )
         {{else -}}
-            r, x, err := s.{{$opID}}Request(
+            r, x, err := s.{{$opID}}Request(ctx,
                 {{- if $hasInput}}input{{end -}}
             )
         {{end}}
@@ -167,15 +189,19 @@
         {{end -}}
     {{end -}}
     {{if eq $belongs "Bucket" -}}
-        func (s *{{$belongs}}) {{replace $opID "Bucket" "" -1 -}}Request(
+        func (s *{{$belongs}}) {{replace $opID "Bucket" "" -1 -}}Request(ctx context.Context,
             {{- if $isObject}}objectKey string,{{end -}}
             {{- if $hasInput}}input *{{$opID}}Input{{end -}}
         ) (*request.Request, *{{$opID}}Output, error) {
     {{else -}}
-        func (s *{{$belongs}}) {{$opID}}Request(
+        func (s *{{$belongs}}) {{$opID}}Request(ctx context.Context,
             {{- if $hasInput}}input *{{$opID}}Input{{end -}}
         ) (*request.Request, *{{$opID}}Output, error) {
     {{end -}}
+        if ctx == nil {
+            ctx = context.Background()
+        }
+
         {{if $hasInput}}
             if input == nil {
                 input = &{{$opID}}Input{}
@@ -215,7 +241,7 @@
         }
 
         x := &{{$opID}}Output{}
-        r, err := request.New(o, {{if $hasInput}}input{{else}}nil{{end}}, x)
+        r, err := request.New(ctx, o, {{if $hasInput}}input{{else}}nil{{end}}, x)
         if err != nil {
             return nil, nil, err
         }

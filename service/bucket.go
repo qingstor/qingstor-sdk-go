@@ -17,6 +17,7 @@
 package service
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -58,7 +59,16 @@ func (s *Service) Bucket(bucketName string, zone string) (*Bucket, error) {
 // Delete does Delete a bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/delete.html
 func (s *Bucket) Delete() (*DeleteBucketOutput, error) {
-	r, x, err := s.DeleteRequest()
+	return s.DeleteWithContext(context.Background())
+}
+
+// DeleteWithContext add context support for Delete
+func (s *Bucket) DeleteWithContext(ctx context.Context) (*DeleteBucketOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.DeleteRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -76,7 +86,10 @@ func (s *Bucket) Delete() (*DeleteBucketOutput, error) {
 }
 
 // DeleteRequest creates request and output object of DeleteBucket.
-func (s *Bucket) DeleteRequest() (*request.Request, *DeleteBucketOutput, error) {
+func (s *Bucket) DeleteRequest(ctx context.Context) (*request.Request, *DeleteBucketOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -92,7 +105,7 @@ func (s *Bucket) DeleteRequest() (*request.Request, *DeleteBucketOutput, error) 
 	}
 
 	x := &DeleteBucketOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -110,7 +123,16 @@ type DeleteBucketOutput struct {
 // DeleteCNAME does Delete bucket CNAME setting of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cname/delete_cname.html
 func (s *Bucket) DeleteCNAME(input *DeleteBucketCNAMEInput) (*DeleteBucketCNAMEOutput, error) {
-	r, x, err := s.DeleteCNAMERequest(input)
+	return s.DeleteCNAMEWithContext(context.Background(), input)
+}
+
+// DeleteCNAMEWithContext add context support for DeleteCNAME
+func (s *Bucket) DeleteCNAMEWithContext(ctx context.Context, input *DeleteBucketCNAMEInput) (*DeleteBucketCNAMEOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.DeleteCNAMERequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -128,7 +150,10 @@ func (s *Bucket) DeleteCNAME(input *DeleteBucketCNAMEInput) (*DeleteBucketCNAMEO
 }
 
 // DeleteCNAMERequest creates request and output object of DeleteBucketCNAME.
-func (s *Bucket) DeleteCNAMERequest(input *DeleteBucketCNAMEInput) (*request.Request, *DeleteBucketCNAMEOutput, error) {
+func (s *Bucket) DeleteCNAMERequest(ctx context.Context, input *DeleteBucketCNAMEInput) (*request.Request, *DeleteBucketCNAMEOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &DeleteBucketCNAMEInput{}
@@ -148,7 +173,7 @@ func (s *Bucket) DeleteCNAMERequest(input *DeleteBucketCNAMEInput) (*request.Req
 	}
 
 	x := &DeleteBucketCNAMEOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -186,7 +211,16 @@ type DeleteBucketCNAMEOutput struct {
 // DeleteCORS does Delete CORS information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/delete_cors.html
 func (s *Bucket) DeleteCORS() (*DeleteBucketCORSOutput, error) {
-	r, x, err := s.DeleteCORSRequest()
+	return s.DeleteCORSWithContext(context.Background())
+}
+
+// DeleteCORSWithContext add context support for DeleteCORS
+func (s *Bucket) DeleteCORSWithContext(ctx context.Context) (*DeleteBucketCORSOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.DeleteCORSRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -204,7 +238,10 @@ func (s *Bucket) DeleteCORS() (*DeleteBucketCORSOutput, error) {
 }
 
 // DeleteCORSRequest creates request and output object of DeleteBucketCORS.
-func (s *Bucket) DeleteCORSRequest() (*request.Request, *DeleteBucketCORSOutput, error) {
+func (s *Bucket) DeleteCORSRequest(ctx context.Context) (*request.Request, *DeleteBucketCORSOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -220,7 +257,7 @@ func (s *Bucket) DeleteCORSRequest() (*request.Request, *DeleteBucketCORSOutput,
 	}
 
 	x := &DeleteBucketCORSOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -238,7 +275,16 @@ type DeleteBucketCORSOutput struct {
 // DeleteExternalMirror does Delete external mirror of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/external_mirror/delete_external_mirror.html
 func (s *Bucket) DeleteExternalMirror() (*DeleteBucketExternalMirrorOutput, error) {
-	r, x, err := s.DeleteExternalMirrorRequest()
+	return s.DeleteExternalMirrorWithContext(context.Background())
+}
+
+// DeleteExternalMirrorWithContext add context support for DeleteExternalMirror
+func (s *Bucket) DeleteExternalMirrorWithContext(ctx context.Context) (*DeleteBucketExternalMirrorOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.DeleteExternalMirrorRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -256,7 +302,10 @@ func (s *Bucket) DeleteExternalMirror() (*DeleteBucketExternalMirrorOutput, erro
 }
 
 // DeleteExternalMirrorRequest creates request and output object of DeleteBucketExternalMirror.
-func (s *Bucket) DeleteExternalMirrorRequest() (*request.Request, *DeleteBucketExternalMirrorOutput, error) {
+func (s *Bucket) DeleteExternalMirrorRequest(ctx context.Context) (*request.Request, *DeleteBucketExternalMirrorOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -272,7 +321,7 @@ func (s *Bucket) DeleteExternalMirrorRequest() (*request.Request, *DeleteBucketE
 	}
 
 	x := &DeleteBucketExternalMirrorOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -290,7 +339,16 @@ type DeleteBucketExternalMirrorOutput struct {
 // DeleteLifecycle does Delete Lifecycle information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/lifecycle/delete_lifecycle.html
 func (s *Bucket) DeleteLifecycle() (*DeleteBucketLifecycleOutput, error) {
-	r, x, err := s.DeleteLifecycleRequest()
+	return s.DeleteLifecycleWithContext(context.Background())
+}
+
+// DeleteLifecycleWithContext add context support for DeleteLifecycle
+func (s *Bucket) DeleteLifecycleWithContext(ctx context.Context) (*DeleteBucketLifecycleOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.DeleteLifecycleRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -308,7 +366,10 @@ func (s *Bucket) DeleteLifecycle() (*DeleteBucketLifecycleOutput, error) {
 }
 
 // DeleteLifecycleRequest creates request and output object of DeleteBucketLifecycle.
-func (s *Bucket) DeleteLifecycleRequest() (*request.Request, *DeleteBucketLifecycleOutput, error) {
+func (s *Bucket) DeleteLifecycleRequest(ctx context.Context) (*request.Request, *DeleteBucketLifecycleOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -324,7 +385,7 @@ func (s *Bucket) DeleteLifecycleRequest() (*request.Request, *DeleteBucketLifecy
 	}
 
 	x := &DeleteBucketLifecycleOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -342,7 +403,16 @@ type DeleteBucketLifecycleOutput struct {
 // DeleteLogging does Delete bucket logging setting of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/delete_logging.html
 func (s *Bucket) DeleteLogging() (*DeleteBucketLoggingOutput, error) {
-	r, x, err := s.DeleteLoggingRequest()
+	return s.DeleteLoggingWithContext(context.Background())
+}
+
+// DeleteLoggingWithContext add context support for DeleteLogging
+func (s *Bucket) DeleteLoggingWithContext(ctx context.Context) (*DeleteBucketLoggingOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.DeleteLoggingRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -360,7 +430,10 @@ func (s *Bucket) DeleteLogging() (*DeleteBucketLoggingOutput, error) {
 }
 
 // DeleteLoggingRequest creates request and output object of DeleteBucketLogging.
-func (s *Bucket) DeleteLoggingRequest() (*request.Request, *DeleteBucketLoggingOutput, error) {
+func (s *Bucket) DeleteLoggingRequest(ctx context.Context) (*request.Request, *DeleteBucketLoggingOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -376,7 +449,7 @@ func (s *Bucket) DeleteLoggingRequest() (*request.Request, *DeleteBucketLoggingO
 	}
 
 	x := &DeleteBucketLoggingOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -394,7 +467,16 @@ type DeleteBucketLoggingOutput struct {
 // DeleteNotification does Delete Notification information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/notification/delete_notification.html
 func (s *Bucket) DeleteNotification() (*DeleteBucketNotificationOutput, error) {
-	r, x, err := s.DeleteNotificationRequest()
+	return s.DeleteNotificationWithContext(context.Background())
+}
+
+// DeleteNotificationWithContext add context support for DeleteNotification
+func (s *Bucket) DeleteNotificationWithContext(ctx context.Context) (*DeleteBucketNotificationOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.DeleteNotificationRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -412,7 +494,10 @@ func (s *Bucket) DeleteNotification() (*DeleteBucketNotificationOutput, error) {
 }
 
 // DeleteNotificationRequest creates request and output object of DeleteBucketNotification.
-func (s *Bucket) DeleteNotificationRequest() (*request.Request, *DeleteBucketNotificationOutput, error) {
+func (s *Bucket) DeleteNotificationRequest(ctx context.Context) (*request.Request, *DeleteBucketNotificationOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -428,7 +513,7 @@ func (s *Bucket) DeleteNotificationRequest() (*request.Request, *DeleteBucketNot
 	}
 
 	x := &DeleteBucketNotificationOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -446,7 +531,16 @@ type DeleteBucketNotificationOutput struct {
 // DeletePolicy does Delete policy information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/policy/delete_policy.html
 func (s *Bucket) DeletePolicy() (*DeleteBucketPolicyOutput, error) {
-	r, x, err := s.DeletePolicyRequest()
+	return s.DeletePolicyWithContext(context.Background())
+}
+
+// DeletePolicyWithContext add context support for DeletePolicy
+func (s *Bucket) DeletePolicyWithContext(ctx context.Context) (*DeleteBucketPolicyOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.DeletePolicyRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -464,7 +558,10 @@ func (s *Bucket) DeletePolicy() (*DeleteBucketPolicyOutput, error) {
 }
 
 // DeletePolicyRequest creates request and output object of DeleteBucketPolicy.
-func (s *Bucket) DeletePolicyRequest() (*request.Request, *DeleteBucketPolicyOutput, error) {
+func (s *Bucket) DeletePolicyRequest(ctx context.Context) (*request.Request, *DeleteBucketPolicyOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -480,7 +577,7 @@ func (s *Bucket) DeletePolicyRequest() (*request.Request, *DeleteBucketPolicyOut
 	}
 
 	x := &DeleteBucketPolicyOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -498,7 +595,16 @@ type DeleteBucketPolicyOutput struct {
 // DeleteMultipleObjects does Delete multiple objects from the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/delete_multiple.html
 func (s *Bucket) DeleteMultipleObjects(input *DeleteMultipleObjectsInput) (*DeleteMultipleObjectsOutput, error) {
-	r, x, err := s.DeleteMultipleObjectsRequest(input)
+	return s.DeleteMultipleObjectsWithContext(context.Background(), input)
+}
+
+// DeleteMultipleObjectsWithContext add context support for DeleteMultipleObjects
+func (s *Bucket) DeleteMultipleObjectsWithContext(ctx context.Context, input *DeleteMultipleObjectsInput) (*DeleteMultipleObjectsOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.DeleteMultipleObjectsRequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -516,7 +622,10 @@ func (s *Bucket) DeleteMultipleObjects(input *DeleteMultipleObjectsInput) (*Dele
 }
 
 // DeleteMultipleObjectsRequest creates request and output object of DeleteMultipleObjects.
-func (s *Bucket) DeleteMultipleObjectsRequest(input *DeleteMultipleObjectsInput) (*request.Request, *DeleteMultipleObjectsOutput, error) {
+func (s *Bucket) DeleteMultipleObjectsRequest(ctx context.Context, input *DeleteMultipleObjectsInput) (*request.Request, *DeleteMultipleObjectsOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &DeleteMultipleObjectsInput{}
@@ -536,7 +645,7 @@ func (s *Bucket) DeleteMultipleObjectsRequest(input *DeleteMultipleObjectsInput)
 	}
 
 	x := &DeleteMultipleObjectsOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -589,7 +698,16 @@ type DeleteMultipleObjectsOutput struct {
 // GetACL does Get ACL information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/get_acl.html
 func (s *Bucket) GetACL() (*GetBucketACLOutput, error) {
-	r, x, err := s.GetACLRequest()
+	return s.GetACLWithContext(context.Background())
+}
+
+// GetACLWithContext add context support for GetACL
+func (s *Bucket) GetACLWithContext(ctx context.Context) (*GetBucketACLOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.GetACLRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -607,7 +725,10 @@ func (s *Bucket) GetACL() (*GetBucketACLOutput, error) {
 }
 
 // GetACLRequest creates request and output object of GetBucketACL.
-func (s *Bucket) GetACLRequest() (*request.Request, *GetBucketACLOutput, error) {
+func (s *Bucket) GetACLRequest(ctx context.Context) (*request.Request, *GetBucketACLOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -623,7 +744,7 @@ func (s *Bucket) GetACLRequest() (*request.Request, *GetBucketACLOutput, error) 
 	}
 
 	x := &GetBucketACLOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -646,7 +767,16 @@ type GetBucketACLOutput struct {
 // GetCNAME does Get bucket CNAME setting of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cname/get_cname.html
 func (s *Bucket) GetCNAME(input *GetBucketCNAMEInput) (*GetBucketCNAMEOutput, error) {
-	r, x, err := s.GetCNAMERequest(input)
+	return s.GetCNAMEWithContext(context.Background(), input)
+}
+
+// GetCNAMEWithContext add context support for GetCNAME
+func (s *Bucket) GetCNAMEWithContext(ctx context.Context, input *GetBucketCNAMEInput) (*GetBucketCNAMEOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.GetCNAMERequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -664,7 +794,10 @@ func (s *Bucket) GetCNAME(input *GetBucketCNAMEInput) (*GetBucketCNAMEOutput, er
 }
 
 // GetCNAMERequest creates request and output object of GetBucketCNAME.
-func (s *Bucket) GetCNAMERequest(input *GetBucketCNAMEInput) (*request.Request, *GetBucketCNAMEOutput, error) {
+func (s *Bucket) GetCNAMERequest(ctx context.Context, input *GetBucketCNAMEInput) (*request.Request, *GetBucketCNAMEOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &GetBucketCNAMEInput{}
@@ -684,7 +817,7 @@ func (s *Bucket) GetCNAMERequest(input *GetBucketCNAMEInput) (*request.Request, 
 	}
 
 	x := &GetBucketCNAMEOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -740,7 +873,16 @@ type GetBucketCNAMEOutput struct {
 // GetCORS does Get CORS information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/get_cors.html
 func (s *Bucket) GetCORS() (*GetBucketCORSOutput, error) {
-	r, x, err := s.GetCORSRequest()
+	return s.GetCORSWithContext(context.Background())
+}
+
+// GetCORSWithContext add context support for GetCORS
+func (s *Bucket) GetCORSWithContext(ctx context.Context) (*GetBucketCORSOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.GetCORSRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -758,7 +900,10 @@ func (s *Bucket) GetCORS() (*GetBucketCORSOutput, error) {
 }
 
 // GetCORSRequest creates request and output object of GetBucketCORS.
-func (s *Bucket) GetCORSRequest() (*request.Request, *GetBucketCORSOutput, error) {
+func (s *Bucket) GetCORSRequest(ctx context.Context) (*request.Request, *GetBucketCORSOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -774,7 +919,7 @@ func (s *Bucket) GetCORSRequest() (*request.Request, *GetBucketCORSOutput, error
 	}
 
 	x := &GetBucketCORSOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -795,7 +940,16 @@ type GetBucketCORSOutput struct {
 // GetExternalMirror does Get external mirror of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/external_mirror/get_external_mirror.html
 func (s *Bucket) GetExternalMirror() (*GetBucketExternalMirrorOutput, error) {
-	r, x, err := s.GetExternalMirrorRequest()
+	return s.GetExternalMirrorWithContext(context.Background())
+}
+
+// GetExternalMirrorWithContext add context support for GetExternalMirror
+func (s *Bucket) GetExternalMirrorWithContext(ctx context.Context) (*GetBucketExternalMirrorOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.GetExternalMirrorRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -813,7 +967,10 @@ func (s *Bucket) GetExternalMirror() (*GetBucketExternalMirrorOutput, error) {
 }
 
 // GetExternalMirrorRequest creates request and output object of GetBucketExternalMirror.
-func (s *Bucket) GetExternalMirrorRequest() (*request.Request, *GetBucketExternalMirrorOutput, error) {
+func (s *Bucket) GetExternalMirrorRequest(ctx context.Context) (*request.Request, *GetBucketExternalMirrorOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -829,7 +986,7 @@ func (s *Bucket) GetExternalMirrorRequest() (*request.Request, *GetBucketExterna
 	}
 
 	x := &GetBucketExternalMirrorOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -850,7 +1007,16 @@ type GetBucketExternalMirrorOutput struct {
 // GetLifecycle does Get Lifecycle information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/lifecycle/get_lifecycle.html
 func (s *Bucket) GetLifecycle() (*GetBucketLifecycleOutput, error) {
-	r, x, err := s.GetLifecycleRequest()
+	return s.GetLifecycleWithContext(context.Background())
+}
+
+// GetLifecycleWithContext add context support for GetLifecycle
+func (s *Bucket) GetLifecycleWithContext(ctx context.Context) (*GetBucketLifecycleOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.GetLifecycleRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -868,7 +1034,10 @@ func (s *Bucket) GetLifecycle() (*GetBucketLifecycleOutput, error) {
 }
 
 // GetLifecycleRequest creates request and output object of GetBucketLifecycle.
-func (s *Bucket) GetLifecycleRequest() (*request.Request, *GetBucketLifecycleOutput, error) {
+func (s *Bucket) GetLifecycleRequest(ctx context.Context) (*request.Request, *GetBucketLifecycleOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -884,7 +1053,7 @@ func (s *Bucket) GetLifecycleRequest() (*request.Request, *GetBucketLifecycleOut
 	}
 
 	x := &GetBucketLifecycleOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -905,7 +1074,16 @@ type GetBucketLifecycleOutput struct {
 // GetLogging does Get bucket logging setting of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/get_logging.html
 func (s *Bucket) GetLogging() (*GetBucketLoggingOutput, error) {
-	r, x, err := s.GetLoggingRequest()
+	return s.GetLoggingWithContext(context.Background())
+}
+
+// GetLoggingWithContext add context support for GetLogging
+func (s *Bucket) GetLoggingWithContext(ctx context.Context) (*GetBucketLoggingOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.GetLoggingRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -923,7 +1101,10 @@ func (s *Bucket) GetLogging() (*GetBucketLoggingOutput, error) {
 }
 
 // GetLoggingRequest creates request and output object of GetBucketLogging.
-func (s *Bucket) GetLoggingRequest() (*request.Request, *GetBucketLoggingOutput, error) {
+func (s *Bucket) GetLoggingRequest(ctx context.Context) (*request.Request, *GetBucketLoggingOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -939,7 +1120,7 @@ func (s *Bucket) GetLoggingRequest() (*request.Request, *GetBucketLoggingOutput,
 	}
 
 	x := &GetBucketLoggingOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -962,7 +1143,16 @@ type GetBucketLoggingOutput struct {
 // GetNotification does Get Notification information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/notification/get_notification.html
 func (s *Bucket) GetNotification() (*GetBucketNotificationOutput, error) {
-	r, x, err := s.GetNotificationRequest()
+	return s.GetNotificationWithContext(context.Background())
+}
+
+// GetNotificationWithContext add context support for GetNotification
+func (s *Bucket) GetNotificationWithContext(ctx context.Context) (*GetBucketNotificationOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.GetNotificationRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -980,7 +1170,10 @@ func (s *Bucket) GetNotification() (*GetBucketNotificationOutput, error) {
 }
 
 // GetNotificationRequest creates request and output object of GetBucketNotification.
-func (s *Bucket) GetNotificationRequest() (*request.Request, *GetBucketNotificationOutput, error) {
+func (s *Bucket) GetNotificationRequest(ctx context.Context) (*request.Request, *GetBucketNotificationOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -996,7 +1189,7 @@ func (s *Bucket) GetNotificationRequest() (*request.Request, *GetBucketNotificat
 	}
 
 	x := &GetBucketNotificationOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1017,7 +1210,16 @@ type GetBucketNotificationOutput struct {
 // GetPolicy does Get policy information of the bucket.
 // Documentation URL: https://https://docs.qingcloud.com/qingstor/api/bucket/policy/get_policy.html
 func (s *Bucket) GetPolicy() (*GetBucketPolicyOutput, error) {
-	r, x, err := s.GetPolicyRequest()
+	return s.GetPolicyWithContext(context.Background())
+}
+
+// GetPolicyWithContext add context support for GetPolicy
+func (s *Bucket) GetPolicyWithContext(ctx context.Context) (*GetBucketPolicyOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.GetPolicyRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -1035,7 +1237,10 @@ func (s *Bucket) GetPolicy() (*GetBucketPolicyOutput, error) {
 }
 
 // GetPolicyRequest creates request and output object of GetBucketPolicy.
-func (s *Bucket) GetPolicyRequest() (*request.Request, *GetBucketPolicyOutput, error) {
+func (s *Bucket) GetPolicyRequest(ctx context.Context) (*request.Request, *GetBucketPolicyOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -1051,7 +1256,7 @@ func (s *Bucket) GetPolicyRequest() (*request.Request, *GetBucketPolicyOutput, e
 	}
 
 	x := &GetBucketPolicyOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1072,7 +1277,16 @@ type GetBucketPolicyOutput struct {
 // GetStatistics does Get statistics information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/get_stats.html
 func (s *Bucket) GetStatistics() (*GetBucketStatisticsOutput, error) {
-	r, x, err := s.GetStatisticsRequest()
+	return s.GetStatisticsWithContext(context.Background())
+}
+
+// GetStatisticsWithContext add context support for GetStatistics
+func (s *Bucket) GetStatisticsWithContext(ctx context.Context) (*GetBucketStatisticsOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.GetStatisticsRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -1090,7 +1304,10 @@ func (s *Bucket) GetStatistics() (*GetBucketStatisticsOutput, error) {
 }
 
 // GetStatisticsRequest creates request and output object of GetBucketStatistics.
-func (s *Bucket) GetStatisticsRequest() (*request.Request, *GetBucketStatisticsOutput, error) {
+func (s *Bucket) GetStatisticsRequest(ctx context.Context) (*request.Request, *GetBucketStatisticsOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -1106,7 +1323,7 @@ func (s *Bucket) GetStatisticsRequest() (*request.Request, *GetBucketStatisticsO
 	}
 
 	x := &GetBucketStatisticsOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1140,7 +1357,16 @@ type GetBucketStatisticsOutput struct {
 // Head does Check whether the bucket exists and available.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/head.html
 func (s *Bucket) Head() (*HeadBucketOutput, error) {
-	r, x, err := s.HeadRequest()
+	return s.HeadWithContext(context.Background())
+}
+
+// HeadWithContext add context support for Head
+func (s *Bucket) HeadWithContext(ctx context.Context) (*HeadBucketOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.HeadRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -1158,7 +1384,10 @@ func (s *Bucket) Head() (*HeadBucketOutput, error) {
 }
 
 // HeadRequest creates request and output object of HeadBucket.
-func (s *Bucket) HeadRequest() (*request.Request, *HeadBucketOutput, error) {
+func (s *Bucket) HeadRequest(ctx context.Context) (*request.Request, *HeadBucketOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -1174,7 +1403,7 @@ func (s *Bucket) HeadRequest() (*request.Request, *HeadBucketOutput, error) {
 	}
 
 	x := &HeadBucketOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1192,7 +1421,16 @@ type HeadBucketOutput struct {
 // ListMultipartUploads does List multipart uploads in the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/list_multipart_uploads.html
 func (s *Bucket) ListMultipartUploads(input *ListMultipartUploadsInput) (*ListMultipartUploadsOutput, error) {
-	r, x, err := s.ListMultipartUploadsRequest(input)
+	return s.ListMultipartUploadsWithContext(context.Background(), input)
+}
+
+// ListMultipartUploadsWithContext add context support for ListMultipartUploads
+func (s *Bucket) ListMultipartUploadsWithContext(ctx context.Context, input *ListMultipartUploadsInput) (*ListMultipartUploadsOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.ListMultipartUploadsRequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -1210,7 +1448,10 @@ func (s *Bucket) ListMultipartUploads(input *ListMultipartUploadsInput) (*ListMu
 }
 
 // ListMultipartUploadsRequest creates request and output object of ListMultipartUploads.
-func (s *Bucket) ListMultipartUploadsRequest(input *ListMultipartUploadsInput) (*request.Request, *ListMultipartUploadsOutput, error) {
+func (s *Bucket) ListMultipartUploadsRequest(ctx context.Context, input *ListMultipartUploadsInput) (*request.Request, *ListMultipartUploadsOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &ListMultipartUploadsInput{}
@@ -1230,7 +1471,7 @@ func (s *Bucket) ListMultipartUploadsRequest(input *ListMultipartUploadsInput) (
 	}
 
 	x := &ListMultipartUploadsOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1289,7 +1530,16 @@ type ListMultipartUploadsOutput struct {
 // ListObjects does Retrieve the object list in a bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/get.html
 func (s *Bucket) ListObjects(input *ListObjectsInput) (*ListObjectsOutput, error) {
-	r, x, err := s.ListObjectsRequest(input)
+	return s.ListObjectsWithContext(context.Background(), input)
+}
+
+// ListObjectsWithContext add context support for ListObjects
+func (s *Bucket) ListObjectsWithContext(ctx context.Context, input *ListObjectsInput) (*ListObjectsOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.ListObjectsRequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -1307,7 +1557,10 @@ func (s *Bucket) ListObjects(input *ListObjectsInput) (*ListObjectsOutput, error
 }
 
 // ListObjectsRequest creates request and output object of ListObjects.
-func (s *Bucket) ListObjectsRequest(input *ListObjectsInput) (*request.Request, *ListObjectsOutput, error) {
+func (s *Bucket) ListObjectsRequest(ctx context.Context, input *ListObjectsInput) (*request.Request, *ListObjectsOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &ListObjectsInput{}
@@ -1327,7 +1580,7 @@ func (s *Bucket) ListObjectsRequest(input *ListObjectsInput) (*request.Request, 
 	}
 
 	x := &ListObjectsOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1384,7 +1637,16 @@ type ListObjectsOutput struct {
 // Put does Create a new bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/put.html
 func (s *Bucket) Put() (*PutBucketOutput, error) {
-	r, x, err := s.PutRequest()
+	return s.PutWithContext(context.Background())
+}
+
+// PutWithContext add context support for Put
+func (s *Bucket) PutWithContext(ctx context.Context) (*PutBucketOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.PutRequest(ctx)
 
 	if err != nil {
 		return x, err
@@ -1402,7 +1664,10 @@ func (s *Bucket) Put() (*PutBucketOutput, error) {
 }
 
 // PutRequest creates request and output object of PutBucket.
-func (s *Bucket) PutRequest() (*request.Request, *PutBucketOutput, error) {
+func (s *Bucket) PutRequest(ctx context.Context) (*request.Request, *PutBucketOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	properties := *s.Properties
 
@@ -1418,7 +1683,7 @@ func (s *Bucket) PutRequest() (*request.Request, *PutBucketOutput, error) {
 	}
 
 	x := &PutBucketOutput{}
-	r, err := request.New(o, nil, x)
+	r, err := request.New(ctx, o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1436,7 +1701,16 @@ type PutBucketOutput struct {
 // PutACL does Set ACL information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/put_acl.html
 func (s *Bucket) PutACL(input *PutBucketACLInput) (*PutBucketACLOutput, error) {
-	r, x, err := s.PutACLRequest(input)
+	return s.PutACLWithContext(context.Background(), input)
+}
+
+// PutACLWithContext add context support for PutACL
+func (s *Bucket) PutACLWithContext(ctx context.Context, input *PutBucketACLInput) (*PutBucketACLOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.PutACLRequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -1454,7 +1728,10 @@ func (s *Bucket) PutACL(input *PutBucketACLInput) (*PutBucketACLOutput, error) {
 }
 
 // PutACLRequest creates request and output object of PutBucketACL.
-func (s *Bucket) PutACLRequest(input *PutBucketACLInput) (*request.Request, *PutBucketACLOutput, error) {
+func (s *Bucket) PutACLRequest(ctx context.Context, input *PutBucketACLInput) (*request.Request, *PutBucketACLOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &PutBucketACLInput{}
@@ -1474,7 +1751,7 @@ func (s *Bucket) PutACLRequest(input *PutBucketACLInput) (*request.Request, *Put
 	}
 
 	x := &PutBucketACLOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1520,7 +1797,16 @@ type PutBucketACLOutput struct {
 // PutCNAME does Set bucket CNAME of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cname/put_cname.html
 func (s *Bucket) PutCNAME(input *PutBucketCNAMEInput) (*PutBucketCNAMEOutput, error) {
-	r, x, err := s.PutCNAMERequest(input)
+	return s.PutCNAMEWithContext(context.Background(), input)
+}
+
+// PutCNAMEWithContext add context support for PutCNAME
+func (s *Bucket) PutCNAMEWithContext(ctx context.Context, input *PutBucketCNAMEInput) (*PutBucketCNAMEOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.PutCNAMERequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -1538,7 +1824,10 @@ func (s *Bucket) PutCNAME(input *PutBucketCNAMEInput) (*PutBucketCNAMEOutput, er
 }
 
 // PutCNAMERequest creates request and output object of PutBucketCNAME.
-func (s *Bucket) PutCNAMERequest(input *PutBucketCNAMEInput) (*request.Request, *PutBucketCNAMEOutput, error) {
+func (s *Bucket) PutCNAMERequest(ctx context.Context, input *PutBucketCNAMEInput) (*request.Request, *PutBucketCNAMEOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &PutBucketCNAMEInput{}
@@ -1558,7 +1847,7 @@ func (s *Bucket) PutCNAMERequest(input *PutBucketCNAMEInput) (*request.Request, 
 	}
 
 	x := &PutBucketCNAMEOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1618,7 +1907,16 @@ type PutBucketCNAMEOutput struct {
 // PutCORS does Set CORS information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/put_cors.html
 func (s *Bucket) PutCORS(input *PutBucketCORSInput) (*PutBucketCORSOutput, error) {
-	r, x, err := s.PutCORSRequest(input)
+	return s.PutCORSWithContext(context.Background(), input)
+}
+
+// PutCORSWithContext add context support for PutCORS
+func (s *Bucket) PutCORSWithContext(ctx context.Context, input *PutBucketCORSInput) (*PutBucketCORSOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.PutCORSRequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -1636,7 +1934,10 @@ func (s *Bucket) PutCORS(input *PutBucketCORSInput) (*PutBucketCORSOutput, error
 }
 
 // PutCORSRequest creates request and output object of PutBucketCORS.
-func (s *Bucket) PutCORSRequest(input *PutBucketCORSInput) (*request.Request, *PutBucketCORSOutput, error) {
+func (s *Bucket) PutCORSRequest(ctx context.Context, input *PutBucketCORSInput) (*request.Request, *PutBucketCORSOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &PutBucketCORSInput{}
@@ -1656,7 +1957,7 @@ func (s *Bucket) PutCORSRequest(input *PutBucketCORSInput) (*request.Request, *P
 	}
 
 	x := &PutBucketCORSOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1702,7 +2003,16 @@ type PutBucketCORSOutput struct {
 // PutExternalMirror does Set external mirror of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/external_mirror/put_external_mirror.html
 func (s *Bucket) PutExternalMirror(input *PutBucketExternalMirrorInput) (*PutBucketExternalMirrorOutput, error) {
-	r, x, err := s.PutExternalMirrorRequest(input)
+	return s.PutExternalMirrorWithContext(context.Background(), input)
+}
+
+// PutExternalMirrorWithContext add context support for PutExternalMirror
+func (s *Bucket) PutExternalMirrorWithContext(ctx context.Context, input *PutBucketExternalMirrorInput) (*PutBucketExternalMirrorOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.PutExternalMirrorRequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -1720,7 +2030,10 @@ func (s *Bucket) PutExternalMirror(input *PutBucketExternalMirrorInput) (*PutBuc
 }
 
 // PutExternalMirrorRequest creates request and output object of PutBucketExternalMirror.
-func (s *Bucket) PutExternalMirrorRequest(input *PutBucketExternalMirrorInput) (*request.Request, *PutBucketExternalMirrorOutput, error) {
+func (s *Bucket) PutExternalMirrorRequest(ctx context.Context, input *PutBucketExternalMirrorInput) (*request.Request, *PutBucketExternalMirrorOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &PutBucketExternalMirrorInput{}
@@ -1740,7 +2053,7 @@ func (s *Bucket) PutExternalMirrorRequest(input *PutBucketExternalMirrorInput) (
 	}
 
 	x := &PutBucketExternalMirrorOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1778,7 +2091,16 @@ type PutBucketExternalMirrorOutput struct {
 // PutLifecycle does Set Lifecycle information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/lifecycle/put_lifecycle.html
 func (s *Bucket) PutLifecycle(input *PutBucketLifecycleInput) (*PutBucketLifecycleOutput, error) {
-	r, x, err := s.PutLifecycleRequest(input)
+	return s.PutLifecycleWithContext(context.Background(), input)
+}
+
+// PutLifecycleWithContext add context support for PutLifecycle
+func (s *Bucket) PutLifecycleWithContext(ctx context.Context, input *PutBucketLifecycleInput) (*PutBucketLifecycleOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.PutLifecycleRequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -1796,7 +2118,10 @@ func (s *Bucket) PutLifecycle(input *PutBucketLifecycleInput) (*PutBucketLifecyc
 }
 
 // PutLifecycleRequest creates request and output object of PutBucketLifecycle.
-func (s *Bucket) PutLifecycleRequest(input *PutBucketLifecycleInput) (*request.Request, *PutBucketLifecycleOutput, error) {
+func (s *Bucket) PutLifecycleRequest(ctx context.Context, input *PutBucketLifecycleInput) (*request.Request, *PutBucketLifecycleOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &PutBucketLifecycleInput{}
@@ -1816,7 +2141,7 @@ func (s *Bucket) PutLifecycleRequest(input *PutBucketLifecycleInput) (*request.R
 	}
 
 	x := &PutBucketLifecycleOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1862,7 +2187,16 @@ type PutBucketLifecycleOutput struct {
 // PutLogging does Set bucket logging of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/put_logging.html
 func (s *Bucket) PutLogging(input *PutBucketLoggingInput) (*PutBucketLoggingOutput, error) {
-	r, x, err := s.PutLoggingRequest(input)
+	return s.PutLoggingWithContext(context.Background(), input)
+}
+
+// PutLoggingWithContext add context support for PutLogging
+func (s *Bucket) PutLoggingWithContext(ctx context.Context, input *PutBucketLoggingInput) (*PutBucketLoggingOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.PutLoggingRequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -1880,7 +2214,10 @@ func (s *Bucket) PutLogging(input *PutBucketLoggingInput) (*PutBucketLoggingOutp
 }
 
 // PutLoggingRequest creates request and output object of PutBucketLogging.
-func (s *Bucket) PutLoggingRequest(input *PutBucketLoggingInput) (*request.Request, *PutBucketLoggingOutput, error) {
+func (s *Bucket) PutLoggingRequest(ctx context.Context, input *PutBucketLoggingInput) (*request.Request, *PutBucketLoggingOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &PutBucketLoggingInput{}
@@ -1900,7 +2237,7 @@ func (s *Bucket) PutLoggingRequest(input *PutBucketLoggingInput) (*request.Reque
 	}
 
 	x := &PutBucketLoggingOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1947,7 +2284,16 @@ type PutBucketLoggingOutput struct {
 // PutNotification does Set Notification information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/notification/put_notification.html
 func (s *Bucket) PutNotification(input *PutBucketNotificationInput) (*PutBucketNotificationOutput, error) {
-	r, x, err := s.PutNotificationRequest(input)
+	return s.PutNotificationWithContext(context.Background(), input)
+}
+
+// PutNotificationWithContext add context support for PutNotification
+func (s *Bucket) PutNotificationWithContext(ctx context.Context, input *PutBucketNotificationInput) (*PutBucketNotificationOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.PutNotificationRequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -1965,7 +2311,10 @@ func (s *Bucket) PutNotification(input *PutBucketNotificationInput) (*PutBucketN
 }
 
 // PutNotificationRequest creates request and output object of PutBucketNotification.
-func (s *Bucket) PutNotificationRequest(input *PutBucketNotificationInput) (*request.Request, *PutBucketNotificationOutput, error) {
+func (s *Bucket) PutNotificationRequest(ctx context.Context, input *PutBucketNotificationInput) (*request.Request, *PutBucketNotificationOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &PutBucketNotificationInput{}
@@ -1985,7 +2334,7 @@ func (s *Bucket) PutNotificationRequest(input *PutBucketNotificationInput) (*req
 	}
 
 	x := &PutBucketNotificationOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -2031,7 +2380,16 @@ type PutBucketNotificationOutput struct {
 // PutPolicy does Set policy information of the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/policy/put_policy.html
 func (s *Bucket) PutPolicy(input *PutBucketPolicyInput) (*PutBucketPolicyOutput, error) {
-	r, x, err := s.PutPolicyRequest(input)
+	return s.PutPolicyWithContext(context.Background(), input)
+}
+
+// PutPolicyWithContext add context support for PutPolicy
+func (s *Bucket) PutPolicyWithContext(ctx context.Context, input *PutBucketPolicyInput) (*PutBucketPolicyOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.PutPolicyRequest(ctx, input)
 
 	if err != nil {
 		return x, err
@@ -2049,7 +2407,10 @@ func (s *Bucket) PutPolicy(input *PutBucketPolicyInput) (*PutBucketPolicyOutput,
 }
 
 // PutPolicyRequest creates request and output object of PutBucketPolicy.
-func (s *Bucket) PutPolicyRequest(input *PutBucketPolicyInput) (*request.Request, *PutBucketPolicyOutput, error) {
+func (s *Bucket) PutPolicyRequest(ctx context.Context, input *PutBucketPolicyInput) (*request.Request, *PutBucketPolicyOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	if input == nil {
 		input = &PutBucketPolicyInput{}
@@ -2069,7 +2430,7 @@ func (s *Bucket) PutPolicyRequest(input *PutBucketPolicyInput) (*request.Request
 	}
 
 	x := &PutBucketPolicyOutput{}
-	r, err := request.New(o, input, x)
+	r, err := request.New(ctx, o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}

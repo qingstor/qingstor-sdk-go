@@ -101,7 +101,7 @@ func putObjectWithKey(objectKey string) error {
 			hashInBytes := hash.Sum(nil)[:16]
 			md5String := hex.EncodeToString(hashInBytes)
 
-			//file.Seek(0, io.SeekStart)
+			// file.Seek(0, io.SeekStart)
 			file.Seek(0, 0)
 			if len(objectKey) > 1000 {
 				objectKey = objectKey[:1000]
@@ -330,7 +330,7 @@ func getObjectWithContentType(objectKey, contentType string) error {
 			if len(objectKey) > 1000 {
 				objectKey = objectKey[:1000]
 			}
-			getObjectWithContentTypeRequest, _, err := bucket.GetObjectRequest(
+			getObjectWithContentTypeRequest, _, err := bucket.GetObjectRequest(nil,
 				fmt.Sprintf("%s-%d", objectKey, index),
 				&qs.GetObjectInput{
 					ResponseContentType: qs.String(contentType),
@@ -393,7 +393,7 @@ func getObjectWithQuerySignature(objectKey string) error {
 			if len(objectKey) > 1000 {
 				objectKey = objectKey[:1000]
 			}
-			r, _, err := bucket.GetObjectRequest(
+			r, _, err := bucket.GetObjectRequest(nil,
 				fmt.Sprintf("%s-%d", objectKey, index), nil,
 			)
 			if err != nil {

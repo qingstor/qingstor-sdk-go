@@ -1,6 +1,7 @@
 package upload
 
 import (
+	"context"
 	"errors"
 	"io"
 
@@ -10,6 +11,7 @@ import (
 
 // Uploader struct provides a struct to upload
 type Uploader struct {
+	ctx      context.Context
 	bucket   *service.Bucket
 	partSize int
 }
@@ -24,6 +26,19 @@ func Init(bucket *service.Bucket, partSize int) *Uploader {
 	}
 }
 
+// Context always return a non-nil context
+func (u *Uploader) Context() context.Context {
+	if u.ctx == nil {
+		return context.Background()
+	}
+	return u.ctx
+}
+
+// WithContext set uploader's context manually
+func (u *Uploader) WithContext(ctx context.Context) {
+	u.ctx = ctx
+}
+
 // Upload uploads multi parts of large object
 func (u *Uploader) Upload(fd io.Reader, objectKey string) error {
 	length, err := getFileSize(fd)
@@ -32,7 +47,7 @@ func (u *Uploader) Upload(fd io.Reader, objectKey string) error {
 		return err
 	}
 	if length < int64(smallestPartSize) {
-		_, err := u.bucket.PutObject(objectKey, &service.PutObjectInput{Body: fd})
+		_, err := u.bucket.PutObjectWithContext(u.Context(), objectKey, &service.PutObjectInput{Body: fd})
 		if err != nil {
 			logger.Errorf(nil, "Autoswitched to putobject and upload failed")
 			return err
@@ -66,7 +81,8 @@ func (u *Uploader) Upload(fd io.Reader, objectKey string) error {
 }
 
 func (u *Uploader) init(objectKey string) (*string, error) {
-	output, err := u.bucket.InitiateMultipartUpload(
+	output, err := u.bucket.InitiateMultipartUploadWithContext(
+		u.Context(),
 		objectKey,
 		&service.InitiateMultipartUploadInput{},
 	)
@@ -89,7 +105,8 @@ func (u *Uploader) upload(fd io.Reader, uploadID *string, objectKey string) ([]*
 			logger.Errorf(nil, "Get next part failed, %v", err)
 			return nil, err
 		}
-		_, err = u.bucket.UploadMultipart(
+		_, err = u.bucket.UploadMultipartWithContext(
+			u.Context(),
 			objectKey,
 			&service.UploadMultipartInput{
 				UploadID:   uploadID,
@@ -110,7 +127,8 @@ func (u *Uploader) upload(fd io.Reader, uploadID *string, objectKey string) ([]*
 }
 
 func (u *Uploader) complete(objectKey string, uploadID *string, partNumbers []*service.ObjectPartType) error {
-	_, err := u.bucket.CompleteMultipartUpload(
+	_, err := u.bucket.CompleteMultipartUploadWithContext(
+		u.Context(),
 		objectKey,
 		&service.CompleteMultipartUploadInput{
 			UploadID:    uploadID,

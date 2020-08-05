@@ -17,6 +17,7 @@
 package builder
 
 import (
+	"context"
 	"reflect"
 	"testing"
 	"time"
@@ -74,7 +75,7 @@ func TestQingStorBuilder_BuildHTTPRequest(t *testing.T) {
 		IfModifiedSince: convert.Time(time.Date(2016, 9, 1, 15, 30, 0, 0, tz)),
 		Range:           convert.String("100-"),
 	})
-	httpRequest, err := qsBuilder.BuildHTTPRequest(operation, &inputValue)
+	httpRequest, err := qsBuilder.BuildHTTPRequest(context.Background(), operation, &inputValue)
 	assert.Nil(t, err)
 	assert.NotNil(t, httpRequest.Header.Get("Date"))
 	assert.Equal(t, "0", httpRequest.Header.Get("Content-Length"))
@@ -113,7 +114,7 @@ func TestQingStorBuilder_BuildHTTPRequestWithDisableURICleaning(t *testing.T) {
 		IfModifiedSince: convert.Time(time.Date(2016, 9, 1, 15, 30, 0, 0, tz)),
 		Range:           convert.String("100-"),
 	})
-	httpRequest, err := qsBuilder.BuildHTTPRequest(operation, &inputValue)
+	httpRequest, err := qsBuilder.BuildHTTPRequest(context.Background(), operation, &inputValue)
 	assert.Nil(t, err)
 	assert.NotNil(t, httpRequest.Header.Get("Date"))
 	assert.Equal(t, "0", httpRequest.Header.Get("Content-Length"))

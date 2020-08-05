@@ -70,12 +70,20 @@
         {{end -}}
     {{- end -}}
     {{- if eq $belongs "Bucket" -}}
-        {{replace $opID "Bucket" "" -1 -}}(
+        {{$funcName := replace $opID "Bucket" "" -1 -}}
+        {{$funcName -}}(
+            {{- if $isObject}}objectKey string,{{end -}}
+            {{- if $hasInput}}input *{{$servicePackage}}.{{$opID}}Input{{end -}}
+        ) (*{{$servicePackage}}.{{$opID}}Output, error)
+        {{$funcName -}}WithContext(ctx context.Context,
             {{- if $isObject}}objectKey string,{{end -}}
             {{- if $hasInput}}input *{{$servicePackage}}.{{$opID}}Input{{end -}}
         ) (*{{$servicePackage}}.{{$opID}}Output, error)
     {{- else -}}
         {{$opID}}(
+            {{- if $hasInput}}input *{{$servicePackage}}.{{$opID}}Input{{end -}}
+        ) (*{{$servicePackage}}.{{$opID}}Output, error)
+        {{$opID}}WithContext(ctx context.Context,
             {{- if $hasInput}}input *{{$servicePackage}}.{{$opID}}Input{{end -}}
         ) (*{{$servicePackage}}.{{$opID}}Output, error)
     {{- end -}}
