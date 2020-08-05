@@ -92,7 +92,7 @@ func TestRequestSend(t *testing.T) {
 	}
 
 	output := &SomeActionOutput{}
-	r, err := New(context.Background(), operation, &SomeActionInput{
+	r, err := New(operation, &SomeActionInput{
 		Date:            Time(time.Date(2016, 9, 1, 15, 30, 0, 0, time.UTC)),
 		IfModifiedSince: Time(time.Date(2016, 9, 1, 15, 30, 0, 0, time.UTC)),
 		Range:           String("100-"),
@@ -101,7 +101,7 @@ func TestRequestSend(t *testing.T) {
 	}, output)
 	assert.Nil(t, err)
 
-	err = r.build()
+	err = r.build(context.Background())
 	assert.Nil(t, err)
 
 	err = r.sign()

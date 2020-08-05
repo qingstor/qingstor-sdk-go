@@ -51,13 +51,13 @@ func (s *Bucket) AbortMultipartUploadWithContext(ctx context.Context, objectKey 
 		ctx = context.Background()
 	}
 
-	r, x, err := s.AbortMultipartUploadRequest(ctx, objectKey, input)
+	r, x, err := s.AbortMultipartUploadRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -69,10 +69,7 @@ func (s *Bucket) AbortMultipartUploadWithContext(ctx context.Context, objectKey 
 }
 
 // AbortMultipartUploadRequest creates request and output object of AbortMultipartUpload.
-func (s *Bucket) AbortMultipartUploadRequest(ctx context.Context, objectKey string, input *AbortMultipartUploadInput) (*request.Request, *AbortMultipartUploadOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) AbortMultipartUploadRequest(objectKey string, input *AbortMultipartUploadInput) (*request.Request, *AbortMultipartUploadOutput, error) {
 
 	if input == nil {
 		input = &AbortMultipartUploadInput{}
@@ -94,7 +91,7 @@ func (s *Bucket) AbortMultipartUploadRequest(ctx context.Context, objectKey stri
 	}
 
 	x := &AbortMultipartUploadOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -141,13 +138,13 @@ func (s *Bucket) AppendObjectWithContext(ctx context.Context, objectKey string, 
 		ctx = context.Background()
 	}
 
-	r, x, err := s.AppendObjectRequest(ctx, objectKey, input)
+	r, x, err := s.AppendObjectRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -159,10 +156,7 @@ func (s *Bucket) AppendObjectWithContext(ctx context.Context, objectKey string, 
 }
 
 // AppendObjectRequest creates request and output object of AppendObject.
-func (s *Bucket) AppendObjectRequest(ctx context.Context, objectKey string, input *AppendObjectInput) (*request.Request, *AppendObjectOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) AppendObjectRequest(objectKey string, input *AppendObjectInput) (*request.Request, *AppendObjectOutput, error) {
 
 	if input == nil {
 		input = &AppendObjectInput{}
@@ -184,7 +178,7 @@ func (s *Bucket) AppendObjectRequest(ctx context.Context, objectKey string, inpu
 	}
 
 	x := &AppendObjectOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -259,13 +253,13 @@ func (s *Bucket) CompleteMultipartUploadWithContext(ctx context.Context, objectK
 		ctx = context.Background()
 	}
 
-	r, x, err := s.CompleteMultipartUploadRequest(ctx, objectKey, input)
+	r, x, err := s.CompleteMultipartUploadRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -277,10 +271,7 @@ func (s *Bucket) CompleteMultipartUploadWithContext(ctx context.Context, objectK
 }
 
 // CompleteMultipartUploadRequest creates request and output object of CompleteMultipartUpload.
-func (s *Bucket) CompleteMultipartUploadRequest(ctx context.Context, objectKey string, input *CompleteMultipartUploadInput) (*request.Request, *CompleteMultipartUploadOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) CompleteMultipartUploadRequest(objectKey string, input *CompleteMultipartUploadInput) (*request.Request, *CompleteMultipartUploadOutput, error) {
 
 	if input == nil {
 		input = &CompleteMultipartUploadInput{}
@@ -302,7 +293,7 @@ func (s *Bucket) CompleteMultipartUploadRequest(ctx context.Context, objectKey s
 	}
 
 	x := &CompleteMultipartUploadOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -379,13 +370,13 @@ func (s *Bucket) DeleteObjectWithContext(ctx context.Context, objectKey string) 
 		ctx = context.Background()
 	}
 
-	r, x, err := s.DeleteObjectRequest(ctx, objectKey)
+	r, x, err := s.DeleteObjectRequest(objectKey)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -397,10 +388,7 @@ func (s *Bucket) DeleteObjectWithContext(ctx context.Context, objectKey string) 
 }
 
 // DeleteObjectRequest creates request and output object of DeleteObject.
-func (s *Bucket) DeleteObjectRequest(ctx context.Context, objectKey string) (*request.Request, *DeleteObjectOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) DeleteObjectRequest(objectKey string) (*request.Request, *DeleteObjectOutput, error) {
 
 	properties := *s.Properties
 
@@ -418,7 +406,7 @@ func (s *Bucket) DeleteObjectRequest(ctx context.Context, objectKey string) (*re
 	}
 
 	x := &DeleteObjectOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -445,13 +433,13 @@ func (s *Bucket) GetObjectWithContext(ctx context.Context, objectKey string, inp
 		ctx = context.Background()
 	}
 
-	r, x, err := s.GetObjectRequest(ctx, objectKey, input)
+	r, x, err := s.GetObjectRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -463,10 +451,7 @@ func (s *Bucket) GetObjectWithContext(ctx context.Context, objectKey string, inp
 }
 
 // GetObjectRequest creates request and output object of GetObject.
-func (s *Bucket) GetObjectRequest(ctx context.Context, objectKey string, input *GetObjectInput) (*request.Request, *GetObjectOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) GetObjectRequest(objectKey string, input *GetObjectInput) (*request.Request, *GetObjectOutput, error) {
 
 	if input == nil {
 		input = &GetObjectInput{}
@@ -491,7 +476,7 @@ func (s *Bucket) GetObjectRequest(ctx context.Context, objectKey string, input *
 	}
 
 	x := &GetObjectOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -594,13 +579,13 @@ func (s *Bucket) HeadObjectWithContext(ctx context.Context, objectKey string, in
 		ctx = context.Background()
 	}
 
-	r, x, err := s.HeadObjectRequest(ctx, objectKey, input)
+	r, x, err := s.HeadObjectRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -612,10 +597,7 @@ func (s *Bucket) HeadObjectWithContext(ctx context.Context, objectKey string, in
 }
 
 // HeadObjectRequest creates request and output object of HeadObject.
-func (s *Bucket) HeadObjectRequest(ctx context.Context, objectKey string, input *HeadObjectInput) (*request.Request, *HeadObjectOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) HeadObjectRequest(objectKey string, input *HeadObjectInput) (*request.Request, *HeadObjectOutput, error) {
 
 	if input == nil {
 		input = &HeadObjectInput{}
@@ -637,7 +619,7 @@ func (s *Bucket) HeadObjectRequest(ctx context.Context, objectKey string, input 
 	}
 
 	x := &HeadObjectOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -706,13 +688,13 @@ func (s *Bucket) ImageProcessWithContext(ctx context.Context, objectKey string, 
 		ctx = context.Background()
 	}
 
-	r, x, err := s.ImageProcessRequest(ctx, objectKey, input)
+	r, x, err := s.ImageProcessRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -724,10 +706,7 @@ func (s *Bucket) ImageProcessWithContext(ctx context.Context, objectKey string, 
 }
 
 // ImageProcessRequest creates request and output object of ImageProcess.
-func (s *Bucket) ImageProcessRequest(ctx context.Context, objectKey string, input *ImageProcessInput) (*request.Request, *ImageProcessOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) ImageProcessRequest(objectKey string, input *ImageProcessInput) (*request.Request, *ImageProcessOutput, error) {
 
 	if input == nil {
 		input = &ImageProcessInput{}
@@ -750,7 +729,7 @@ func (s *Bucket) ImageProcessRequest(ctx context.Context, objectKey string, inpu
 	}
 
 	x := &ImageProcessOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -825,13 +804,13 @@ func (s *Bucket) InitiateMultipartUploadWithContext(ctx context.Context, objectK
 		ctx = context.Background()
 	}
 
-	r, x, err := s.InitiateMultipartUploadRequest(ctx, objectKey, input)
+	r, x, err := s.InitiateMultipartUploadRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -843,10 +822,7 @@ func (s *Bucket) InitiateMultipartUploadWithContext(ctx context.Context, objectK
 }
 
 // InitiateMultipartUploadRequest creates request and output object of InitiateMultipartUpload.
-func (s *Bucket) InitiateMultipartUploadRequest(ctx context.Context, objectKey string, input *InitiateMultipartUploadInput) (*request.Request, *InitiateMultipartUploadOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) InitiateMultipartUploadRequest(objectKey string, input *InitiateMultipartUploadInput) (*request.Request, *InitiateMultipartUploadOutput, error) {
 
 	if input == nil {
 		input = &InitiateMultipartUploadInput{}
@@ -868,7 +844,7 @@ func (s *Bucket) InitiateMultipartUploadRequest(ctx context.Context, objectKey s
 	}
 
 	x := &InitiateMultipartUploadOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -955,13 +931,13 @@ func (s *Bucket) ListMultipartWithContext(ctx context.Context, objectKey string,
 		ctx = context.Background()
 	}
 
-	r, x, err := s.ListMultipartRequest(ctx, objectKey, input)
+	r, x, err := s.ListMultipartRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -973,10 +949,7 @@ func (s *Bucket) ListMultipartWithContext(ctx context.Context, objectKey string,
 }
 
 // ListMultipartRequest creates request and output object of ListMultipart.
-func (s *Bucket) ListMultipartRequest(ctx context.Context, objectKey string, input *ListMultipartInput) (*request.Request, *ListMultipartOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) ListMultipartRequest(objectKey string, input *ListMultipartInput) (*request.Request, *ListMultipartOutput, error) {
 
 	if input == nil {
 		input = &ListMultipartInput{}
@@ -998,7 +971,7 @@ func (s *Bucket) ListMultipartRequest(ctx context.Context, objectKey string, inp
 	}
 
 	x := &ListMultipartOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1054,13 +1027,13 @@ func (s *Bucket) OptionsObjectWithContext(ctx context.Context, objectKey string,
 		ctx = context.Background()
 	}
 
-	r, x, err := s.OptionsObjectRequest(ctx, objectKey, input)
+	r, x, err := s.OptionsObjectRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1072,10 +1045,7 @@ func (s *Bucket) OptionsObjectWithContext(ctx context.Context, objectKey string,
 }
 
 // OptionsObjectRequest creates request and output object of OptionsObject.
-func (s *Bucket) OptionsObjectRequest(ctx context.Context, objectKey string, input *OptionsObjectInput) (*request.Request, *OptionsObjectOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) OptionsObjectRequest(objectKey string, input *OptionsObjectInput) (*request.Request, *OptionsObjectOutput, error) {
 
 	if input == nil {
 		input = &OptionsObjectInput{}
@@ -1099,7 +1069,7 @@ func (s *Bucket) OptionsObjectRequest(ctx context.Context, objectKey string, inp
 	}
 
 	x := &OptionsObjectOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1168,13 +1138,13 @@ func (s *Bucket) PutObjectWithContext(ctx context.Context, objectKey string, inp
 		ctx = context.Background()
 	}
 
-	r, x, err := s.PutObjectRequest(ctx, objectKey, input)
+	r, x, err := s.PutObjectRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1186,10 +1156,7 @@ func (s *Bucket) PutObjectWithContext(ctx context.Context, objectKey string, inp
 }
 
 // PutObjectRequest creates request and output object of PutObject.
-func (s *Bucket) PutObjectRequest(ctx context.Context, objectKey string, input *PutObjectInput) (*request.Request, *PutObjectOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) PutObjectRequest(objectKey string, input *PutObjectInput) (*request.Request, *PutObjectOutput, error) {
 
 	if input == nil {
 		input = &PutObjectInput{}
@@ -1211,7 +1178,7 @@ func (s *Bucket) PutObjectRequest(ctx context.Context, objectKey string, input *
 	}
 
 	x := &PutObjectOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1328,13 +1295,13 @@ func (s *Bucket) UploadMultipartWithContext(ctx context.Context, objectKey strin
 		ctx = context.Background()
 	}
 
-	r, x, err := s.UploadMultipartRequest(ctx, objectKey, input)
+	r, x, err := s.UploadMultipartRequest(objectKey, input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1346,10 +1313,7 @@ func (s *Bucket) UploadMultipartWithContext(ctx context.Context, objectKey strin
 }
 
 // UploadMultipartRequest creates request and output object of UploadMultipart.
-func (s *Bucket) UploadMultipartRequest(ctx context.Context, objectKey string, input *UploadMultipartInput) (*request.Request, *UploadMultipartOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) UploadMultipartRequest(objectKey string, input *UploadMultipartInput) (*request.Request, *UploadMultipartOutput, error) {
 
 	if input == nil {
 		input = &UploadMultipartInput{}
@@ -1371,7 +1335,7 @@ func (s *Bucket) UploadMultipartRequest(ctx context.Context, objectKey string, i
 	}
 
 	x := &UploadMultipartOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}

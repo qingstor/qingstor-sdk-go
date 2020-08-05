@@ -18,7 +18,6 @@ package response
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -37,24 +36,14 @@ import (
 
 // unpacker is the response unpacker for QingStor service.
 type unpacker struct {
-	ctx       context.Context
 	operation *data.Operation
 	resp      *http.Response
 	output    *reflect.Value
 }
 
-// context always return non-nil context
-func (b *unpacker) context() context.Context {
-	if b.ctx == nil {
-		return context.Background()
-	}
-	return b.ctx
-}
-
 // UnpackToOutput unpack the http response with an operation, http response and an output.
-func UnpackToOutput(ctx context.Context, o *data.Operation, r *http.Response, x *reflect.Value) error {
+func UnpackToOutput(o *data.Operation, r *http.Response, x *reflect.Value) error {
 	u := &unpacker{
-		ctx:       ctx,
 		operation: o,
 		resp:      r,
 		output:    x,

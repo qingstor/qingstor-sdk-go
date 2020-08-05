@@ -157,12 +157,12 @@
         }
 
         {{if eq $belongs "Bucket" -}}
-            r, x, err := s.{{replace $opID "Bucket" "" -1}}Request(ctx,
+            r, x, err := s.{{replace $opID "Bucket" "" -1}}Request(
                 {{- if $isObject}}objectKey,{{end -}}
                 {{- if $hasInput}}input{{end -}}
             )
         {{else -}}
-            r, x, err := s.{{$opID}}Request(ctx,
+            r, x, err := s.{{$opID}}Request(
                 {{- if $hasInput}}input{{end -}}
             )
         {{end}}
@@ -170,7 +170,7 @@
             return x, err
         }
 
-        err = r.Send()
+        err = r.Send(ctx)
         if err != nil {
             return nil, err
         }
@@ -189,19 +189,15 @@
         {{end -}}
     {{end -}}
     {{if eq $belongs "Bucket" -}}
-        func (s *{{$belongs}}) {{replace $opID "Bucket" "" -1 -}}Request(ctx context.Context,
+        func (s *{{$belongs}}) {{replace $opID "Bucket" "" -1 -}}Request(
             {{- if $isObject}}objectKey string,{{end -}}
             {{- if $hasInput}}input *{{$opID}}Input{{end -}}
         ) (*request.Request, *{{$opID}}Output, error) {
     {{else -}}
-        func (s *{{$belongs}}) {{$opID}}Request(ctx context.Context,
+        func (s *{{$belongs}}) {{$opID}}Request(
             {{- if $hasInput}}input *{{$opID}}Input{{end -}}
         ) (*request.Request, *{{$opID}}Output, error) {
     {{end -}}
-        if ctx == nil {
-            ctx = context.Background()
-        }
-
         {{if $hasInput}}
             if input == nil {
                 input = &{{$opID}}Input{}
@@ -241,7 +237,7 @@
         }
 
         x := &{{$opID}}Output{}
-        r, err := request.New(ctx, o, {{if $hasInput}}input{{else}}nil{{end}}, x)
+        r, err := request.New(o, {{if $hasInput}}input{{else}}nil{{end}}, x)
         if err != nil {
             return nil, nil, err
         }

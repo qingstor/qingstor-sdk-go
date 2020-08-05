@@ -68,13 +68,13 @@ func (s *Bucket) DeleteWithContext(ctx context.Context) (*DeleteBucketOutput, er
 		ctx = context.Background()
 	}
 
-	r, x, err := s.DeleteRequest(ctx)
+	r, x, err := s.DeleteRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -86,10 +86,7 @@ func (s *Bucket) DeleteWithContext(ctx context.Context) (*DeleteBucketOutput, er
 }
 
 // DeleteRequest creates request and output object of DeleteBucket.
-func (s *Bucket) DeleteRequest(ctx context.Context) (*request.Request, *DeleteBucketOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) DeleteRequest() (*request.Request, *DeleteBucketOutput, error) {
 
 	properties := *s.Properties
 
@@ -105,7 +102,7 @@ func (s *Bucket) DeleteRequest(ctx context.Context) (*request.Request, *DeleteBu
 	}
 
 	x := &DeleteBucketOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -132,13 +129,13 @@ func (s *Bucket) DeleteCNAMEWithContext(ctx context.Context, input *DeleteBucket
 		ctx = context.Background()
 	}
 
-	r, x, err := s.DeleteCNAMERequest(ctx, input)
+	r, x, err := s.DeleteCNAMERequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -150,10 +147,7 @@ func (s *Bucket) DeleteCNAMEWithContext(ctx context.Context, input *DeleteBucket
 }
 
 // DeleteCNAMERequest creates request and output object of DeleteBucketCNAME.
-func (s *Bucket) DeleteCNAMERequest(ctx context.Context, input *DeleteBucketCNAMEInput) (*request.Request, *DeleteBucketCNAMEOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) DeleteCNAMERequest(input *DeleteBucketCNAMEInput) (*request.Request, *DeleteBucketCNAMEOutput, error) {
 
 	if input == nil {
 		input = &DeleteBucketCNAMEInput{}
@@ -173,7 +167,7 @@ func (s *Bucket) DeleteCNAMERequest(ctx context.Context, input *DeleteBucketCNAM
 	}
 
 	x := &DeleteBucketCNAMEOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -220,13 +214,13 @@ func (s *Bucket) DeleteCORSWithContext(ctx context.Context) (*DeleteBucketCORSOu
 		ctx = context.Background()
 	}
 
-	r, x, err := s.DeleteCORSRequest(ctx)
+	r, x, err := s.DeleteCORSRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -238,10 +232,7 @@ func (s *Bucket) DeleteCORSWithContext(ctx context.Context) (*DeleteBucketCORSOu
 }
 
 // DeleteCORSRequest creates request and output object of DeleteBucketCORS.
-func (s *Bucket) DeleteCORSRequest(ctx context.Context) (*request.Request, *DeleteBucketCORSOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) DeleteCORSRequest() (*request.Request, *DeleteBucketCORSOutput, error) {
 
 	properties := *s.Properties
 
@@ -257,7 +248,7 @@ func (s *Bucket) DeleteCORSRequest(ctx context.Context) (*request.Request, *Dele
 	}
 
 	x := &DeleteBucketCORSOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -284,13 +275,13 @@ func (s *Bucket) DeleteExternalMirrorWithContext(ctx context.Context) (*DeleteBu
 		ctx = context.Background()
 	}
 
-	r, x, err := s.DeleteExternalMirrorRequest(ctx)
+	r, x, err := s.DeleteExternalMirrorRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -302,10 +293,7 @@ func (s *Bucket) DeleteExternalMirrorWithContext(ctx context.Context) (*DeleteBu
 }
 
 // DeleteExternalMirrorRequest creates request and output object of DeleteBucketExternalMirror.
-func (s *Bucket) DeleteExternalMirrorRequest(ctx context.Context) (*request.Request, *DeleteBucketExternalMirrorOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) DeleteExternalMirrorRequest() (*request.Request, *DeleteBucketExternalMirrorOutput, error) {
 
 	properties := *s.Properties
 
@@ -321,7 +309,7 @@ func (s *Bucket) DeleteExternalMirrorRequest(ctx context.Context) (*request.Requ
 	}
 
 	x := &DeleteBucketExternalMirrorOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -348,13 +336,13 @@ func (s *Bucket) DeleteLifecycleWithContext(ctx context.Context) (*DeleteBucketL
 		ctx = context.Background()
 	}
 
-	r, x, err := s.DeleteLifecycleRequest(ctx)
+	r, x, err := s.DeleteLifecycleRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -366,10 +354,7 @@ func (s *Bucket) DeleteLifecycleWithContext(ctx context.Context) (*DeleteBucketL
 }
 
 // DeleteLifecycleRequest creates request and output object of DeleteBucketLifecycle.
-func (s *Bucket) DeleteLifecycleRequest(ctx context.Context) (*request.Request, *DeleteBucketLifecycleOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) DeleteLifecycleRequest() (*request.Request, *DeleteBucketLifecycleOutput, error) {
 
 	properties := *s.Properties
 
@@ -385,7 +370,7 @@ func (s *Bucket) DeleteLifecycleRequest(ctx context.Context) (*request.Request, 
 	}
 
 	x := &DeleteBucketLifecycleOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -412,13 +397,13 @@ func (s *Bucket) DeleteLoggingWithContext(ctx context.Context) (*DeleteBucketLog
 		ctx = context.Background()
 	}
 
-	r, x, err := s.DeleteLoggingRequest(ctx)
+	r, x, err := s.DeleteLoggingRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -430,10 +415,7 @@ func (s *Bucket) DeleteLoggingWithContext(ctx context.Context) (*DeleteBucketLog
 }
 
 // DeleteLoggingRequest creates request and output object of DeleteBucketLogging.
-func (s *Bucket) DeleteLoggingRequest(ctx context.Context) (*request.Request, *DeleteBucketLoggingOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) DeleteLoggingRequest() (*request.Request, *DeleteBucketLoggingOutput, error) {
 
 	properties := *s.Properties
 
@@ -449,7 +431,7 @@ func (s *Bucket) DeleteLoggingRequest(ctx context.Context) (*request.Request, *D
 	}
 
 	x := &DeleteBucketLoggingOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -476,13 +458,13 @@ func (s *Bucket) DeleteNotificationWithContext(ctx context.Context) (*DeleteBuck
 		ctx = context.Background()
 	}
 
-	r, x, err := s.DeleteNotificationRequest(ctx)
+	r, x, err := s.DeleteNotificationRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -494,10 +476,7 @@ func (s *Bucket) DeleteNotificationWithContext(ctx context.Context) (*DeleteBuck
 }
 
 // DeleteNotificationRequest creates request and output object of DeleteBucketNotification.
-func (s *Bucket) DeleteNotificationRequest(ctx context.Context) (*request.Request, *DeleteBucketNotificationOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) DeleteNotificationRequest() (*request.Request, *DeleteBucketNotificationOutput, error) {
 
 	properties := *s.Properties
 
@@ -513,7 +492,7 @@ func (s *Bucket) DeleteNotificationRequest(ctx context.Context) (*request.Reques
 	}
 
 	x := &DeleteBucketNotificationOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -540,13 +519,13 @@ func (s *Bucket) DeletePolicyWithContext(ctx context.Context) (*DeleteBucketPoli
 		ctx = context.Background()
 	}
 
-	r, x, err := s.DeletePolicyRequest(ctx)
+	r, x, err := s.DeletePolicyRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -558,10 +537,7 @@ func (s *Bucket) DeletePolicyWithContext(ctx context.Context) (*DeleteBucketPoli
 }
 
 // DeletePolicyRequest creates request and output object of DeleteBucketPolicy.
-func (s *Bucket) DeletePolicyRequest(ctx context.Context) (*request.Request, *DeleteBucketPolicyOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) DeletePolicyRequest() (*request.Request, *DeleteBucketPolicyOutput, error) {
 
 	properties := *s.Properties
 
@@ -577,7 +553,7 @@ func (s *Bucket) DeletePolicyRequest(ctx context.Context) (*request.Request, *De
 	}
 
 	x := &DeleteBucketPolicyOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -604,13 +580,13 @@ func (s *Bucket) DeleteMultipleObjectsWithContext(ctx context.Context, input *De
 		ctx = context.Background()
 	}
 
-	r, x, err := s.DeleteMultipleObjectsRequest(ctx, input)
+	r, x, err := s.DeleteMultipleObjectsRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -622,10 +598,7 @@ func (s *Bucket) DeleteMultipleObjectsWithContext(ctx context.Context, input *De
 }
 
 // DeleteMultipleObjectsRequest creates request and output object of DeleteMultipleObjects.
-func (s *Bucket) DeleteMultipleObjectsRequest(ctx context.Context, input *DeleteMultipleObjectsInput) (*request.Request, *DeleteMultipleObjectsOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) DeleteMultipleObjectsRequest(input *DeleteMultipleObjectsInput) (*request.Request, *DeleteMultipleObjectsOutput, error) {
 
 	if input == nil {
 		input = &DeleteMultipleObjectsInput{}
@@ -645,7 +618,7 @@ func (s *Bucket) DeleteMultipleObjectsRequest(ctx context.Context, input *Delete
 	}
 
 	x := &DeleteMultipleObjectsOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -707,13 +680,13 @@ func (s *Bucket) GetACLWithContext(ctx context.Context) (*GetBucketACLOutput, er
 		ctx = context.Background()
 	}
 
-	r, x, err := s.GetACLRequest(ctx)
+	r, x, err := s.GetACLRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -725,10 +698,7 @@ func (s *Bucket) GetACLWithContext(ctx context.Context) (*GetBucketACLOutput, er
 }
 
 // GetACLRequest creates request and output object of GetBucketACL.
-func (s *Bucket) GetACLRequest(ctx context.Context) (*request.Request, *GetBucketACLOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) GetACLRequest() (*request.Request, *GetBucketACLOutput, error) {
 
 	properties := *s.Properties
 
@@ -744,7 +714,7 @@ func (s *Bucket) GetACLRequest(ctx context.Context) (*request.Request, *GetBucke
 	}
 
 	x := &GetBucketACLOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -776,13 +746,13 @@ func (s *Bucket) GetCNAMEWithContext(ctx context.Context, input *GetBucketCNAMEI
 		ctx = context.Background()
 	}
 
-	r, x, err := s.GetCNAMERequest(ctx, input)
+	r, x, err := s.GetCNAMERequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -794,10 +764,7 @@ func (s *Bucket) GetCNAMEWithContext(ctx context.Context, input *GetBucketCNAMEI
 }
 
 // GetCNAMERequest creates request and output object of GetBucketCNAME.
-func (s *Bucket) GetCNAMERequest(ctx context.Context, input *GetBucketCNAMEInput) (*request.Request, *GetBucketCNAMEOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) GetCNAMERequest(input *GetBucketCNAMEInput) (*request.Request, *GetBucketCNAMEOutput, error) {
 
 	if input == nil {
 		input = &GetBucketCNAMEInput{}
@@ -817,7 +784,7 @@ func (s *Bucket) GetCNAMERequest(ctx context.Context, input *GetBucketCNAMEInput
 	}
 
 	x := &GetBucketCNAMEOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -882,13 +849,13 @@ func (s *Bucket) GetCORSWithContext(ctx context.Context) (*GetBucketCORSOutput, 
 		ctx = context.Background()
 	}
 
-	r, x, err := s.GetCORSRequest(ctx)
+	r, x, err := s.GetCORSRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -900,10 +867,7 @@ func (s *Bucket) GetCORSWithContext(ctx context.Context) (*GetBucketCORSOutput, 
 }
 
 // GetCORSRequest creates request and output object of GetBucketCORS.
-func (s *Bucket) GetCORSRequest(ctx context.Context) (*request.Request, *GetBucketCORSOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) GetCORSRequest() (*request.Request, *GetBucketCORSOutput, error) {
 
 	properties := *s.Properties
 
@@ -919,7 +883,7 @@ func (s *Bucket) GetCORSRequest(ctx context.Context) (*request.Request, *GetBuck
 	}
 
 	x := &GetBucketCORSOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -949,13 +913,13 @@ func (s *Bucket) GetExternalMirrorWithContext(ctx context.Context) (*GetBucketEx
 		ctx = context.Background()
 	}
 
-	r, x, err := s.GetExternalMirrorRequest(ctx)
+	r, x, err := s.GetExternalMirrorRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -967,10 +931,7 @@ func (s *Bucket) GetExternalMirrorWithContext(ctx context.Context) (*GetBucketEx
 }
 
 // GetExternalMirrorRequest creates request and output object of GetBucketExternalMirror.
-func (s *Bucket) GetExternalMirrorRequest(ctx context.Context) (*request.Request, *GetBucketExternalMirrorOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) GetExternalMirrorRequest() (*request.Request, *GetBucketExternalMirrorOutput, error) {
 
 	properties := *s.Properties
 
@@ -986,7 +947,7 @@ func (s *Bucket) GetExternalMirrorRequest(ctx context.Context) (*request.Request
 	}
 
 	x := &GetBucketExternalMirrorOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1016,13 +977,13 @@ func (s *Bucket) GetLifecycleWithContext(ctx context.Context) (*GetBucketLifecyc
 		ctx = context.Background()
 	}
 
-	r, x, err := s.GetLifecycleRequest(ctx)
+	r, x, err := s.GetLifecycleRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1034,10 +995,7 @@ func (s *Bucket) GetLifecycleWithContext(ctx context.Context) (*GetBucketLifecyc
 }
 
 // GetLifecycleRequest creates request and output object of GetBucketLifecycle.
-func (s *Bucket) GetLifecycleRequest(ctx context.Context) (*request.Request, *GetBucketLifecycleOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) GetLifecycleRequest() (*request.Request, *GetBucketLifecycleOutput, error) {
 
 	properties := *s.Properties
 
@@ -1053,7 +1011,7 @@ func (s *Bucket) GetLifecycleRequest(ctx context.Context) (*request.Request, *Ge
 	}
 
 	x := &GetBucketLifecycleOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1083,13 +1041,13 @@ func (s *Bucket) GetLoggingWithContext(ctx context.Context) (*GetBucketLoggingOu
 		ctx = context.Background()
 	}
 
-	r, x, err := s.GetLoggingRequest(ctx)
+	r, x, err := s.GetLoggingRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1101,10 +1059,7 @@ func (s *Bucket) GetLoggingWithContext(ctx context.Context) (*GetBucketLoggingOu
 }
 
 // GetLoggingRequest creates request and output object of GetBucketLogging.
-func (s *Bucket) GetLoggingRequest(ctx context.Context) (*request.Request, *GetBucketLoggingOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) GetLoggingRequest() (*request.Request, *GetBucketLoggingOutput, error) {
 
 	properties := *s.Properties
 
@@ -1120,7 +1075,7 @@ func (s *Bucket) GetLoggingRequest(ctx context.Context) (*request.Request, *GetB
 	}
 
 	x := &GetBucketLoggingOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1152,13 +1107,13 @@ func (s *Bucket) GetNotificationWithContext(ctx context.Context) (*GetBucketNoti
 		ctx = context.Background()
 	}
 
-	r, x, err := s.GetNotificationRequest(ctx)
+	r, x, err := s.GetNotificationRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1170,10 +1125,7 @@ func (s *Bucket) GetNotificationWithContext(ctx context.Context) (*GetBucketNoti
 }
 
 // GetNotificationRequest creates request and output object of GetBucketNotification.
-func (s *Bucket) GetNotificationRequest(ctx context.Context) (*request.Request, *GetBucketNotificationOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) GetNotificationRequest() (*request.Request, *GetBucketNotificationOutput, error) {
 
 	properties := *s.Properties
 
@@ -1189,7 +1141,7 @@ func (s *Bucket) GetNotificationRequest(ctx context.Context) (*request.Request, 
 	}
 
 	x := &GetBucketNotificationOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1219,13 +1171,13 @@ func (s *Bucket) GetPolicyWithContext(ctx context.Context) (*GetBucketPolicyOutp
 		ctx = context.Background()
 	}
 
-	r, x, err := s.GetPolicyRequest(ctx)
+	r, x, err := s.GetPolicyRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1237,10 +1189,7 @@ func (s *Bucket) GetPolicyWithContext(ctx context.Context) (*GetBucketPolicyOutp
 }
 
 // GetPolicyRequest creates request and output object of GetBucketPolicy.
-func (s *Bucket) GetPolicyRequest(ctx context.Context) (*request.Request, *GetBucketPolicyOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) GetPolicyRequest() (*request.Request, *GetBucketPolicyOutput, error) {
 
 	properties := *s.Properties
 
@@ -1256,7 +1205,7 @@ func (s *Bucket) GetPolicyRequest(ctx context.Context) (*request.Request, *GetBu
 	}
 
 	x := &GetBucketPolicyOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1286,13 +1235,13 @@ func (s *Bucket) GetStatisticsWithContext(ctx context.Context) (*GetBucketStatis
 		ctx = context.Background()
 	}
 
-	r, x, err := s.GetStatisticsRequest(ctx)
+	r, x, err := s.GetStatisticsRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1304,10 +1253,7 @@ func (s *Bucket) GetStatisticsWithContext(ctx context.Context) (*GetBucketStatis
 }
 
 // GetStatisticsRequest creates request and output object of GetBucketStatistics.
-func (s *Bucket) GetStatisticsRequest(ctx context.Context) (*request.Request, *GetBucketStatisticsOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) GetStatisticsRequest() (*request.Request, *GetBucketStatisticsOutput, error) {
 
 	properties := *s.Properties
 
@@ -1323,7 +1269,7 @@ func (s *Bucket) GetStatisticsRequest(ctx context.Context) (*request.Request, *G
 	}
 
 	x := &GetBucketStatisticsOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1366,13 +1312,13 @@ func (s *Bucket) HeadWithContext(ctx context.Context) (*HeadBucketOutput, error)
 		ctx = context.Background()
 	}
 
-	r, x, err := s.HeadRequest(ctx)
+	r, x, err := s.HeadRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1384,10 +1330,7 @@ func (s *Bucket) HeadWithContext(ctx context.Context) (*HeadBucketOutput, error)
 }
 
 // HeadRequest creates request and output object of HeadBucket.
-func (s *Bucket) HeadRequest(ctx context.Context) (*request.Request, *HeadBucketOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) HeadRequest() (*request.Request, *HeadBucketOutput, error) {
 
 	properties := *s.Properties
 
@@ -1403,7 +1346,7 @@ func (s *Bucket) HeadRequest(ctx context.Context) (*request.Request, *HeadBucket
 	}
 
 	x := &HeadBucketOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1430,13 +1373,13 @@ func (s *Bucket) ListMultipartUploadsWithContext(ctx context.Context, input *Lis
 		ctx = context.Background()
 	}
 
-	r, x, err := s.ListMultipartUploadsRequest(ctx, input)
+	r, x, err := s.ListMultipartUploadsRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1448,10 +1391,7 @@ func (s *Bucket) ListMultipartUploadsWithContext(ctx context.Context, input *Lis
 }
 
 // ListMultipartUploadsRequest creates request and output object of ListMultipartUploads.
-func (s *Bucket) ListMultipartUploadsRequest(ctx context.Context, input *ListMultipartUploadsInput) (*request.Request, *ListMultipartUploadsOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) ListMultipartUploadsRequest(input *ListMultipartUploadsInput) (*request.Request, *ListMultipartUploadsOutput, error) {
 
 	if input == nil {
 		input = &ListMultipartUploadsInput{}
@@ -1471,7 +1411,7 @@ func (s *Bucket) ListMultipartUploadsRequest(ctx context.Context, input *ListMul
 	}
 
 	x := &ListMultipartUploadsOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1539,13 +1479,13 @@ func (s *Bucket) ListObjectsWithContext(ctx context.Context, input *ListObjectsI
 		ctx = context.Background()
 	}
 
-	r, x, err := s.ListObjectsRequest(ctx, input)
+	r, x, err := s.ListObjectsRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1557,10 +1497,7 @@ func (s *Bucket) ListObjectsWithContext(ctx context.Context, input *ListObjectsI
 }
 
 // ListObjectsRequest creates request and output object of ListObjects.
-func (s *Bucket) ListObjectsRequest(ctx context.Context, input *ListObjectsInput) (*request.Request, *ListObjectsOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) ListObjectsRequest(input *ListObjectsInput) (*request.Request, *ListObjectsOutput, error) {
 
 	if input == nil {
 		input = &ListObjectsInput{}
@@ -1580,7 +1517,7 @@ func (s *Bucket) ListObjectsRequest(ctx context.Context, input *ListObjectsInput
 	}
 
 	x := &ListObjectsOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1646,13 +1583,13 @@ func (s *Bucket) PutWithContext(ctx context.Context) (*PutBucketOutput, error) {
 		ctx = context.Background()
 	}
 
-	r, x, err := s.PutRequest(ctx)
+	r, x, err := s.PutRequest()
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1664,10 +1601,7 @@ func (s *Bucket) PutWithContext(ctx context.Context) (*PutBucketOutput, error) {
 }
 
 // PutRequest creates request and output object of PutBucket.
-func (s *Bucket) PutRequest(ctx context.Context) (*request.Request, *PutBucketOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) PutRequest() (*request.Request, *PutBucketOutput, error) {
 
 	properties := *s.Properties
 
@@ -1683,7 +1617,7 @@ func (s *Bucket) PutRequest(ctx context.Context) (*request.Request, *PutBucketOu
 	}
 
 	x := &PutBucketOutput{}
-	r, err := request.New(ctx, o, nil, x)
+	r, err := request.New(o, nil, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1710,13 +1644,13 @@ func (s *Bucket) PutACLWithContext(ctx context.Context, input *PutBucketACLInput
 		ctx = context.Background()
 	}
 
-	r, x, err := s.PutACLRequest(ctx, input)
+	r, x, err := s.PutACLRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1728,10 +1662,7 @@ func (s *Bucket) PutACLWithContext(ctx context.Context, input *PutBucketACLInput
 }
 
 // PutACLRequest creates request and output object of PutBucketACL.
-func (s *Bucket) PutACLRequest(ctx context.Context, input *PutBucketACLInput) (*request.Request, *PutBucketACLOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) PutACLRequest(input *PutBucketACLInput) (*request.Request, *PutBucketACLOutput, error) {
 
 	if input == nil {
 		input = &PutBucketACLInput{}
@@ -1751,7 +1682,7 @@ func (s *Bucket) PutACLRequest(ctx context.Context, input *PutBucketACLInput) (*
 	}
 
 	x := &PutBucketACLOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1806,13 +1737,13 @@ func (s *Bucket) PutCNAMEWithContext(ctx context.Context, input *PutBucketCNAMEI
 		ctx = context.Background()
 	}
 
-	r, x, err := s.PutCNAMERequest(ctx, input)
+	r, x, err := s.PutCNAMERequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1824,10 +1755,7 @@ func (s *Bucket) PutCNAMEWithContext(ctx context.Context, input *PutBucketCNAMEI
 }
 
 // PutCNAMERequest creates request and output object of PutBucketCNAME.
-func (s *Bucket) PutCNAMERequest(ctx context.Context, input *PutBucketCNAMEInput) (*request.Request, *PutBucketCNAMEOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) PutCNAMERequest(input *PutBucketCNAMEInput) (*request.Request, *PutBucketCNAMEOutput, error) {
 
 	if input == nil {
 		input = &PutBucketCNAMEInput{}
@@ -1847,7 +1775,7 @@ func (s *Bucket) PutCNAMERequest(ctx context.Context, input *PutBucketCNAMEInput
 	}
 
 	x := &PutBucketCNAMEOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -1916,13 +1844,13 @@ func (s *Bucket) PutCORSWithContext(ctx context.Context, input *PutBucketCORSInp
 		ctx = context.Background()
 	}
 
-	r, x, err := s.PutCORSRequest(ctx, input)
+	r, x, err := s.PutCORSRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1934,10 +1862,7 @@ func (s *Bucket) PutCORSWithContext(ctx context.Context, input *PutBucketCORSInp
 }
 
 // PutCORSRequest creates request and output object of PutBucketCORS.
-func (s *Bucket) PutCORSRequest(ctx context.Context, input *PutBucketCORSInput) (*request.Request, *PutBucketCORSOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) PutCORSRequest(input *PutBucketCORSInput) (*request.Request, *PutBucketCORSOutput, error) {
 
 	if input == nil {
 		input = &PutBucketCORSInput{}
@@ -1957,7 +1882,7 @@ func (s *Bucket) PutCORSRequest(ctx context.Context, input *PutBucketCORSInput) 
 	}
 
 	x := &PutBucketCORSOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -2012,13 +1937,13 @@ func (s *Bucket) PutExternalMirrorWithContext(ctx context.Context, input *PutBuc
 		ctx = context.Background()
 	}
 
-	r, x, err := s.PutExternalMirrorRequest(ctx, input)
+	r, x, err := s.PutExternalMirrorRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -2030,10 +1955,7 @@ func (s *Bucket) PutExternalMirrorWithContext(ctx context.Context, input *PutBuc
 }
 
 // PutExternalMirrorRequest creates request and output object of PutBucketExternalMirror.
-func (s *Bucket) PutExternalMirrorRequest(ctx context.Context, input *PutBucketExternalMirrorInput) (*request.Request, *PutBucketExternalMirrorOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) PutExternalMirrorRequest(input *PutBucketExternalMirrorInput) (*request.Request, *PutBucketExternalMirrorOutput, error) {
 
 	if input == nil {
 		input = &PutBucketExternalMirrorInput{}
@@ -2053,7 +1975,7 @@ func (s *Bucket) PutExternalMirrorRequest(ctx context.Context, input *PutBucketE
 	}
 
 	x := &PutBucketExternalMirrorOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -2100,13 +2022,13 @@ func (s *Bucket) PutLifecycleWithContext(ctx context.Context, input *PutBucketLi
 		ctx = context.Background()
 	}
 
-	r, x, err := s.PutLifecycleRequest(ctx, input)
+	r, x, err := s.PutLifecycleRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -2118,10 +2040,7 @@ func (s *Bucket) PutLifecycleWithContext(ctx context.Context, input *PutBucketLi
 }
 
 // PutLifecycleRequest creates request and output object of PutBucketLifecycle.
-func (s *Bucket) PutLifecycleRequest(ctx context.Context, input *PutBucketLifecycleInput) (*request.Request, *PutBucketLifecycleOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) PutLifecycleRequest(input *PutBucketLifecycleInput) (*request.Request, *PutBucketLifecycleOutput, error) {
 
 	if input == nil {
 		input = &PutBucketLifecycleInput{}
@@ -2141,7 +2060,7 @@ func (s *Bucket) PutLifecycleRequest(ctx context.Context, input *PutBucketLifecy
 	}
 
 	x := &PutBucketLifecycleOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -2196,13 +2115,13 @@ func (s *Bucket) PutLoggingWithContext(ctx context.Context, input *PutBucketLogg
 		ctx = context.Background()
 	}
 
-	r, x, err := s.PutLoggingRequest(ctx, input)
+	r, x, err := s.PutLoggingRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -2214,10 +2133,7 @@ func (s *Bucket) PutLoggingWithContext(ctx context.Context, input *PutBucketLogg
 }
 
 // PutLoggingRequest creates request and output object of PutBucketLogging.
-func (s *Bucket) PutLoggingRequest(ctx context.Context, input *PutBucketLoggingInput) (*request.Request, *PutBucketLoggingOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) PutLoggingRequest(input *PutBucketLoggingInput) (*request.Request, *PutBucketLoggingOutput, error) {
 
 	if input == nil {
 		input = &PutBucketLoggingInput{}
@@ -2237,7 +2153,7 @@ func (s *Bucket) PutLoggingRequest(ctx context.Context, input *PutBucketLoggingI
 	}
 
 	x := &PutBucketLoggingOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -2293,13 +2209,13 @@ func (s *Bucket) PutNotificationWithContext(ctx context.Context, input *PutBucke
 		ctx = context.Background()
 	}
 
-	r, x, err := s.PutNotificationRequest(ctx, input)
+	r, x, err := s.PutNotificationRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -2311,10 +2227,7 @@ func (s *Bucket) PutNotificationWithContext(ctx context.Context, input *PutBucke
 }
 
 // PutNotificationRequest creates request and output object of PutBucketNotification.
-func (s *Bucket) PutNotificationRequest(ctx context.Context, input *PutBucketNotificationInput) (*request.Request, *PutBucketNotificationOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) PutNotificationRequest(input *PutBucketNotificationInput) (*request.Request, *PutBucketNotificationOutput, error) {
 
 	if input == nil {
 		input = &PutBucketNotificationInput{}
@@ -2334,7 +2247,7 @@ func (s *Bucket) PutNotificationRequest(ctx context.Context, input *PutBucketNot
 	}
 
 	x := &PutBucketNotificationOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -2389,13 +2302,13 @@ func (s *Bucket) PutPolicyWithContext(ctx context.Context, input *PutBucketPolic
 		ctx = context.Background()
 	}
 
-	r, x, err := s.PutPolicyRequest(ctx, input)
+	r, x, err := s.PutPolicyRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -2407,10 +2320,7 @@ func (s *Bucket) PutPolicyWithContext(ctx context.Context, input *PutBucketPolic
 }
 
 // PutPolicyRequest creates request and output object of PutBucketPolicy.
-func (s *Bucket) PutPolicyRequest(ctx context.Context, input *PutBucketPolicyInput) (*request.Request, *PutBucketPolicyOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Bucket) PutPolicyRequest(input *PutBucketPolicyInput) (*request.Request, *PutBucketPolicyOutput, error) {
 
 	if input == nil {
 		input = &PutBucketPolicyInput{}
@@ -2430,7 +2340,7 @@ func (s *Bucket) PutPolicyRequest(ctx context.Context, input *PutBucketPolicyInp
 	}
 
 	x := &PutBucketPolicyOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}

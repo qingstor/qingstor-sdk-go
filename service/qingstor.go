@@ -50,13 +50,13 @@ func (s *Service) ListBucketsWithContext(ctx context.Context, input *ListBuckets
 		ctx = context.Background()
 	}
 
-	r, x, err := s.ListBucketsRequest(ctx, input)
+	r, x, err := s.ListBucketsRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.Send(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -68,10 +68,7 @@ func (s *Service) ListBucketsWithContext(ctx context.Context, input *ListBuckets
 }
 
 // ListBucketsRequest creates request and output object of ListBuckets.
-func (s *Service) ListBucketsRequest(ctx context.Context, input *ListBucketsInput) (*request.Request, *ListBucketsOutput, error) {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+func (s *Service) ListBucketsRequest(input *ListBucketsInput) (*request.Request, *ListBucketsOutput, error) {
 
 	if input == nil {
 		input = &ListBucketsInput{}
@@ -88,7 +85,7 @@ func (s *Service) ListBucketsRequest(ctx context.Context, input *ListBucketsInpu
 	}
 
 	x := &ListBucketsOutput{}
-	r, err := request.New(ctx, o, input, x)
+	r, err := request.New(o, input, x)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -36,8 +36,6 @@ import (
 
 // A Request can build, sign, send and unpack API request.
 type Request struct {
-	ctx context.Context
-
 	Operation *data.Operation
 	Input     *reflect.Value
 	Output    *reflect.Value
@@ -46,17 +44,9 @@ type Request struct {
 	HTTPResponse *http.Response
 }
 
-// Context always return a non-nil context
-func (r *Request) Context() context.Context {
-	if r.ctx == nil {
-		return context.Background()
-	}
-	return r.ctx
-}
-
 // New create a Request from given Operation, Input and Output.
 // It returns a Request.
-func New(ctx context.Context, o *data.Operation, i data.Input, x interface{}) (*Request, error) {
+func New(o *data.Operation, i data.Input, x interface{}) (*Request, error) {
 	input := reflect.ValueOf(i)
 	if input.IsValid() && input.Elem().IsValid() {
 		err := i.Validate()
@@ -67,7 +57,6 @@ func New(ctx context.Context, o *data.Operation, i data.Input, x interface{}) (*
 	output := reflect.ValueOf(x)
 
 	return &Request{
-		ctx:       ctx,
 		Operation: o,
 		Input:     &input,
 		Output:    &output,
@@ -76,8 +65,8 @@ func New(ctx context.Context, o *data.Operation, i data.Input, x interface{}) (*
 
 // Send sends API request.
 // It returns error if error occurred.
-func (r *Request) Send() error {
-	err := r.Build()
+func (r *Request) Send(ctx context.Context) error {
+	err := r.Build(ctx)
 	if err != nil {
 		return err
 	}
@@ -97,13 +86,13 @@ func (r *Request) Send() error {
 
 // Build checks and builds the API request.
 // It returns error if error occurred.
-func (r *Request) Build() error {
+func (r *Request) Build(ctx context.Context) error {
 	err := r.check()
 	if err != nil {
 		return err
 	}
 
-	err = r.build()
+	err = r.build(ctx)
 	if err != nil {
 		return err
 	}
@@ -179,9 +168,9 @@ func (r *Request) check() error {
 	return nil
 }
 
-func (r *Request) build() error {
+func (r *Request) build(ctx context.Context) error {
 	b := &builder.Builder{}
-	httpRequest, err := b.BuildHTTPRequest(r.Context(), r.Operation, r.Input)
+	httpRequest, err := b.BuildHTTPRequest(ctx, r.Operation, r.Input)
 	if err != nil {
 		return err
 	}
@@ -242,7 +231,7 @@ func (r *Request) send() error {
 }
 
 func (r *Request) unpack() error {
-	err := response.UnpackToOutput(r.Context(), r.Operation, r.HTTPResponse, r.Output)
+	err := response.UnpackToOutput(r.Operation, r.HTTPResponse, r.Output)
 	if err != nil {
 		return err
 	}

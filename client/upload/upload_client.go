@@ -11,7 +11,6 @@ import (
 
 // Uploader struct provides a struct to upload
 type Uploader struct {
-	ctx      context.Context
 	bucket   *service.Bucket
 	partSize int
 }
@@ -26,28 +25,20 @@ func Init(bucket *service.Bucket, partSize int) *Uploader {
 	}
 }
 
-// Context always return a non-nil context
-func (u *Uploader) Context() context.Context {
-	if u.ctx == nil {
-		return context.Background()
-	}
-	return u.ctx
-}
-
-// WithContext set uploader's context manually
-func (u *Uploader) WithContext(ctx context.Context) {
-	u.ctx = ctx
-}
-
 // Upload uploads multi parts of large object
 func (u *Uploader) Upload(fd io.Reader, objectKey string) error {
+	return u.UploadWithContext(context.Background(), fd, objectKey)
+}
+
+// UploadWithContext add support for context
+func (u *Uploader) UploadWithContext(ctx context.Context, fd io.Reader, objectKey string) error {
 	length, err := getFileSize(fd)
 	if err != nil {
 		logger.Errorf(nil, "Get file size error")
 		return err
 	}
 	if length < int64(smallestPartSize) {
-		_, err := u.bucket.PutObjectWithContext(u.Context(), objectKey, &service.PutObjectInput{Body: fd})
+		_, err := u.bucket.PutObjectWithContext(ctx, objectKey, &service.PutObjectInput{Body: fd})
 		if err != nil {
 			logger.Errorf(nil, "Autoswitched to putobject and upload failed")
 			return err
@@ -59,19 +50,19 @@ func (u *Uploader) Upload(fd io.Reader, objectKey string) error {
 		return errors.New("the part size is too small")
 	}
 
-	uploadID, err := u.init(objectKey)
+	uploadID, err := u.init(ctx, objectKey)
 	if err != nil {
 		logger.Errorf(nil, "Init multipart upload error, %v.", err)
 		return err
 	}
 
-	partNumbers, err := u.upload(fd, uploadID, objectKey)
+	partNumbers, err := u.upload(ctx, fd, uploadID, objectKey)
 	if err != nil {
 		logger.Errorf(nil, "Upload multipart error, %v.", err)
 		return err
 	}
 
-	err = u.complete(objectKey, uploadID, partNumbers)
+	err = u.complete(ctx, objectKey, uploadID, partNumbers)
 	if err != nil {
 		logger.Errorf(nil, "Complete upload error, %v.", err)
 		return err
@@ -80,9 +71,9 @@ func (u *Uploader) Upload(fd io.Reader, objectKey string) error {
 	return nil
 }
 
-func (u *Uploader) init(objectKey string) (*string, error) {
+func (u *Uploader) init(ctx context.Context, objectKey string) (*string, error) {
 	output, err := u.bucket.InitiateMultipartUploadWithContext(
-		u.Context(),
+		ctx,
 		objectKey,
 		&service.InitiateMultipartUploadInput{},
 	)
@@ -92,7 +83,7 @@ func (u *Uploader) init(objectKey string) (*string, error) {
 	return output.UploadID, nil
 }
 
-func (u *Uploader) upload(fd io.Reader, uploadID *string, objectKey string) ([]*service.ObjectPartType, error) {
+func (u *Uploader) upload(ctx context.Context, fd io.Reader, uploadID *string, objectKey string) ([]*service.ObjectPartType, error) {
 	var partCnt int
 	partNumbers := []*service.ObjectPartType{}
 	fileReader := newChunk(fd, u.partSize)
@@ -106,7 +97,7 @@ func (u *Uploader) upload(fd io.Reader, uploadID *string, objectKey string) ([]*
 			return nil, err
 		}
 		_, err = u.bucket.UploadMultipartWithContext(
-			u.Context(),
+			ctx,
 			objectKey,
 			&service.UploadMultipartInput{
 				UploadID:   uploadID,
@@ -126,9 +117,9 @@ func (u *Uploader) upload(fd io.Reader, uploadID *string, objectKey string) ([]*
 	return partNumbers, nil
 }
 
-func (u *Uploader) complete(objectKey string, uploadID *string, partNumbers []*service.ObjectPartType) error {
+func (u *Uploader) complete(ctx context.Context, objectKey string, uploadID *string, partNumbers []*service.ObjectPartType) error {
 	_, err := u.bucket.CompleteMultipartUploadWithContext(
-		u.Context(),
+		ctx,
 		objectKey,
 		&service.CompleteMultipartUploadInput{
 			UploadID:    uploadID,

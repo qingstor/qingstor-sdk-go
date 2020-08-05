@@ -18,6 +18,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
@@ -330,7 +331,7 @@ func getObjectWithContentType(objectKey, contentType string) error {
 			if len(objectKey) > 1000 {
 				objectKey = objectKey[:1000]
 			}
-			getObjectWithContentTypeRequest, _, err := bucket.GetObjectRequest(nil,
+			getObjectWithContentTypeRequest, _, err := bucket.GetObjectRequest(
 				fmt.Sprintf("%s-%d", objectKey, index),
 				&qs.GetObjectInput{
 					ResponseContentType: qs.String(contentType),
@@ -340,12 +341,12 @@ func getObjectWithContentType(objectKey, contentType string) error {
 				errChan <- err
 				return
 			}
-			err = getObjectWithContentTypeRequest.Send()
+			err = getObjectWithContentTypeRequest.Send(context.Background())
 			if err != nil {
 				errChan <- err
 				return
 			}
-			err = getObjectWithContentTypeRequest.Send()
+			err = getObjectWithContentTypeRequest.Send(context.Background())
 			if err != nil {
 				errChan <- err
 				return
@@ -393,14 +394,14 @@ func getObjectWithQuerySignature(objectKey string) error {
 			if len(objectKey) > 1000 {
 				objectKey = objectKey[:1000]
 			}
-			r, _, err := bucket.GetObjectRequest(nil,
+			r, _, err := bucket.GetObjectRequest(
 				fmt.Sprintf("%s-%d", objectKey, index), nil,
 			)
 			if err != nil {
 				errChan <- err
 				return
 			}
-			err = r.Build()
+			err = r.Build(context.Background())
 			if err != nil {
 				errChan <- err
 				return
