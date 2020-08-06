@@ -74,6 +74,7 @@ func (qss *QingStorSigner) WriteQuerySignature(request *http.Request, expires in
 
 // BuildSignature calculates the signature string.
 func (qss *QingStorSigner) BuildSignature(request *http.Request) (string, error) {
+	logger := log.FromContext(request.Context())
 	stringToSign, err := qss.BuildStringToSign(request)
 	if err != nil {
 		return "", err
@@ -85,7 +86,7 @@ func (qss *QingStorSigner) BuildSignature(request *http.Request) (string, error)
 	signature := strings.TrimSpace(base64.StdEncoding.EncodeToString(h.Sum(nil)))
 	authorization := "QS " + qss.AccessKeyID + ":" + signature
 
-	log.FromContext(request.Context()).Debug(
+	logger.Debug(
 		log.String("qs_authorization", authorization),
 		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
 	)
@@ -95,6 +96,7 @@ func (qss *QingStorSigner) BuildSignature(request *http.Request) (string, error)
 
 // BuildQuerySignature calculates the signature string for query.
 func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires int) (string, error) {
+	logger := log.FromContext(request.Context())
 	stringToSign, err := qss.BuildQueryStringToSign(request, expires)
 	if err != nil {
 		return "", err
@@ -110,7 +112,7 @@ func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires in
 		qss.AccessKeyID, expires, signature,
 	)
 
-	log.FromContext(request.Context()).Debug(
+	logger.Debug(
 		log.String("query_signature", query),
 		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
 	)
@@ -120,6 +122,7 @@ func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires in
 
 // BuildStringToSign build the string to sign.
 func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, error) {
+	logger := log.FromContext(request.Context())
 	date := request.Header.Get("Date")
 	if request.Header.Get("X-QS-Date") != "" {
 		date = ""
@@ -139,7 +142,7 @@ func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, err
 	}
 	stringToSign += canonicalizedResource
 
-	log.FromContext(request.Context()).Debug(
+	logger.Debug(
 		log.String("string_to_sign", stringToSign),
 		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
 	)
@@ -149,6 +152,7 @@ func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, err
 
 // BuildQueryStringToSign build the string to sign for query.
 func (qss *QingStorSigner) BuildQueryStringToSign(request *http.Request, expires int) (string, error) {
+	logger := log.FromContext(request.Context())
 	stringToSign := fmt.Sprintf(
 		"%s\n%s\n%s\n%d\n",
 		request.Method,
@@ -164,7 +168,7 @@ func (qss *QingStorSigner) BuildQueryStringToSign(request *http.Request, expires
 	}
 	stringToSign += canonicalizedResource
 
-	log.FromContext(request.Context()).Debug(
+	logger.Debug(
 		log.String("query_string_to_sign", stringToSign),
 		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
 	)
@@ -191,6 +195,7 @@ func (qss *QingStorSigner) buildCanonicalizedHeaders(request *http.Request) stri
 }
 
 func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (string, error) {
+	logger := log.FromContext(request.Context())
 	path := utils.URLQueryEscape(request.URL.Path)
 	query := request.URL.Query()
 
@@ -223,7 +228,7 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (st
 		path = path + "?" + joinedParts
 	}
 
-	log.FromContext(request.Context()).Debug(
+	logger.Debug(
 		log.String("canonicalized_resource", path),
 		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
 	)

@@ -249,6 +249,7 @@ func (r *Request) signQuery(expires int) error {
 }
 
 func (r *Request) send(ctx context.Context) error {
+	logger := log.FromContext(ctx)
 	var resp *http.Response
 	var err error
 
@@ -256,7 +257,7 @@ func (r *Request) send(ctx context.Context) error {
 		r.Operation.Config.InitHTTPClient()
 	}
 
-	log.FromContext(ctx).Info(
+	logger.Info(
 		log.String("title", "Sending request"),
 		log.Int("date", convert.StringToTimestamp(r.HTTPRequest.Header.Get("Date"), convert.RFC822)),
 		log.String("method", r.Operation.RequestMethod),

@@ -98,11 +98,12 @@ func (b *unpacker) unpackResponse(ctx context.Context) error {
 }
 
 func (b *unpacker) exposeStatusCode(ctx context.Context) error {
+	logger := log.FromContext(ctx)
 	value := b.output.Elem().FieldByName("StatusCode")
 	if value.IsValid() {
 		switch value.Interface().(type) {
 		case *int:
-			log.FromContext(ctx).Info(
+			logger.Info(
 				log.String("title", "QingStor response code"),
 				log.Int("status_code", int64(b.resp.StatusCode)),
 				log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
@@ -115,7 +116,8 @@ func (b *unpacker) exposeStatusCode(ctx context.Context) error {
 }
 
 func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
-	log.FromContext(ctx).Info(
+	logger := log.FromContext(ctx)
+	logger.Info(
 		log.String("title", "QingStor response header"),
 		log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
 		log.String("header", fmt.Sprint(b.resp.Header)),
@@ -190,6 +192,7 @@ func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
 }
 
 func (b *unpacker) parseResponseBody(ctx context.Context) error {
+	logger := log.FromContext(ctx)
 	if b.isResponseRight() {
 		value := b.output.Elem().FieldByName("Body")
 		if value.IsValid() {
@@ -199,7 +202,7 @@ func (b *unpacker) parseResponseBody(ctx context.Context) error {
 				buffer.ReadFrom(b.resp.Body)
 				b.resp.Body.Close()
 
-				log.FromContext(ctx).Info(
+				logger.Info(
 					log.String("title", "QingStor response body"),
 					log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
 					log.Bytes("body", buffer.Bytes()),
@@ -216,6 +219,7 @@ func (b *unpacker) parseResponseBody(ctx context.Context) error {
 }
 
 func (b *unpacker) parseResponseElements(ctx context.Context) error {
+	logger := log.FromContext(ctx)
 	if !b.isResponseRight() {
 		return nil
 	}
@@ -238,7 +242,7 @@ func (b *unpacker) parseResponseElements(ctx context.Context) error {
 		return nil
 	}
 
-	log.FromContext(ctx).Info(
+	logger.Info(
 		log.String("title", "QingStor response body"),
 		log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
 		log.Bytes("body", buffer.Bytes()),
@@ -269,6 +273,7 @@ func (b *unpacker) isResponseRight() bool {
 }
 
 func (b *unpacker) parseError(ctx context.Context) error {
+	logger := log.FromContext(ctx)
 	if b.isResponseRight() {
 		return nil
 	}
@@ -290,12 +295,12 @@ func (b *unpacker) parseError(ctx context.Context) error {
 	buffer := &bytes.Buffer{}
 	_, err := io.Copy(buffer, b.resp.Body)
 	if err != nil {
-		log.FromContext(ctx).Error(log.String("copy_from_error_response_body_failed", err.Error()))
+		logger.Error(log.String("copy_from_error_response_body_failed", err.Error()))
 		return err
 	}
 	err = b.resp.Body.Close()
 	if err != nil {
-		log.FromContext(ctx).Error(log.String("close_error_response_body_failed", err.Error()))
+		logger.Error(log.String("close_error_response_body_failed", err.Error()))
 		return err
 	}
 
