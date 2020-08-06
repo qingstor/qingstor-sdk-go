@@ -74,7 +74,7 @@ func (s *Bucket) DeleteWithContext(ctx context.Context) (*DeleteBucketOutput, er
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func (s *Bucket) DeleteCNAMEWithContext(ctx context.Context, input *DeleteBucket
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -220,7 +220,7 @@ func (s *Bucket) DeleteCORSWithContext(ctx context.Context) (*DeleteBucketCORSOu
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -281,7 +281,7 @@ func (s *Bucket) DeleteExternalMirrorWithContext(ctx context.Context) (*DeleteBu
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -342,7 +342,7 @@ func (s *Bucket) DeleteLifecycleWithContext(ctx context.Context) (*DeleteBucketL
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -403,7 +403,7 @@ func (s *Bucket) DeleteLoggingWithContext(ctx context.Context) (*DeleteBucketLog
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -464,7 +464,7 @@ func (s *Bucket) DeleteNotificationWithContext(ctx context.Context) (*DeleteBuck
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -525,7 +525,7 @@ func (s *Bucket) DeletePolicyWithContext(ctx context.Context) (*DeleteBucketPoli
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -586,7 +586,7 @@ func (s *Bucket) DeleteMultipleObjectsWithContext(ctx context.Context, input *De
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -686,7 +686,7 @@ func (s *Bucket) GetACLWithContext(ctx context.Context) (*GetBucketACLOutput, er
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -752,7 +752,7 @@ func (s *Bucket) GetCNAMEWithContext(ctx context.Context, input *GetBucketCNAMEI
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -855,7 +855,7 @@ func (s *Bucket) GetCORSWithContext(ctx context.Context) (*GetBucketCORSOutput, 
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -919,7 +919,7 @@ func (s *Bucket) GetExternalMirrorWithContext(ctx context.Context) (*GetBucketEx
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -983,7 +983,7 @@ func (s *Bucket) GetLifecycleWithContext(ctx context.Context) (*GetBucketLifecyc
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1047,7 +1047,7 @@ func (s *Bucket) GetLoggingWithContext(ctx context.Context) (*GetBucketLoggingOu
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1113,7 +1113,7 @@ func (s *Bucket) GetNotificationWithContext(ctx context.Context) (*GetBucketNoti
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1177,7 +1177,7 @@ func (s *Bucket) GetPolicyWithContext(ctx context.Context) (*GetBucketPolicyOutp
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1241,7 +1241,7 @@ func (s *Bucket) GetStatisticsWithContext(ctx context.Context) (*GetBucketStatis
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1318,7 +1318,7 @@ func (s *Bucket) HeadWithContext(ctx context.Context) (*HeadBucketOutput, error)
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1379,7 +1379,7 @@ func (s *Bucket) ListMultipartUploadsWithContext(ctx context.Context, input *Lis
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1485,7 +1485,7 @@ func (s *Bucket) ListObjectsWithContext(ctx context.Context, input *ListObjectsI
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1589,7 +1589,7 @@ func (s *Bucket) PutWithContext(ctx context.Context) (*PutBucketOutput, error) {
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1650,7 +1650,7 @@ func (s *Bucket) PutACLWithContext(ctx context.Context, input *PutBucketACLInput
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1743,7 +1743,7 @@ func (s *Bucket) PutCNAMEWithContext(ctx context.Context, input *PutBucketCNAMEI
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1850,7 +1850,7 @@ func (s *Bucket) PutCORSWithContext(ctx context.Context, input *PutBucketCORSInp
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1943,7 +1943,7 @@ func (s *Bucket) PutExternalMirrorWithContext(ctx context.Context, input *PutBuc
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -2028,7 +2028,7 @@ func (s *Bucket) PutLifecycleWithContext(ctx context.Context, input *PutBucketLi
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -2121,7 +2121,7 @@ func (s *Bucket) PutLoggingWithContext(ctx context.Context, input *PutBucketLogg
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -2215,7 +2215,7 @@ func (s *Bucket) PutNotificationWithContext(ctx context.Context, input *PutBucke
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -2308,7 +2308,7 @@ func (s *Bucket) PutPolicyWithContext(ctx context.Context, input *PutBucketPolic
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}

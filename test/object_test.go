@@ -341,12 +341,12 @@ func getObjectWithContentType(objectKey, contentType string) error {
 				errChan <- err
 				return
 			}
-			err = getObjectWithContentTypeRequest.Send(context.Background())
+			err = getObjectWithContentTypeRequest.SendWithContext(context.Background())
 			if err != nil {
 				errChan <- err
 				return
 			}
-			err = getObjectWithContentTypeRequest.Send(context.Background())
+			err = getObjectWithContentTypeRequest.SendWithContext(context.Background())
 			if err != nil {
 				errChan <- err
 				return
@@ -401,7 +401,7 @@ func getObjectWithQuerySignature(objectKey string) error {
 				errChan <- err
 				return
 			}
-			err = r.Build(context.Background())
+			err = r.BuildWithContext(context.Background())
 			if err != nil {
 				errChan <- err
 				return

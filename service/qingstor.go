@@ -56,7 +56,7 @@ func (s *Service) ListBucketsWithContext(ctx context.Context, input *ListBuckets
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -57,7 +57,7 @@ func (s *Bucket) AbortMultipartUploadWithContext(ctx context.Context, objectKey 
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +144,7 @@ func (s *Bucket) AppendObjectWithContext(ctx context.Context, objectKey string, 
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -259,7 +259,7 @@ func (s *Bucket) CompleteMultipartUploadWithContext(ctx context.Context, objectK
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -376,7 +376,7 @@ func (s *Bucket) DeleteObjectWithContext(ctx context.Context, objectKey string) 
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -439,7 +439,7 @@ func (s *Bucket) GetObjectWithContext(ctx context.Context, objectKey string, inp
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -585,7 +585,7 @@ func (s *Bucket) HeadObjectWithContext(ctx context.Context, objectKey string, in
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -694,7 +694,7 @@ func (s *Bucket) ImageProcessWithContext(ctx context.Context, objectKey string, 
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -810,7 +810,7 @@ func (s *Bucket) InitiateMultipartUploadWithContext(ctx context.Context, objectK
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -937,7 +937,7 @@ func (s *Bucket) ListMultipartWithContext(ctx context.Context, objectKey string,
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1033,7 +1033,7 @@ func (s *Bucket) OptionsObjectWithContext(ctx context.Context, objectKey string,
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1144,7 +1144,7 @@ func (s *Bucket) PutObjectWithContext(ctx context.Context, objectKey string, inp
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -1301,7 +1301,7 @@ func (s *Bucket) UploadMultipartWithContext(ctx context.Context, objectKey strin
 		return x, err
 	}
 
-	err = r.Send(ctx)
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}

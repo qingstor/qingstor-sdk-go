@@ -104,7 +104,7 @@ func TestRequestSend(t *testing.T) {
 	err = r.build(context.Background())
 	assert.Nil(t, err)
 
-	err = r.sign()
+	err = r.sign(context.Background())
 	assert.Nil(t, err)
 
 	assert.Equal(t, r.HTTPRequest.URL.String(), "https://qingstor.com:443/aaa/bbb/ccc-ddd?upload_id=0")
@@ -127,7 +127,7 @@ func TestRequestSend(t *testing.T) {
 	assert.Nil(t, err)
 	r.HTTPResponse = httpResponse
 
-	err = r.unpack()
+	err = r.unpack(context.Background())
 	assert.NotNil(t, err)
 
 	switch e := err.(type) {

@@ -63,20 +63,24 @@ func New(o *data.Operation, i data.Input, x interface{}) (*Request, error) {
 	}, nil
 }
 
-// Send sends API request.
+// SendWithContext sends API request with given ctx.
 // It returns error if error occurred.
-func (r *Request) Send(ctx context.Context) error {
-	err := r.Build(ctx)
+func (r *Request) SendWithContext(ctx context.Context) error {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	err := r.BuildWithContext(ctx)
 	if err != nil {
 		return err
 	}
 
-	err = r.Sign()
+	err = r.SignWithContext(ctx)
 	if err != nil {
 		return err
 	}
 
-	err = r.Do()
+	err = r.DoWithContext(ctx)
 	if err != nil {
 		return err
 	}
@@ -84,10 +88,21 @@ func (r *Request) Send(ctx context.Context) error {
 	return nil
 }
 
-// Build checks and builds the API request.
+// Send sends API request.
 // It returns error if error occurred.
-func (r *Request) Build(ctx context.Context) error {
-	err := r.check()
+// Deprecated: Use SendWithContext instead
+func (r *Request) Send() error {
+	return r.SendWithContext(context.Background())
+}
+
+// BuildWithContext checks and builds the API request with given ctx.
+// It returns error if error occurred.
+func (r *Request) BuildWithContext(ctx context.Context) error {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	err := r.check(ctx)
 	if err != nil {
 		return err
 	}
@@ -100,30 +115,59 @@ func (r *Request) Build(ctx context.Context) error {
 	return nil
 }
 
-// Do sends and unpacks the API request.
+// Build checks and builds the API request.
 // It returns error if error occurred.
-func (r *Request) Do() error {
-	err := r.send()
+// Deprecated: Use BuildWithContext instead
+func (r *Request) Build() error {
+	return r.BuildWithContext(context.Background())
+}
+
+// DoWithContext sends and unpacks the API request with given ctx.
+// It returns error if error occurred.
+func (r *Request) DoWithContext(ctx context.Context) error {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	err := r.send(ctx)
 	if err != nil {
 		return err
 	}
 
-	err = r.unpack()
+	err = r.unpack(ctx)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-// Sign sign the API request by setting the authorization header.
+// Do sends and unpacks the API request.
 // It returns error if error occurred.
-func (r *Request) Sign() error {
-	err := r.sign()
+// Deprecated: Use DoWithContext instead
+func (r *Request) Do() error {
+	return r.DoWithContext(context.Background())
+}
+
+// SignWithContext sign the API request by setting the authorization header with given ctx.
+// It returns error if error occurred.
+func (r *Request) SignWithContext(ctx context.Context) error {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	err := r.sign(ctx)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+// Sign sign the API request by setting the authorization header.
+// It returns error if error occurred.
+// Deprecated: Use SignWithContext instead
+func (r *Request) Sign() error {
+	return r.SignWithContext(context.Background())
 }
 
 // SignQuery sign the API request by appending query string.
@@ -156,7 +200,7 @@ func (r *Request) ApplyQuerySignature(accessKeyID string, expires int, signature
 	return nil
 }
 
-func (r *Request) check() error {
+func (r *Request) check(ctx context.Context) error {
 	if r.Operation.Config.AccessKeyID == "" {
 		return errors.New("access key not provided")
 	}
@@ -179,7 +223,7 @@ func (r *Request) build(ctx context.Context) error {
 	return nil
 }
 
-func (r *Request) sign() error {
+func (r *Request) sign(ctx context.Context) error {
 	s := &signer.QingStorSigner{
 		AccessKeyID:     r.Operation.Config.AccessKeyID,
 		SecretAccessKey: r.Operation.Config.SecretAccessKey,
@@ -205,7 +249,7 @@ func (r *Request) signQuery(expires int) error {
 	return nil
 }
 
-func (r *Request) send() error {
+func (r *Request) send(ctx context.Context) error {
 	var resp *http.Response
 	var err error
 
@@ -230,8 +274,8 @@ func (r *Request) send() error {
 	return nil
 }
 
-func (r *Request) unpack() error {
-	err := response.UnpackToOutput(r.Operation, r.HTTPResponse, r.Output)
+func (r *Request) unpack(ctx context.Context) error {
+	err := response.UnpackToOutputWithContext(ctx, r.Operation, r.HTTPResponse, r.Output)
 	if err != nil {
 		return err
 	}
