@@ -126,6 +126,7 @@
     {{- end}}
     {{if eq $belongs "Bucket" -}}
         {{$funcName := replace $opID "Bucket" "" -1 -}}
+        {{/* This is "funcName" method, which call "funcNameWithContext" to do real action */ -}}
         func (s *{{$belongs}}) {{$funcName}}(
             {{- if $isObject}}objectKey string,{{end -}}
             {{- if $hasInput}}input *{{$opID}}Input{{end -}}
@@ -134,19 +135,22 @@
             {{- if $isObject}}objectKey,{{end -}}
             {{- if $hasInput}}input{{end -}})
         }
-
+        {{/* This is the "funcNameWithContext" method split from "funcName" */ -}}
         // {{$funcName}}WithContext add context support for {{$funcName}}
         func (s *{{$belongs}}) {{$funcName}}WithContext(ctx context.Context,
             {{- if $isObject}}objectKey string,{{end -}}
             {{- if $hasInput}}input *{{$opID}}Input{{end -}}
         ) (*{{$opID}}Output, error) {
     {{else -}}
+        {{/* $opID is the method name */ -}}
+        {{/* This is "opID" method, which call "opIDWithContext" to do real action */ -}}
         func (s *{{$belongs}}) {{$opID}}(
             {{- if $hasInput}}input *{{$opID}}Input{{end -}}
         ) (*{{$opID}}Output, error) {
             return s.{{$opID}}WithContext(context.Background(), {{- if $hasInput}}input{{end -}})
         }
 
+        {{/* This is the "opIDWithContext" method split from "opID" */ -}}
         // {{$opID}}WithContext add context support for {{$opID}}
         func (s *{{$belongs}}) {{$opID}}WithContext(ctx context.Context,
             {{- if $hasInput}}input *{{$opID}}Input{{end -}}
