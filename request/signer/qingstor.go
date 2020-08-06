@@ -26,8 +26,8 @@ import (
 	"strings"
 
 	"github.com/pengsrc/go-shared/convert"
+	"github.com/qingstor/log"
 
-	"github.com/qingstor/qingstor-sdk-go/v4/logger"
 	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
 
@@ -74,6 +74,7 @@ func (qss *QingStorSigner) WriteQuerySignature(request *http.Request, expires in
 
 // BuildSignature calculates the signature string.
 func (qss *QingStorSigner) BuildSignature(request *http.Request) (string, error) {
+	logger := log.FromContext(request.Context())
 	stringToSign, err := qss.BuildStringToSign(request)
 	if err != nil {
 		return "", err
@@ -85,17 +86,17 @@ func (qss *QingStorSigner) BuildSignature(request *http.Request) (string, error)
 	signature := strings.TrimSpace(base64.StdEncoding.EncodeToString(h.Sum(nil)))
 	authorization := "QS " + qss.AccessKeyID + ":" + signature
 
-	logger.Debugf(nil, fmt.Sprintf(
-		"QingStor authorization: [%d] %s",
-		convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822),
-		authorization,
-	))
+	logger.Debug(
+		log.String("qs_authorization", authorization),
+		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
+	)
 
 	return authorization, nil
 }
 
 // BuildQuerySignature calculates the signature string for query.
 func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires int) (string, error) {
+	logger := log.FromContext(request.Context())
 	stringToSign, err := qss.BuildQueryStringToSign(request, expires)
 	if err != nil {
 		return "", err
@@ -111,17 +112,17 @@ func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires in
 		qss.AccessKeyID, expires, signature,
 	)
 
-	logger.Debugf(nil, fmt.Sprintf(
-		"QingStor query signature: [%d] %s",
-		convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822),
-		query,
-	))
+	logger.Debug(
+		log.String("query_signature", query),
+		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
+	)
 
 	return query, nil
 }
 
 // BuildStringToSign build the string to sign.
 func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, error) {
+	logger := log.FromContext(request.Context())
 	date := request.Header.Get("Date")
 	if request.Header.Get("X-QS-Date") != "" {
 		date = ""
@@ -141,17 +142,17 @@ func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, err
 	}
 	stringToSign += canonicalizedResource
 
-	logger.Debugf(nil, fmt.Sprintf(
-		"QingStor string to sign: [%d] %s",
-		convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822),
-		stringToSign,
-	))
+	logger.Debug(
+		log.String("string_to_sign", stringToSign),
+		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
+	)
 
 	return stringToSign, nil
 }
 
 // BuildQueryStringToSign build the string to sign for query.
 func (qss *QingStorSigner) BuildQueryStringToSign(request *http.Request, expires int) (string, error) {
+	logger := log.FromContext(request.Context())
 	stringToSign := fmt.Sprintf(
 		"%s\n%s\n%s\n%d\n",
 		request.Method,
@@ -167,11 +168,10 @@ func (qss *QingStorSigner) BuildQueryStringToSign(request *http.Request, expires
 	}
 	stringToSign += canonicalizedResource
 
-	logger.Debugf(nil, fmt.Sprintf(
-		"QingStor query string to sign: [%d] %s",
-		convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822),
-		stringToSign,
-	))
+	logger.Debug(
+		log.String("query_string_to_sign", stringToSign),
+		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
+	)
 
 	return stringToSign, nil
 }
@@ -195,6 +195,7 @@ func (qss *QingStorSigner) buildCanonicalizedHeaders(request *http.Request) stri
 }
 
 func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (string, error) {
+	logger := log.FromContext(request.Context())
 	path := utils.URLQueryEscape(request.URL.Path)
 	query := request.URL.Query()
 
@@ -227,11 +228,10 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (st
 		path = path + "?" + joinedParts
 	}
 
-	logger.Debugf(nil, fmt.Sprintf(
-		"QingStor canonicalized resource: [%d] %s",
-		convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822),
-		path,
-	))
+	logger.Debug(
+		log.String("canonicalized_resource", path),
+		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
+	)
 
 	return path, nil
 }

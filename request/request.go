@@ -19,15 +19,14 @@ package request
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"reflect"
 	"strconv"
 	"time"
 
 	"github.com/pengsrc/go-shared/convert"
+	"github.com/qingstor/log"
 
-	"github.com/qingstor/qingstor-sdk-go/v4/logger"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/builder"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/response"
@@ -250,6 +249,7 @@ func (r *Request) signQuery(expires int) error {
 }
 
 func (r *Request) send(ctx context.Context) error {
+	logger := log.FromContext(ctx)
 	var resp *http.Response
 	var err error
 
@@ -257,12 +257,12 @@ func (r *Request) send(ctx context.Context) error {
 		r.Operation.Config.InitHTTPClient()
 	}
 
-	logger.Infof(nil, fmt.Sprintf(
-		"Sending request: [%d] %s %s",
-		convert.StringToTimestamp(r.HTTPRequest.Header.Get("Date"), convert.RFC822),
-		r.Operation.RequestMethod,
-		r.HTTPRequest.Host,
-	))
+	logger.Info(
+		log.String("title", "Sending request"),
+		log.Int("date", convert.StringToTimestamp(r.HTTPRequest.Header.Get("Date"), convert.RFC822)),
+		log.String("method", r.Operation.RequestMethod),
+		log.String("host", r.HTTPRequest.Host),
+	)
 
 	resp, err = r.Operation.Config.Connection.Do(r.HTTPRequest)
 	if err != nil {

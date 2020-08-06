@@ -27,7 +27,6 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/qingstor/qingstor-sdk-go/v4/config"
-	"github.com/qingstor/qingstor-sdk-go/v4/logger"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 )
@@ -71,7 +70,6 @@ func Time(v time.Time) *time.Time {
 func TestRequestSend(t *testing.T) {
 	conf, err := config.New("ACCESS_KEY_ID", "SECRET_ACCESS_KEY")
 	assert.Nil(t, err)
-	logger.SetLevel("warn")
 
 	operation := &data.Operation{
 		Config: conf,

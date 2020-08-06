@@ -29,8 +29,8 @@ import (
 	"time"
 
 	"github.com/pengsrc/go-shared/convert"
+	"github.com/qingstor/log"
 
-	"github.com/qingstor/qingstor-sdk-go/v4/logger"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 )
@@ -98,15 +98,16 @@ func (b *unpacker) unpackResponse(ctx context.Context) error {
 }
 
 func (b *unpacker) exposeStatusCode(ctx context.Context) error {
+	logger := log.FromContext(ctx)
 	value := b.output.Elem().FieldByName("StatusCode")
 	if value.IsValid() {
 		switch value.Interface().(type) {
 		case *int:
-			logger.Infof(nil, fmt.Sprintf(
-				"QingStor response status code: [%d] %d",
-				convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822),
-				b.resp.StatusCode,
-			))
+			logger.Info(
+				log.String("title", "QingStor response code"),
+				log.Int("status_code", int64(b.resp.StatusCode)),
+				log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
+			)
 			value.Set(reflect.ValueOf(&b.resp.StatusCode))
 		}
 	}
@@ -115,11 +116,12 @@ func (b *unpacker) exposeStatusCode(ctx context.Context) error {
 }
 
 func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
-	logger.Infof(nil, fmt.Sprintf(
-		"QingStor response headers: [%d] %s",
-		convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822),
-		fmt.Sprint(b.resp.Header),
-	))
+	logger := log.FromContext(ctx)
+	logger.Info(
+		log.String("title", "QingStor response header"),
+		log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
+		log.String("header", fmt.Sprint(b.resp.Header)),
+	)
 
 	if !b.isResponseRight() {
 		return nil
@@ -190,6 +192,7 @@ func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
 }
 
 func (b *unpacker) parseResponseBody(ctx context.Context) error {
+	logger := log.FromContext(ctx)
 	if b.isResponseRight() {
 		value := b.output.Elem().FieldByName("Body")
 		if value.IsValid() {
@@ -199,11 +202,11 @@ func (b *unpacker) parseResponseBody(ctx context.Context) error {
 				buffer.ReadFrom(b.resp.Body)
 				b.resp.Body.Close()
 
-				logger.Infof(nil, fmt.Sprintf(
-					"QingStor response body string: [%d] %s",
-					convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822),
-					string(buffer.Bytes()),
-				))
+				logger.Info(
+					log.String("title", "QingStor response body"),
+					log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
+					log.Bytes("body", buffer.Bytes()),
+				)
 
 				value.SetString(string(buffer.Bytes()))
 			case "io.ReadCloser":
@@ -216,6 +219,7 @@ func (b *unpacker) parseResponseBody(ctx context.Context) error {
 }
 
 func (b *unpacker) parseResponseElements(ctx context.Context) error {
+	logger := log.FromContext(ctx)
 	if !b.isResponseRight() {
 		return nil
 	}
@@ -238,11 +242,11 @@ func (b *unpacker) parseResponseElements(ctx context.Context) error {
 		return nil
 	}
 
-	logger.Infof(nil, fmt.Sprintf(
-		"QingStor response body string: [%d] %s",
-		convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822),
-		string(buffer.Bytes()),
-	))
+	logger.Info(
+		log.String("title", "QingStor response body"),
+		log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
+		log.Bytes("body", buffer.Bytes()),
+	)
 
 	err := json.Unmarshal(buffer.Bytes(), b.output.Interface())
 	if err != nil {
@@ -269,6 +273,7 @@ func (b *unpacker) isResponseRight() bool {
 }
 
 func (b *unpacker) parseError(ctx context.Context) error {
+	logger := log.FromContext(ctx)
 	if b.isResponseRight() {
 		return nil
 	}
@@ -290,12 +295,12 @@ func (b *unpacker) parseError(ctx context.Context) error {
 	buffer := &bytes.Buffer{}
 	_, err := io.Copy(buffer, b.resp.Body)
 	if err != nil {
-		logger.Errorf(nil, "Copy from error response body failed for %v", err)
+		logger.Error(log.String("copy_from_error_response_body_failed", err.Error()))
 		return err
 	}
 	err = b.resp.Body.Close()
 	if err != nil {
-		logger.Errorf(nil, "Close error response body failed for %v", err)
+		logger.Error(log.String("close_error_response_body_failed", err.Error()))
 		return err
 	}
 

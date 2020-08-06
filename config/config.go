@@ -24,9 +24,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/qingstor/log"
 	"gopkg.in/yaml.v2"
 
-	"github.com/qingstor/qingstor-sdk-go/v4/logger"
+	"github.com/qingstor/qingstor-sdk-go/v4/internal/pkg/logger"
 	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
 
@@ -151,11 +152,6 @@ func (c *Config) Check() (err error) {
 		}
 	}
 
-	err = logger.CheckLevel(c.LogLevel)
-	if err != nil {
-		return
-	}
-
 	return
 }
 
@@ -167,11 +163,11 @@ func (c *Config) LoadDefaultConfig() (err error) {
 
 	err = yaml.Unmarshal([]byte(DefaultConfigFileContent), c)
 	if err != nil {
-		logger.Errorf(nil, "Config parse error, %v.", err)
+		logger.GetLogger().Error(
+			log.String("config_parse_error", err.Error()),
+		)
 		return
 	}
-
-	logger.SetLevel(c.LogLevel)
 
 	c.InitHTTPClient()
 	return
@@ -182,7 +178,10 @@ func (c *Config) LoadDefaultConfig() (err error) {
 func (c *Config) LoadUserConfig() (err error) {
 	_, err = os.Stat(GetUserConfigFilePath())
 	if err != nil {
-		logger.Warnf(nil, "Installing default config file to %s.", GetUserConfigFilePath())
+		logger.GetLogger().Warn(
+			log.String("title", "Installing default config file"),
+			log.String("path", GetUserConfigFilePath()),
+		)
 		InstallDefaultUserConfig()
 	}
 
@@ -198,7 +197,10 @@ func (c *Config) LoadConfigFromFilePath(filePath string) (err error) {
 
 	yamlString, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		logger.Errorf(nil, "File not found: %s.", filePath)
+		logger.GetLogger().Error(
+			log.String("file_not_found", err.Error()),
+			log.String("path", filePath),
+		)
 		return err
 	}
 
@@ -212,7 +214,7 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 
 	err = yaml.Unmarshal(content, c)
 	if err != nil {
-		logger.Errorf(nil, "Config parse error, %v.", err)
+		logger.GetLogger().Error(log.String("config_parse_error", err.Error()))
 		return
 	}
 
@@ -220,8 +222,6 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 	if err != nil {
 		return
 	}
-
-	logger.SetLevel(c.LogLevel)
 
 	c.InitHTTPClient()
 	return
