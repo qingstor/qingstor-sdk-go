@@ -18,6 +18,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
@@ -101,7 +102,7 @@ func putObjectWithKey(objectKey string) error {
 			hashInBytes := hash.Sum(nil)[:16]
 			md5String := hex.EncodeToString(hashInBytes)
 
-			//file.Seek(0, io.SeekStart)
+			// file.Seek(0, io.SeekStart)
 			file.Seek(0, 0)
 			if len(objectKey) > 1000 {
 				objectKey = objectKey[:1000]
@@ -340,12 +341,12 @@ func getObjectWithContentType(objectKey, contentType string) error {
 				errChan <- err
 				return
 			}
-			err = getObjectWithContentTypeRequest.Send()
+			err = getObjectWithContentTypeRequest.SendWithContext(context.Background())
 			if err != nil {
 				errChan <- err
 				return
 			}
-			err = getObjectWithContentTypeRequest.Send()
+			err = getObjectWithContentTypeRequest.SendWithContext(context.Background())
 			if err != nil {
 				errChan <- err
 				return
@@ -400,7 +401,7 @@ func getObjectWithQuerySignature(objectKey string) error {
 				errChan <- err
 				return
 			}
-			err = r.Build()
+			err = r.BuildWithContext(context.Background())
 			if err != nil {
 				errChan <- err
 				return

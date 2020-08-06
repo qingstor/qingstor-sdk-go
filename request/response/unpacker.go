@@ -18,6 +18,7 @@ package response
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -41,34 +42,44 @@ type unpacker struct {
 	output    *reflect.Value
 }
 
-// UnpackToOutput unpack the http response with an operation, http response and an output.
-func UnpackToOutput(o *data.Operation, r *http.Response, x *reflect.Value) error {
+// UnpackToOutputWithContext unpack the http response with an operation, http response and an output with given ctx.
+func UnpackToOutputWithContext(ctx context.Context, o *data.Operation, r *http.Response, x *reflect.Value) error {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	u := &unpacker{
 		operation: o,
 		resp:      r,
 		output:    x,
 	}
-	return u.unpackResponse()
+	return u.unpackResponse(ctx)
 }
 
-func (b *unpacker) unpackResponse() error {
-	err := b.exposeStatusCode()
+// UnpackToOutput unpack the http response with an operation, http response and an output with given ctx.
+// Deprecated: Use UnpackToOutputWithContext instead
+func UnpackToOutput(o *data.Operation, r *http.Response, x *reflect.Value) error {
+	return UnpackToOutputWithContext(context.Background(), o, r, x)
+}
+
+func (b *unpacker) unpackResponse(ctx context.Context) error {
+	err := b.exposeStatusCode(ctx)
 	if err != nil {
 		return err
 	}
-	err = b.parseResponseHeaders()
+	err = b.parseResponseHeaders(ctx)
 	if err != nil {
 		return err
 	}
-	err = b.parseResponseBody()
+	err = b.parseResponseBody(ctx)
 	if err != nil {
 		return err
 	}
-	err = b.parseResponseElements()
+	err = b.parseResponseElements(ctx)
 	if err != nil {
 		return err
 	}
-	err = b.parseError()
+	err = b.parseError(ctx)
 	if err != nil {
 		return err
 	}
@@ -86,7 +97,7 @@ func (b *unpacker) unpackResponse() error {
 	return nil
 }
 
-func (b *unpacker) exposeStatusCode() error {
+func (b *unpacker) exposeStatusCode(ctx context.Context) error {
 	value := b.output.Elem().FieldByName("StatusCode")
 	if value.IsValid() {
 		switch value.Interface().(type) {
@@ -103,7 +114,7 @@ func (b *unpacker) exposeStatusCode() error {
 	return nil
 }
 
-func (b *unpacker) parseResponseHeaders() error {
+func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
 	logger.Infof(nil, fmt.Sprintf(
 		"QingStor response headers: [%d] %s",
 		convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822),
@@ -178,7 +189,7 @@ func (b *unpacker) parseResponseHeaders() error {
 	return nil
 }
 
-func (b *unpacker) parseResponseBody() error {
+func (b *unpacker) parseResponseBody(ctx context.Context) error {
 	if b.isResponseRight() {
 		value := b.output.Elem().FieldByName("Body")
 		if value.IsValid() {
@@ -204,7 +215,7 @@ func (b *unpacker) parseResponseBody() error {
 	return nil
 }
 
-func (b *unpacker) parseResponseElements() error {
+func (b *unpacker) parseResponseElements(ctx context.Context) error {
 	if !b.isResponseRight() {
 		return nil
 	}
@@ -257,7 +268,7 @@ func (b *unpacker) isResponseRight() bool {
 	return flag
 }
 
-func (b *unpacker) parseError() error {
+func (b *unpacker) parseError(ctx context.Context) error {
 	if b.isResponseRight() {
 		return nil
 	}

@@ -18,6 +18,7 @@ package builder
 
 import (
 	"bytes"
+	"context"
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/json"
@@ -57,7 +58,7 @@ type Builder struct {
 }
 
 // BuildHTTPRequest builds http request with an operation and an input.
-func (qb *Builder) BuildHTTPRequest(o *data.Operation, i *reflect.Value) (*http.Request, error) {
+func (qb *Builder) BuildHTTPRequest(ctx context.Context, o *data.Operation, i *reflect.Value) (*http.Request, error) {
 	qb.operation = o
 	qb.input = i
 
@@ -66,7 +67,7 @@ func (qb *Builder) BuildHTTPRequest(o *data.Operation, i *reflect.Value) (*http.
 		return nil, err
 	}
 
-	httpRequest, err := http.NewRequest(qb.operation.RequestMethod,
+	httpRequest, err := http.NewRequestWithContext(ctx, qb.operation.RequestMethod,
 		qb.parsedURL, qb.parsedBody)
 	if err != nil {
 		return nil, err

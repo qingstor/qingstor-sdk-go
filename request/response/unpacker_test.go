@@ -18,6 +18,7 @@ package response
 
 import (
 	"bytes"
+	"context"
 	"io/ioutil"
 	"net/http"
 	"reflect"
@@ -79,7 +80,7 @@ func TestSimpleUnpackHTTPRequest(t *testing.T) {
 	output := &FakeOutput{}
 	outputValue := reflect.ValueOf(output)
 	u := unpacker{operation: &data.Operation{}, resp: httpResponse, output: &outputValue}
-	err := u.unpackResponse()
+	err := u.unpackResponse(context.Background())
 	assert.Nil(t, err)
 	assert.Equal(t, 200, IntValue(output.StatusCode))
 	assert.Equal(t, "el_a", StringValue(output.A))
@@ -143,7 +144,7 @@ func TestUnpackHTTPRequest(t *testing.T) {
 	output := &ListBucketsOutput{}
 	outputValue := reflect.ValueOf(output)
 	u := unpacker{operation: &data.Operation{}, resp: httpResponse, output: &outputValue}
-	err := u.unpackResponse()
+	err := u.unpackResponse(context.Background())
 	assert.Nil(t, err)
 	assert.Equal(t, "test-header", StringValue(output.XTestHeader))
 	assert.Equal(t, time.Date(2016, 9, 1, 7, 30, 0, 0, time.UTC), TimeValue(output.XTestTime))
@@ -175,7 +176,7 @@ func TestUnpackHTTPRequestWithError(t *testing.T) {
 	output := &ListBucketsOutput{}
 	outputValue := reflect.ValueOf(output)
 	u := unpacker{operation: &data.Operation{}, resp: httpResponse, output: &outputValue}
-	err := u.unpackResponse()
+	err := u.unpackResponse(context.Background())
 	assert.NotNil(t, err)
 	switch e := err.(type) {
 	case *errors.QingStorError:
@@ -200,7 +201,7 @@ func TestUnpackHeadHTTPRequestWithError(t *testing.T) {
 	output := &HeadBucketsOutput{}
 	outputValue := reflect.ValueOf(output)
 	u := unpacker{operation: &data.Operation{}, resp: httpResponse, output: &outputValue}
-	err := u.unpackResponse()
+	err := u.unpackResponse(context.Background())
 	assert.NotNil(t, err)
 	switch e := err.(type) {
 	case *errors.QingStorError:
@@ -223,7 +224,7 @@ func TestUnpackHTTPRequestWithEmptyError(t *testing.T) {
 	output := &ListBucketsOutput{}
 	outputValue := reflect.ValueOf(output)
 	u := unpacker{operation: &data.Operation{}, resp: httpResponse, output: &outputValue}
-	err := u.unpackResponse()
+	err := u.unpackResponse(context.Background())
 	assert.NotNil(t, err)
 	switch e := err.(type) {
 	case *errors.QingStorError:

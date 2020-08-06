@@ -18,6 +18,7 @@
 package service
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/qingstor/qingstor-sdk-go/v4/config"
@@ -40,13 +41,22 @@ func Init(c *config.Config) (*Service, error) {
 // ListBuckets does Retrieve the bucket list.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/service/get.html
 func (s *Service) ListBuckets(input *ListBucketsInput) (*ListBucketsOutput, error) {
+	return s.ListBucketsWithContext(context.Background(), input)
+}
+
+// ListBucketsWithContext add context support for ListBuckets
+func (s *Service) ListBucketsWithContext(ctx context.Context, input *ListBucketsInput) (*ListBucketsOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	r, x, err := s.ListBucketsRequest(input)
 
 	if err != nil {
 		return x, err
 	}
 
-	err = r.Send()
+	err = r.SendWithContext(ctx)
 	if err != nil {
 		return nil, err
 	}
