@@ -27,7 +27,7 @@ import (
 	"github.com/qingstor/log"
 	"gopkg.in/yaml.v2"
 
-	"github.com/qingstor/qingstor-sdk-go/v4/logger"
+	"github.com/qingstor/qingstor-sdk-go/v4/internal/pkg/logger"
 	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
 
