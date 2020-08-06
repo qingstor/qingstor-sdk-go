@@ -1,6 +1,19 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v4.1.0] - 2020-8-6
+
+### Added
+
+- bucket: Add logging && CNAME API support (#105)
+- Add cname and replication into queryToSign (#106)
+- Add support for context (#108)
+
+### Changed
+
+- logger: Implement new qingstor logger (#107)
+- Mark `Send()`, `Build()`, `Sign()`, `Do()` method in request package as deprecated
+
 ## [v4.0.0] - 2020-4-23
 
 ### Added
@@ -246,6 +259,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v4.1.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.2.0...v4.0.0
 [v3.2.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.1.1...v3.2.0
 [v3.1.1]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.1.0...v3.1.1
