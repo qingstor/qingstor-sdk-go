@@ -273,14 +273,16 @@ func (b *unpacker) isResponseRight() bool {
 }
 
 func (b *unpacker) parseError(ctx context.Context) error {
-	logger := log.FromContext(ctx)
 	if b.isResponseRight() {
 		return nil
 	}
 
+	respCode, requestID := b.resp.StatusCode, b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	logger := log.FromContext(ctx).WithFields(log.String("requestID", requestID))
+
 	qsError := &errors.QingStorError{
-		StatusCode: b.resp.StatusCode,
-		RequestID:  b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID")),
+		StatusCode: respCode,
+		RequestID:  requestID,
 	}
 
 	// QingStor nginx could refuse user's request directly and only return status code.
@@ -288,27 +290,66 @@ func (b *unpacker) parseError(ctx context.Context) error {
 	if b.resp.ContentLength <= 0 {
 		return qsError
 	}
-	if !strings.HasPrefix(b.resp.Header.Get("Content-Type"), "application/json") {
-		return qsError
-	}
 
 	buffer := &bytes.Buffer{}
 	_, err := io.Copy(buffer, b.resp.Body)
 	if err != nil {
-		logger.Error(log.String("copy_from_error_response_body_failed", err.Error()))
-		return err
-	}
-	err = b.resp.Body.Close()
-	if err != nil {
-		logger.Error(log.String("close_error_response_body_failed", err.Error()))
-		return err
+		logger.Error(
+			log.String("action", "copy_from_error_response_body"),
+			log.String("err", err.Error()),
+		)
+		return errors.NewUnhandledError(
+			errors.WithRequestID(requestID),
+			errors.WithStatusCode(respCode),
+			errors.WithDetail(err.Error()),
+			errors.WithMessage("copy from error response body failed"),
+		)
+
 	}
 
-	if buffer.Len() > 0 && json.Valid(buffer.Bytes()) {
-		err := json.Unmarshal(buffer.Bytes(), qsError)
-		if err != nil {
-			return err
-		}
+	// close response body after copy
+	if err = b.resp.Body.Close(); err != nil {
+		logger.Error(
+			log.String("action", "close_error_response_body"),
+			log.String("err", err.Error()),
+		)
+		return errors.NewUnhandledError(
+			errors.WithRequestID(requestID),
+			errors.WithStatusCode(respCode),
+			errors.WithDetail(err.Error()),
+			errors.WithMessage("close error response body failed"),
+		)
 	}
+
+	// don't handle non-json error (qs error is surely json format), return body as it is
+	if !strings.HasPrefix(b.resp.Header.Get("Content-Type"), "application/json") {
+		return errors.NewUnhandledError(
+			errors.WithRequestID(requestID),
+			errors.WithStatusCode(respCode),
+			errors.WithDetail(buffer.String()),
+			errors.WithMessage("content not json"),
+		)
+	}
+
+	// if body is blank, return qsError directly
+	if buffer.Len() <= 0 {
+		return qsError
+	}
+
+	// try to unmarshal body as qsError, if failed return unhandled error
+	if err = json.Unmarshal(buffer.Bytes(), qsError); err != nil {
+		logger.Error(
+			log.String("action", "close_error_response_body_failed"),
+			log.Bytes("body", buffer.Bytes()),
+			log.String("err", err.Error()),
+		)
+		return errors.NewUnhandledError(
+			errors.WithRequestID(requestID),
+			errors.WithStatusCode(respCode),
+			errors.WithDetail(buffer.String()),
+			errors.WithMessage(err.Error()),
+		)
+	}
+
 	return qsError
 }
