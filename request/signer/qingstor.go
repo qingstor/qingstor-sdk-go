@@ -28,6 +28,7 @@ import (
 	"github.com/pengsrc/go-shared/convert"
 	"github.com/qingstor/log"
 
+	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
 
@@ -65,7 +66,10 @@ func (qss *QingStorSigner) WriteQuerySignature(request *http.Request, expires in
 	newRequest, err := http.NewRequest(request.Method,
 		request.URL.Scheme+"://"+request.URL.Host+utils.URLQueryEscape(request.URL.Path)+query, nil)
 	if err != nil {
-		return err
+		return errors.NewSDKError(
+			errors.WithAction("new http request in WriteQuerySignature"),
+			errors.WithError(err),
+		)
 	}
 	request.URL = newRequest.URL
 

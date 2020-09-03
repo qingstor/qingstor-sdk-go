@@ -252,12 +252,12 @@ func TestUnpackHTTPRequestWithNonJsonError(t *testing.T) {
 	u := unpacker{operation: &data.Operation{}, resp: httpResponse, output: &outputValue}
 	err := u.unpackResponse(context.Background())
 	assert.NotNil(t, err)
-	switch e := err.(type) {
-	case errors.UnhandledError:
-		assert.Equal(t, 403, e.StatusCode)
-		assert.Equal(t, respStr, e.Detail)
-		assert.Equal(t, "aa08cf7a43f611e5886952542e6ce14b", e.RequestID)
-	}
+
+	e, ok := err.(errors.UnhandledResponseError)
+	assert.True(t, ok, "err should be UnhandledResponseError")
+	assert.Equal(t, 403, e.StatusCode)
+	assert.Equal(t, respStr, e.Content)
+	assert.Equal(t, httpResponse.Header, e.Header)
 }
 
 func TestUnpackHTTPRequestWithInvalidJsonError(t *testing.T) {
@@ -279,10 +279,8 @@ func TestUnpackHTTPRequestWithInvalidJsonError(t *testing.T) {
 	u := unpacker{operation: &data.Operation{}, resp: httpResponse, output: &outputValue}
 	err := u.unpackResponse(context.Background())
 	assert.NotNil(t, err)
-	switch e := err.(type) {
-	case errors.UnhandledError:
-		assert.Equal(t, 403, e.StatusCode)
-		assert.Equal(t, respStr, e.Detail)
-		assert.Equal(t, "aa08cf7a43f611e5886952542e6ce14b", e.RequestID)
-	}
+
+	e, ok := err.(errors.SDKError)
+	assert.True(t, ok, "err should be SDKError")
+	assert.Equal(t, "aa08cf7a43f611e5886952542e6ce14b", e.RequestID)
 }

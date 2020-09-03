@@ -18,7 +18,6 @@ package request
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -29,6 +28,7 @@ import (
 
 	"github.com/qingstor/qingstor-sdk-go/v4/request/builder"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/response"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/signer"
 )
@@ -201,11 +201,17 @@ func (r *Request) ApplyQuerySignature(accessKeyID string, expires int, signature
 
 func (r *Request) check(ctx context.Context) error {
 	if r.Operation.Config.AccessKeyID == "" {
-		return errors.New("access key not provided")
+		return errors.NewSDKError(
+			errors.WithAction("check request"),
+			errors.WithErrStr("access key not provided"),
+		)
 	}
 
 	if r.Operation.Config.SecretAccessKey == "" {
-		return errors.New("secret access key not provided")
+		return errors.NewSDKError(
+			errors.WithAction("check request"),
+			errors.WithErrStr("secret access key not provided"),
+		)
 	}
 
 	return nil
@@ -266,7 +272,10 @@ func (r *Request) send(ctx context.Context) error {
 
 	resp, err = r.Operation.Config.Connection.Do(r.HTTPRequest)
 	if err != nil {
-		return err
+		return errors.NewSDKError(
+			errors.WithAction("do request in send"),
+			errors.WithError(err),
+		)
 	}
 
 	r.HTTPResponse = resp

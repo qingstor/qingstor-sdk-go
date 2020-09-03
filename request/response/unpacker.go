@@ -88,7 +88,10 @@ func (b *unpacker) unpackResponse(ctx context.Context) error {
 	if b.operation.APIName != "GET Object" && b.operation.APIName != "Image Process" && b.resp.Body != nil {
 		err = b.resp.Body.Close()
 		if err != nil {
-			return err
+			return errors.NewSDKError(
+				errors.WithAction("close response body in unpackResponse"),
+				errors.WithError(err),
+			)
 		}
 
 		b.resp.Body = nil
@@ -116,16 +119,18 @@ func (b *unpacker) exposeStatusCode(ctx context.Context) error {
 }
 
 func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
-	logger := log.FromContext(ctx)
+	if !b.isResponseRight() {
+		return nil
+	}
+
+	requestID := b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	logger := log.FromContext(ctx).WithFields(log.String("requestID", requestID))
 	logger.Info(
 		log.String("title", "QingStor response header"),
 		log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
 		log.String("header", fmt.Sprint(b.resp.Header)),
 	)
 
-	if !b.isResponseRight() {
-		return nil
-	}
 	fields := b.output.Elem()
 	for i := 0; i < fields.NumField(); i++ {
 		field := fields.Field(i)
@@ -161,13 +166,21 @@ func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
 			case *int:
 				intValue, err := strconv.Atoi(fieldStringValue)
 				if err != nil {
-					return err
+					return errors.NewSDKError(
+						errors.WithAction("convert int in parseResponseHeaders"),
+						errors.WithRequestID(requestID),
+						errors.WithError(err),
+					)
 				}
 				field.Set(reflect.ValueOf(&intValue))
 			case *int64:
 				int64Value, err := strconv.ParseInt(fieldStringValue, 10, 64)
 				if err != nil {
-					return err
+					return errors.NewSDKError(
+						errors.WithAction("convert int64 in parseResponseHeaders"),
+						errors.WithRequestID(requestID),
+						errors.WithError(err),
+					)
 				}
 				field.Set(reflect.ValueOf(&int64Value))
 			case *bool:
@@ -182,7 +195,11 @@ func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
 				}
 				timeValue, err := convert.StringToTime(fieldStringValue, format)
 				if err != nil {
-					return err
+					return errors.NewSDKError(
+						errors.WithAction("convert time in parseResponseHeaders"),
+						errors.WithRequestID(requestID),
+						errors.WithError(err),
+					)
 				}
 				field.Set(reflect.ValueOf(&timeValue))
 			}
@@ -192,26 +209,42 @@ func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
 }
 
 func (b *unpacker) parseResponseBody(ctx context.Context) error {
-	logger := log.FromContext(ctx)
-	if b.isResponseRight() {
-		value := b.output.Elem().FieldByName("Body")
-		if value.IsValid() {
-			switch value.Type().String() {
-			case "string":
-				buffer := &bytes.Buffer{}
-				buffer.ReadFrom(b.resp.Body)
-				b.resp.Body.Close()
+	if !b.isResponseRight() {
+		return nil
+	}
 
-				logger.Info(
-					log.String("title", "QingStor response body"),
-					log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
-					log.Bytes("body", buffer.Bytes()),
+	requestID := b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	logger := log.FromContext(ctx).WithFields(log.String("requestID", requestID))
+
+	value := b.output.Elem().FieldByName("Body")
+	if value.IsValid() {
+		switch value.Type().String() {
+		case "string":
+			buffer := &bytes.Buffer{}
+			if _, err := buffer.ReadFrom(b.resp.Body); err != nil {
+				return errors.NewSDKError(
+					errors.WithAction("read body in parseResponseBody"),
+					errors.WithRequestID(requestID),
+					errors.WithError(err),
 				)
-
-				value.SetString(string(buffer.Bytes()))
-			case "io.ReadCloser":
-				value.Set(reflect.ValueOf(b.resp.Body))
 			}
+			if err := b.resp.Body.Close(); err != nil {
+				return errors.NewSDKError(
+					errors.WithAction("close resp body in parseResponseBody"),
+					errors.WithRequestID(requestID),
+					errors.WithError(err),
+				)
+			}
+
+			logger.Info(
+				log.String("title", "QingStor response body"),
+				log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
+				log.Bytes("body", buffer.Bytes()),
+			)
+
+			value.SetString(string(buffer.Bytes()))
+		case "io.ReadCloser":
+			value.Set(reflect.ValueOf(b.resp.Body))
 		}
 	}
 
@@ -219,10 +252,12 @@ func (b *unpacker) parseResponseBody(ctx context.Context) error {
 }
 
 func (b *unpacker) parseResponseElements(ctx context.Context) error {
-	logger := log.FromContext(ctx)
 	if !b.isResponseRight() {
 		return nil
 	}
+
+	requestID := b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	logger := log.FromContext(ctx).WithFields(log.String("requestID", requestID))
 
 	// Do not parse GetObject and ImageProcess's body.
 	if b.operation.APIName == "GET Object" ||
@@ -235,8 +270,20 @@ func (b *unpacker) parseResponseElements(ctx context.Context) error {
 	}
 
 	buffer := &bytes.Buffer{}
-	buffer.ReadFrom(b.resp.Body)
-	b.resp.Body.Close()
+	if _, err := buffer.ReadFrom(b.resp.Body); err != nil {
+		return errors.NewSDKError(
+			errors.WithAction("read body in parseResponseElements"),
+			errors.WithRequestID(requestID),
+			errors.WithError(err),
+		)
+	}
+	if err := b.resp.Body.Close(); err != nil {
+		return errors.NewSDKError(
+			errors.WithAction("close resp body in parseResponseElements"),
+			errors.WithRequestID(requestID),
+			errors.WithError(err),
+		)
+	}
 
 	if buffer.Len() == 0 {
 		return nil
@@ -250,7 +297,11 @@ func (b *unpacker) parseResponseElements(ctx context.Context) error {
 
 	err := json.Unmarshal(buffer.Bytes(), b.output.Interface())
 	if err != nil {
-		return err
+		return errors.NewSDKError(
+			errors.WithAction("unmarshal in parseResponseElements"),
+			errors.WithRequestID(requestID),
+			errors.WithError(err),
+		)
 	}
 
 	return nil
@@ -277,11 +328,11 @@ func (b *unpacker) parseError(ctx context.Context) error {
 		return nil
 	}
 
-	respCode, requestID := b.resp.StatusCode, b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	requestID := b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
 	logger := log.FromContext(ctx).WithFields(log.String("requestID", requestID))
 
 	qsError := &errors.QingStorError{
-		StatusCode: respCode,
+		StatusCode: b.resp.StatusCode,
 		RequestID:  requestID,
 	}
 
@@ -298,11 +349,10 @@ func (b *unpacker) parseError(ctx context.Context) error {
 			log.String("action", "copy_from_error_response_body"),
 			log.String("err", err.Error()),
 		)
-		return errors.NewUnhandledError(
+		return errors.NewSDKError(
+			errors.WithAction("copy from response body in parseError"),
 			errors.WithRequestID(requestID),
-			errors.WithStatusCode(respCode),
-			errors.WithDetail(err.Error()),
-			errors.WithMessage("copy from error response body failed"),
+			errors.WithError(err),
 		)
 
 	}
@@ -313,21 +363,19 @@ func (b *unpacker) parseError(ctx context.Context) error {
 			log.String("action", "close_error_response_body"),
 			log.String("err", err.Error()),
 		)
-		return errors.NewUnhandledError(
+		return errors.NewSDKError(
+			errors.WithAction("close response body in parseError"),
 			errors.WithRequestID(requestID),
-			errors.WithStatusCode(respCode),
-			errors.WithDetail(err.Error()),
-			errors.WithMessage("close error response body failed"),
+			errors.WithError(err),
 		)
 	}
 
 	// don't handle non-json error (qs error is surely json format), return body as it is
 	if !strings.HasPrefix(b.resp.Header.Get("Content-Type"), "application/json") {
-		return errors.NewUnhandledError(
-			errors.WithRequestID(requestID),
-			errors.WithStatusCode(respCode),
-			errors.WithDetail(buffer.String()),
-			errors.WithMessage("content not json"),
+		return errors.NewUnhandledResponseError(
+			errors.WithHeader(b.resp.Header),
+			errors.WithStatusCode(b.resp.StatusCode),
+			errors.WithContent(buffer.String()),
 		)
 	}
 
@@ -343,11 +391,10 @@ func (b *unpacker) parseError(ctx context.Context) error {
 			log.Bytes("body", buffer.Bytes()),
 			log.String("err", err.Error()),
 		)
-		return errors.NewUnhandledError(
+		return errors.NewSDKError(
+			errors.WithAction("unmarshal response body in parseError"),
 			errors.WithRequestID(requestID),
-			errors.WithStatusCode(respCode),
-			errors.WithDetail(buffer.String()),
-			errors.WithMessage(err.Error()),
+			errors.WithError(err),
 		)
 	}
 

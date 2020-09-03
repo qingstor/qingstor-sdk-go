@@ -1,56 +1,50 @@
 package errors
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
-// UnhandledError stores information of an unhandled error response.
-type UnhandledError struct {
+// UnhandledResponseError stores information of an unhandled error response.
+type UnhandledResponseError struct {
 	StatusCode int
-
-	Message   string
-	Detail    string
-	RequestID string
+	Header     http.Header
+	Content    string
 }
 
 // Error returns the description of QingStor error response.
-func (e UnhandledError) Error() string {
+func (e UnhandledResponseError) Error() string {
 	return fmt.Sprintf(
-		"Unhandled Error: StatusCode \"%d\", Message \"%s\", Request ID \"%s\", Detail \"%s\"",
-		e.StatusCode, e.Message, e.RequestID, e.Detail)
+		"Unhandled Error: StatusCode \"%d\", Header \"%v\", Content \"%s\"",
+		e.StatusCode, e.Header, e.Content)
 }
 
-// NewUnhandledError conduct an unhandled error
-func NewUnhandledError(fs ...func(*UnhandledError)) UnhandledError {
-	e := UnhandledError{}
+// NewUnhandledResponseError conduct an unhandled response error
+func NewUnhandledResponseError(fs ...func(*UnhandledResponseError)) UnhandledResponseError {
+	e := UnhandledResponseError{}
 	for _, f := range fs {
 		f(&e)
 	}
 	return e
 }
 
-// WithRequestID set RequestID for UnhandledError
-func WithRequestID(id string) func(*UnhandledError) {
-	return func(e *UnhandledError) {
-		e.RequestID = id
-	}
-}
-
-// WithStatusCode set StatusCode for UnhandledError
-func WithStatusCode(code int) func(*UnhandledError) {
-	return func(e *UnhandledError) {
+// WithStatusCode set StatusCode for UnhandledResponseError
+func WithStatusCode(code int) func(*UnhandledResponseError) {
+	return func(e *UnhandledResponseError) {
 		e.StatusCode = code
 	}
 }
 
-// WithDetail set Detail for UnhandledError
-func WithDetail(detail string) func(*UnhandledError) {
-	return func(e *UnhandledError) {
-		e.Detail = detail
+// WithContent set Content for UnhandledResponseError
+func WithContent(detail string) func(*UnhandledResponseError) {
+	return func(e *UnhandledResponseError) {
+		e.Content = detail
 	}
 }
 
-// WithMessage set Message for UnhandledError
-func WithMessage(msg string) func(*UnhandledError) {
-	return func(e *UnhandledError) {
-		e.Message = msg
+// WithHeader set Header for UnhandledResponseError
+func WithHeader(h http.Header) func(*UnhandledResponseError) {
+	return func(e *UnhandledResponseError) {
+		e.Header = h
 	}
 }
