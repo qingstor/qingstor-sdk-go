@@ -361,7 +361,7 @@ func (qb *Builder) setupHeaders(httpRequest *http.Request) error {
 		default:
 			return errors.NewSDKError(
 				errors.WithAction("get content length in setupHeaders"),
-				errors.WithErrStr("cannot get Content-Length"),
+				errors.WithError(fmt.Errorf("cannot get Content-Length")),
 			)
 		}
 		if length > 0 {
@@ -399,7 +399,7 @@ func (qb *Builder) setupHeaders(httpRequest *http.Request) error {
 		if err != nil {
 			return errors.NewSDKError(
 				errors.WithAction("parse url in setupHeaders"),
-				errors.WithErrStr(fmt.Sprintf("invalid HTTP header value: %s", s)),
+				errors.WithError(fmt.Errorf("invalid HTTP header value: %s", s)),
 			)
 		}
 		httpRequest.Header.Set("X-QS-Fetch-Source", u.String())

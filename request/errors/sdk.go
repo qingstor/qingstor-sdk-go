@@ -1,15 +1,19 @@
 package errors
 
 import (
-	"errors"
 	"fmt"
 )
 
-// SDKError stores information of an error return by sdk it self.
+// SDKError stores information of an error return by sdk itself.
 type SDKError struct {
 	Action    string
 	RequestID string
 	Err       error
+}
+
+// Unwrap implement interface of errors
+func (e SDKError) Unwrap() error {
+	return e.Err
 }
 
 // Error implement errors.Error
@@ -37,13 +41,6 @@ func WithAction(action string) func(*SDKError) {
 func WithError(err error) func(*SDKError) {
 	return func(e *SDKError) {
 		e.Err = err
-	}
-}
-
-// WithErrStr set Err by string for SDKError
-func WithErrStr(errStr string) func(*SDKError) {
-	return func(e *SDKError) {
-		e.Err = errors.New(errStr)
 	}
 }
 

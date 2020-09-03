@@ -18,6 +18,7 @@ package request
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -203,14 +204,14 @@ func (r *Request) check(ctx context.Context) error {
 	if r.Operation.Config.AccessKeyID == "" {
 		return errors.NewSDKError(
 			errors.WithAction("check request"),
-			errors.WithErrStr("access key not provided"),
+			errors.WithError(fmt.Errorf("access key not provided")),
 		)
 	}
 
 	if r.Operation.Config.SecretAccessKey == "" {
 		return errors.NewSDKError(
 			errors.WithAction("check request"),
-			errors.WithErrStr("secret access key not provided"),
+			errors.WithError(fmt.Errorf("secret access key not provided")),
 		)
 	}
 
