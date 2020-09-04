@@ -110,6 +110,7 @@ func (b *unpacker) exposeStatusCode(ctx context.Context) error {
 				log.String("title", "QingStor response code"),
 				log.Int("status_code", int64(b.resp.StatusCode)),
 				log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
+				log.String("request_id", b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))),
 			)
 			value.Set(reflect.ValueOf(&b.resp.StatusCode))
 		}
@@ -124,11 +125,12 @@ func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
 	}
 
 	requestID := b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
-	logger := log.FromContext(ctx).WithFields(log.String("requestID", requestID))
+	logger := log.FromContext(ctx)
 	logger.Info(
 		log.String("title", "QingStor response header"),
 		log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
 		log.String("header", fmt.Sprint(b.resp.Header)),
+		log.String("request_id", requestID),
 	)
 
 	fields := b.output.Elem()
@@ -214,7 +216,7 @@ func (b *unpacker) parseResponseBody(ctx context.Context) error {
 	}
 
 	requestID := b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
-	logger := log.FromContext(ctx).WithFields(log.String("requestID", requestID))
+	logger := log.FromContext(ctx)
 
 	value := b.output.Elem().FieldByName("Body")
 	if value.IsValid() {
@@ -240,6 +242,7 @@ func (b *unpacker) parseResponseBody(ctx context.Context) error {
 				log.String("title", "QingStor response body"),
 				log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
 				log.Bytes("body", buffer.Bytes()),
+				log.String("request_id", requestID),
 			)
 
 			value.SetString(string(buffer.Bytes()))
@@ -257,7 +260,7 @@ func (b *unpacker) parseResponseElements(ctx context.Context) error {
 	}
 
 	requestID := b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
-	logger := log.FromContext(ctx).WithFields(log.String("requestID", requestID))
+	logger := log.FromContext(ctx)
 
 	// Do not parse GetObject and ImageProcess's body.
 	if b.operation.APIName == "GET Object" ||
@@ -293,6 +296,7 @@ func (b *unpacker) parseResponseElements(ctx context.Context) error {
 		log.String("title", "QingStor response body"),
 		log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
 		log.Bytes("body", buffer.Bytes()),
+		log.String("request_id", requestID),
 	)
 
 	err := json.Unmarshal(buffer.Bytes(), b.output.Interface())
@@ -329,7 +333,7 @@ func (b *unpacker) parseError(ctx context.Context) error {
 	}
 
 	requestID := b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
-	logger := log.FromContext(ctx).WithFields(log.String("requestID", requestID))
+	logger := log.FromContext(ctx)
 
 	qsError := &errors.QingStorError{
 		StatusCode: b.resp.StatusCode,
@@ -348,6 +352,7 @@ func (b *unpacker) parseError(ctx context.Context) error {
 		logger.Error(
 			log.String("action", "copy_from_error_response_body"),
 			log.String("err", err.Error()),
+			log.String("request_id", requestID),
 		)
 		return errors.NewSDKError(
 			errors.WithAction("copy from response body in parseError"),
@@ -362,6 +367,7 @@ func (b *unpacker) parseError(ctx context.Context) error {
 		logger.Error(
 			log.String("action", "close_error_response_body"),
 			log.String("err", err.Error()),
+			log.String("request_id", requestID),
 		)
 		return errors.NewSDKError(
 			errors.WithAction("close response body in parseError"),
@@ -390,6 +396,7 @@ func (b *unpacker) parseError(ctx context.Context) error {
 			log.String("action", "close_error_response_body_failed"),
 			log.Bytes("body", buffer.Bytes()),
 			log.String("err", err.Error()),
+			log.String("request_id", requestID),
 		)
 		return errors.NewSDKError(
 			errors.WithAction("unmarshal response body in parseError"),
