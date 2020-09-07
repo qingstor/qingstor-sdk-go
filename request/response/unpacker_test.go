@@ -232,3 +232,55 @@ func TestUnpackHTTPRequestWithEmptyError(t *testing.T) {
 		assert.Equal(t, "aa08cf7a43f611e5886952542e6ce14b", e.RequestID)
 	}
 }
+
+func TestUnpackHTTPRequestWithNonJsonError(t *testing.T) {
+	type ListBucketsOutput struct {
+		StatusCode *int `location:"statusCode"`
+		Error      *errors.QingStorError
+		RequestID  *string `location:"requestID"`
+	}
+
+	respStr := "<html>some html error</html>"
+	httpResponse := &http.Response{Header: http.Header{}}
+	httpResponse.StatusCode = 403
+	httpResponse.Body = ioutil.NopCloser(strings.NewReader(respStr))
+	httpResponse.ContentLength = int64(len(respStr))
+	httpResponse.Header.Set("X-QS-Request-ID", "aa08cf7a43f611e5886952542e6ce14b")
+
+	output := &ListBucketsOutput{}
+	outputValue := reflect.ValueOf(output)
+	u := unpacker{operation: &data.Operation{}, resp: httpResponse, output: &outputValue}
+	err := u.unpackResponse(context.Background())
+	assert.NotNil(t, err)
+
+	e, ok := err.(errors.UnhandledResponseError)
+	assert.True(t, ok, "err should be UnhandledResponseError")
+	assert.Equal(t, 403, e.StatusCode)
+	assert.Equal(t, respStr, e.Content)
+	assert.Equal(t, httpResponse.Header, e.Header)
+}
+
+func TestUnpackHTTPRequestWithInvalidJsonError(t *testing.T) {
+	type ListBucketsOutput struct {
+		StatusCode *int `location:"statusCode"`
+		Error      *errors.QingStorError
+		RequestID  *string `location:"requestID"`
+	}
+
+	respStr := "{\"key\": \"value\", \"invalid key\"}"
+	httpResponse := &http.Response{Header: http.Header{"Content-Type": []string{"application/json"}}}
+	httpResponse.StatusCode = 403
+	httpResponse.Body = ioutil.NopCloser(strings.NewReader(respStr))
+	httpResponse.ContentLength = int64(len(respStr))
+	httpResponse.Header.Set("X-QS-Request-ID", "aa08cf7a43f611e5886952542e6ce14b")
+
+	output := &ListBucketsOutput{}
+	outputValue := reflect.ValueOf(output)
+	u := unpacker{operation: &data.Operation{}, resp: httpResponse, output: &outputValue}
+	err := u.unpackResponse(context.Background())
+	assert.NotNil(t, err)
+
+	e, ok := err.(errors.SDKError)
+	assert.True(t, ok, "err should be SDKError")
+	assert.Equal(t, "aa08cf7a43f611e5886952542e6ce14b", e.RequestID)
+}

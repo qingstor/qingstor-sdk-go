@@ -22,7 +22,6 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -41,6 +40,7 @@ import (
 
 	"github.com/qingstor/qingstor-sdk-go/v4"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
 
@@ -71,7 +71,10 @@ func (qb *Builder) BuildHTTPRequest(ctx context.Context, o *data.Operation, i *r
 	httpRequest, err := http.NewRequestWithContext(ctx, qb.operation.RequestMethod,
 		qb.parsedURL, qb.parsedBody)
 	if err != nil {
-		return nil, err
+		return nil, errors.NewSDKError(
+			errors.WithAction("close response body in parseError"),
+			errors.WithError(err),
+		)
 	}
 
 	err = qb.setupHeaders(httpRequest)
@@ -148,7 +151,10 @@ func (qb *Builder) parseRequestBody() error {
 	if len(requestData) != 0 {
 		dataValue, err := json.Marshal(requestData)
 		if err != nil {
-			return err
+			return errors.NewSDKError(
+				errors.WithAction("marshal request data in parseRequestBody"),
+				errors.WithError(err),
+			)
 		}
 
 		qb.parsedBodyString = string(dataValue)
@@ -288,7 +294,10 @@ func (qb *Builder) parseRequestURL() error {
 
 	requestURL, err := url.Parse(endpoint + requestURI)
 	if err != nil {
-		return err
+		return errors.NewSDKError(
+			errors.WithAction("parse url in parseRequestURL"),
+			errors.WithError(err),
+		)
 	}
 
 	if qb.parsedQuery != nil {
@@ -327,18 +336,33 @@ func (qb *Builder) setupHeaders(httpRequest *http.Request) error {
 			// start, err := body.Seek(0, io.SeekStart)
 			start, err := body.Seek(0, 0)
 			if err != nil {
-				return err
+				return errors.NewSDKError(
+					errors.WithAction("seek start in setupHeaders"),
+					errors.WithError(err),
+				)
 			}
 			// end, err := body.Seek(0, io.SeekEnd)
 			end, err := body.Seek(0, 2)
 			if err != nil {
-				return err
+				return errors.NewSDKError(
+					errors.WithAction("seek end in setupHeaders"),
+					errors.WithError(err),
+				)
 			}
 			// body.Seek(0, io.SeekStart)
-			body.Seek(0, 0)
+			_, err = body.Seek(0, 0)
+			if err != nil {
+				return errors.NewSDKError(
+					errors.WithAction("reset seek in setupHeaders"),
+					errors.WithError(err),
+				)
+			}
 			length = end - start
 		default:
-			return errors.New("can not get Content-Length")
+			return errors.NewSDKError(
+				errors.WithAction("get content length in setupHeaders"),
+				errors.WithError(fmt.Errorf("cannot get Content-Length")),
+			)
 		}
 		if length > 0 {
 			httpRequest.ContentLength = length
@@ -349,7 +373,10 @@ func (qb *Builder) setupHeaders(httpRequest *http.Request) error {
 	}
 	length, err := strconv.ParseInt(httpRequest.Header.Get("Content-Length"), 10, 64)
 	if err != nil {
-		return err
+		return errors.NewSDKError(
+			errors.WithAction("parse int in setupHeaders"),
+			errors.WithError(err),
+		)
 	}
 	httpRequest.ContentLength = int64(length)
 
@@ -370,14 +397,23 @@ func (qb *Builder) setupHeaders(httpRequest *http.Request) error {
 	if s := httpRequest.Header.Get("X-QS-Fetch-Source"); s != "" {
 		u, err := url.Parse(s)
 		if err != nil {
-			return fmt.Errorf("invalid HTTP header value: %s", s)
+			return errors.NewSDKError(
+				errors.WithAction("parse url in setupHeaders"),
+				errors.WithError(fmt.Errorf("invalid HTTP header value: %s", s)),
+			)
 		}
 		httpRequest.Header.Set("X-QS-Fetch-Source", u.String())
 	}
 
 	if qb.operation.APIName == "Delete Multiple Objects" {
 		buffer := &bytes.Buffer{}
-		buffer.ReadFrom(httpRequest.Body)
+		_, err = buffer.ReadFrom(httpRequest.Body)
+		if err != nil {
+			return errors.NewSDKError(
+				errors.WithAction("read from response body in setupHeaders"),
+				errors.WithError(err),
+			)
+		}
 		httpRequest.Body = ioutil.NopCloser(bytes.NewReader(buffer.Bytes()))
 
 		md5Value := md5.Sum(buffer.Bytes())
