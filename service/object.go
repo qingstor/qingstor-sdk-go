@@ -1228,6 +1228,9 @@ type PutObjectInput struct {
 	XQSFetchSource *string `json:"X-QS-Fetch-Source,omitempty" name:"X-QS-Fetch-Source" location:"headers"`
 	// User-defined metadata
 	XQSMetaData *map[string]string `json:"X-QS-MetaData,omitempty" name:"X-QS-MetaData" location:"headers"`
+	// Use for modified metadata, valid (COPY/REPLACE)
+	// XQSMetadataDirective's available values: COPY, REPLACE
+	XQSMetadataDirective *string `json:"X-QS-Metadata-Directive,omitempty" name:"X-QS-Metadata-Directive" location:"headers"`
 	// Move source, format (/<bucket-name>/<object-key>)
 	XQSMoveSource *string `json:"X-QS-Move-Source,omitempty" name:"X-QS-Move-Source" location:"headers"`
 	// Specify the storage class for object
@@ -1245,6 +1248,26 @@ func (v *PutObjectInput) Validate() error {
 		XQSMetaDataerr := utils.IsMetaDataValid(v.XQSMetaData)
 		if XQSMetaDataerr != nil {
 			return XQSMetaDataerr
+		}
+	}
+
+	if v.XQSMetadataDirective != nil {
+		xQSMetadataDirectiveValidValues := []string{"COPY", "REPLACE"}
+		xQSMetadataDirectiveParameterValue := fmt.Sprint(*v.XQSMetadataDirective)
+
+		xQSMetadataDirectiveIsValid := false
+		for _, value := range xQSMetadataDirectiveValidValues {
+			if value == xQSMetadataDirectiveParameterValue {
+				xQSMetadataDirectiveIsValid = true
+			}
+		}
+
+		if !xQSMetadataDirectiveIsValid {
+			return errors.ParameterValueNotAllowedError{
+				ParameterName:  "XQSMetadataDirective",
+				ParameterValue: xQSMetadataDirectiveParameterValue,
+				AllowedValues:  xQSMetadataDirectiveValidValues,
+			}
 		}
 	}
 
