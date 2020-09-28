@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v4.2.0] - 2020-9-28
+
+### Added
+
+- object: Support to set x-qs-metadata-directive header for put copy object(#111)
+
+### Fixed
+
+- Fix error was abandoned when unpack (#110) 
+
 ## [v4.1.0] - 2020-8-6
 
 ### Added
@@ -259,6 +269,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v4.2.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.2.0...v4.0.0
 [v3.2.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.1.1...v3.2.0
