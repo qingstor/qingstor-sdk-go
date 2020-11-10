@@ -1,75 +1,69 @@
 package utils
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 )
 
-// IsMetaDataValid check whether the metadata-KV follows rule in API document
-func IsMetaDataValid(XQSMetaData *map[string]string) error {
-	XQSMetaDataIsValid := true
-	wrongKey := ""
-	wrongValue := ""
+var metadataPrefix = "x-qs-meta-"
 
-	metadataValuelength := 0
-	metadataKeylength := 0
+// validKeyChars contains all valid key char: (a-z, A-Z, -, _, .)
+var validKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_."
+
+// IsMetaDataValid check whether the metadata-KV follows rule in API document
+// https://docs.qingcloud.com/qingstor/api/common/metadata.html#%E5%AF%B9%E8%87%AA%E5%AE%9A%E4%B9%89%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E9%99%90%E5%88%B6
+func IsMetaDataValid(XQSMetaData *map[string]string) error {
+	metadataSize := 0
 
 	for k, v := range *XQSMetaData {
-		metadataKeylength += len(k)
-		metadataValuelength += len(v)
-		startstr := strings.Split(k, "-")
-		if len(startstr) < 4 {
-			wrongKey = k
-			wrongValue = v
-			XQSMetaDataIsValid = false
-			break
-		}
-		if startstr[0] != "x" || startstr[1] != "qs" || startstr[2] != "meta" || startstr[3] == "" {
-			wrongKey = k
-			wrongValue = v
-			XQSMetaDataIsValid = false
-			break
+		if !strings.HasPrefix(k, metadataPrefix) {
+			return newMetaDataInvalidError(k, v)
 		}
 
-		for i := 0; i < len(k); i++ {
-			ch := k[i]
-			if !(ch >= 65 && ch <= 90 || ch >= 97 && ch <= 122 || ch <= 57 && ch >= 48 || ch == 45 || ch == 46) {
-				wrongKey = k
-				wrongValue = v
-				XQSMetaDataIsValid = false
-				break
+		// check key (a-z, A-Z, -, _, .)
+		for _, c := range k {
+			if !strings.ContainsRune(validKeyChars, c) {
+				return newMetaDataInvalidError(k, v)
 			}
 		}
-		for i := 0; i < len(v); i++ {
-			ch := v[i]
-			if ch < 32 || ch > 126 {
-				wrongKey = k
-				wrongValue = v
-				XQSMetaDataIsValid = false
-				break
+
+		// check value (must printable)
+		for _, c := range v {
+			if c <= 32 || c > 126 {
+				return newMetaDataInvalidError(k, v)
 			}
 		}
-		if metadataKeylength > 512 {
-			wrongKey = k
-			wrongValue = v
-			XQSMetaDataIsValid = false
-			break
+
+		// check key length, without prefix "x-qs-meta-"
+		keyLen := len(strings.TrimPrefix(k, metadataPrefix))
+		if keyLen > 512 {
+			return newMetaDataInvalidError(k, v)
 		}
-		if metadataValuelength > 2048 {
-			wrongKey = k
-			wrongValue = v
-			XQSMetaDataIsValid = false
-			break
-		}
+
+		metadataSize = metadataSize + keyLen + len(v)
 	}
 
-	if !XQSMetaDataIsValid {
-		return errors.ParameterValueNotAllowedError{
-			ParameterName:  "XQSMetaData",
-			ParameterValue: "map[" + wrongKey + "]=" + wrongValue,
-			AllowedValues:  []string{"https://docs.qingcloud.com/qingstor/api/common/metadata.html"},
-		}
+	// check metadata size, must le 2048
+	if metadataSize > 2048 {
+		return newMetaDataTooLargeError(metadataSize)
 	}
 	return nil
+}
+
+func newMetaDataInvalidError(key, value string) error {
+	return errors.ParameterValueNotAllowedError{
+		ParameterName:  "XQSMetaData",
+		ParameterValue: "map[" + key + "]=" + value,
+		AllowedValues:  []string{"https://docs.qingcloud.com/qingstor/api/common/metadata.html"},
+	}
+}
+
+func newMetaDataTooLargeError(size int) error {
+	return errors.ParameterValueNotAllowedError{
+		ParameterName:  "XQSMetaData size too large",
+		ParameterValue: strconv.Itoa(size),
+		AllowedValues:  []string{"https://docs.qingcloud.com/qingstor/api/common/metadata.html"},
+	}
 }
