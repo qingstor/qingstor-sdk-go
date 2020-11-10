@@ -1,9 +1,10 @@
 # QingStor SDK for Go
 
-[![Build Status](https://travis-ci.org/qingstor/qingstor-sdk-go.svg?branch=master)](https://travis-ci.org/qingstor/qingstor-sdk-go)
+[![Build Status](https://github.com/qingstor/qingstor-sdk-go/workflows/Unit%20Test/badge.svg?branch=master)](https://github.com/qingstor/qingstor-sdk-go/actions?query=workflow%3A%22Unit+Test%22)
 [![Go Report Card](https://goreportcard.com/badge/github.com/qingstor/qingstor-sdk-go)](https://goreportcard.com/report/github.com/qingstor/qingstor-sdk-go)
 [![API Reference](http://img.shields.io/badge/api-reference-green.svg)](http://docs.qingcloud.com/qingstor/)
 [![License](http://img.shields.io/badge/license-apache%20v2-blue.svg)](https://github.com/qingstor/qingstor-sdk-go/blob/master/LICENSE)
+[![Join the chat](https://img.shields.io/badge/chat-online-blue?style=flat&logo=zulip)](https://qingstor.zulipchat.com/join/hzmetiy4ftc63jktrbfatyct/)
 
 English | [中文](README_zh-CN.md)
 
