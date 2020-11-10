@@ -23,6 +23,7 @@ jobs:
 
       - name: Install snips
         run: |
+          mkdir ${HOME}/source
           pushd ${HOME}/source
           if [[ ! -d "./snips-v0.2.8" ]]; then
             wget https://github.com/qingstor/snips/releases/download/v0.2.8/snips-v0.2.8-linux_amd64.tar.gz &&
