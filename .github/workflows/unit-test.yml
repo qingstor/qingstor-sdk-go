@@ -1,0 +1,53 @@
+name: "Unit Test"
+
+on: [push,pull_request]
+
+jobs:
+  unit_test:
+    name: Unit Test
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        go: [ "1.14", "1.15" ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install snips
+        run: |
+          pushd ${HOME}/source
+          if [[ ! -d "./snips-v0.2.8" ]]; then
+            wget https://github.com/qingstor/snips/releases/download/v0.2.8/snips-v0.2.8-linux_amd64.tar.gz &&
+            mkdir snips-v0.2.8 &&
+            pushd snips-v0.2.8 &&
+            tar -vxzf ../snips-v0.2.8-linux_amd64.tar.gz &&
+            popd;
+          fi
+          pushd snips-v0.2.8 && sudo cp snips /usr/local/bin && popd
+          popd
+
+      - name: Install golint
+        run: go get -u golang.org/x/lint/golint
+
+      - name: Prepare submodule
+        run: |
+          git submodule init
+          make update
+
+      - name: Build
+        run: |
+          make generate
+          make format
+          make check
+          make build
+
+      - name: Test
+        run: make test
