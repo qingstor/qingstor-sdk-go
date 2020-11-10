@@ -21,34 +21,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install snips
-        run: |
-          mkdir ${HOME}/source
-          pushd ${HOME}/source
-          if [[ ! -d "./snips-v0.2.8" ]]; then
-            wget https://github.com/qingstor/snips/releases/download/v0.2.8/snips-v0.2.8-linux_amd64.tar.gz &&
-            mkdir snips-v0.2.8 &&
-            pushd snips-v0.2.8 &&
-            tar -vxzf ../snips-v0.2.8-linux_amd64.tar.gz &&
-            popd;
-          fi
-          pushd snips-v0.2.8 && sudo cp snips /usr/local/bin && popd
-          popd
-
-      - name: Install golint
-        run: go get -u golang.org/x/lint/golint
-
-      - name: Prepare submodule
-        run: |
-          git submodule init
-          make update
-
       - name: Build
-        run: |
-          make generate
-          make format
-          make check
-          make build
+        run: make build
 
       - name: Test
         run: make test
