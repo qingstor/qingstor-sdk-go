@@ -57,6 +57,10 @@ type bucket interface {
 	DeletePolicy() (*service.DeleteBucketPolicyOutput, error)
 	DeletePolicyWithContext(ctx context.Context) (*service.DeleteBucketPolicyOutput, error)
 
+	// DeleteReplication does Delete Replication information of the bucket.
+	DeleteReplication() (*service.DeleteBucketReplicationOutput, error)
+	DeleteReplicationWithContext(ctx context.Context) (*service.DeleteBucketReplicationOutput, error)
+
 	// DeleteMultipleObjects does Delete multiple objects from the bucket.
 	DeleteMultipleObjects(input *service.DeleteMultipleObjectsInput) (*service.DeleteMultipleObjectsOutput, error)
 	DeleteMultipleObjectsWithContext(ctx context.Context, input *service.DeleteMultipleObjectsInput) (*service.DeleteMultipleObjectsOutput, error)
@@ -92,6 +96,10 @@ type bucket interface {
 	// GetPolicy does Get policy information of the bucket.
 	GetPolicy() (*service.GetBucketPolicyOutput, error)
 	GetPolicyWithContext(ctx context.Context) (*service.GetBucketPolicyOutput, error)
+
+	// GetReplication does Get Replication information of the bucket.
+	GetReplication() (*service.GetBucketReplicationOutput, error)
+	GetReplicationWithContext(ctx context.Context) (*service.GetBucketReplicationOutput, error)
 
 	// GetStatistics does Get statistics information of the bucket.
 	GetStatistics() (*service.GetBucketStatisticsOutput, error)
@@ -144,4 +152,8 @@ type bucket interface {
 	// PutPolicy does Set policy information of the bucket.
 	PutPolicy(input *service.PutBucketPolicyInput) (*service.PutBucketPolicyOutput, error)
 	PutPolicyWithContext(ctx context.Context, input *service.PutBucketPolicyInput) (*service.PutBucketPolicyOutput, error)
+
+	// PutReplication does Set Replication information of the bucket.
+	PutReplication(input *service.PutBucketReplicationInput) (*service.PutBucketReplicationOutput, error)
+	PutReplicationWithContext(ctx context.Context, input *service.PutBucketReplicationInput) (*service.PutBucketReplicationOutput, error)
 }

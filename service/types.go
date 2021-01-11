@@ -327,6 +327,29 @@ func (v *CORSRuleType) Validate() error {
 	return nil
 }
 
+// DestinationType presents Destination.
+type DestinationType struct {
+	// dst bucket name
+	Bucket *string `json:"bucket" name:"bucket"` // Required
+	// dst storage class
+	StorageClass *string `json:"storage_class,omitempty" name:"storage_class"`
+	// dst zone
+	Zone *string `json:"zone,omitempty" name:"zone"`
+}
+
+// Validate validates the Destination.
+func (v *DestinationType) Validate() error {
+
+	if v.Bucket == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "Bucket",
+			ParentName:    "Destination",
+		}
+	}
+
+	return nil
+}
+
 // ExpirationType presents Expiration.
 type ExpirationType struct {
 	// days
@@ -355,6 +378,18 @@ func (v *FilterType) Validate() error {
 			ParentName:    "Filter",
 		}
 	}
+
+	return nil
+}
+
+// FiltersType presents Filters.
+type FiltersType struct {
+	// Prefix matching
+	Prefix *string `json:"prefix,omitempty" name:"prefix"`
+}
+
+// Validate validates the Filters.
+func (v *FiltersType) Validate() error {
 
 	return nil
 }
@@ -697,6 +732,122 @@ func (v *RuleType) Validate() error {
 	if v.Transition != nil {
 		if err := v.Transition.Validate(); err != nil {
 			return err
+		}
+	}
+
+	return nil
+}
+
+// RulesType presents Rules.
+type RulesType struct {
+	// rule delete marker
+	// DeleteMarker's available values: enabled, disabled
+	DeleteMarker *string          `json:"delete_marker,omitempty" name:"delete_marker"`
+	Destination  *DestinationType `json:"destination" name:"destination"` // Required
+	Filters      *FiltersType     `json:"filters" name:"filters"`         // Required
+	// rule id
+	ID *string `json:"id" name:"id"` // Required
+	// rule status
+	// Status's available values: enabled, disabled
+	Status *string `json:"status,omitempty" name:"status"`
+	// rule sync marker
+	// SyncMarker's available values: enabled, disabled
+	SyncMarker *string `json:"sync_marker,omitempty" name:"sync_marker"`
+}
+
+// Validate validates the Rules.
+func (v *RulesType) Validate() error {
+
+	if v.DeleteMarker != nil {
+		deleteMarkerValidValues := []string{"enabled", "disabled"}
+		deleteMarkerParameterValue := fmt.Sprint(*v.DeleteMarker)
+
+		deleteMarkerIsValid := false
+		for _, value := range deleteMarkerValidValues {
+			if value == deleteMarkerParameterValue {
+				deleteMarkerIsValid = true
+			}
+		}
+
+		if !deleteMarkerIsValid {
+			return errors.ParameterValueNotAllowedError{
+				ParameterName:  "DeleteMarker",
+				ParameterValue: deleteMarkerParameterValue,
+				AllowedValues:  deleteMarkerValidValues,
+			}
+		}
+	}
+
+	if v.Destination != nil {
+		if err := v.Destination.Validate(); err != nil {
+			return err
+		}
+	}
+
+	if v.Destination == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "Destination",
+			ParentName:    "Rules",
+		}
+	}
+
+	if v.Filters != nil {
+		if err := v.Filters.Validate(); err != nil {
+			return err
+		}
+	}
+
+	if v.Filters == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "Filters",
+			ParentName:    "Rules",
+		}
+	}
+
+	if v.ID == nil {
+		return errors.ParameterRequiredError{
+			ParameterName: "ID",
+			ParentName:    "Rules",
+		}
+	}
+
+	if v.Status != nil {
+		statusValidValues := []string{"enabled", "disabled"}
+		statusParameterValue := fmt.Sprint(*v.Status)
+
+		statusIsValid := false
+		for _, value := range statusValidValues {
+			if value == statusParameterValue {
+				statusIsValid = true
+			}
+		}
+
+		if !statusIsValid {
+			return errors.ParameterValueNotAllowedError{
+				ParameterName:  "Status",
+				ParameterValue: statusParameterValue,
+				AllowedValues:  statusValidValues,
+			}
+		}
+	}
+
+	if v.SyncMarker != nil {
+		syncMarkerValidValues := []string{"enabled", "disabled"}
+		syncMarkerParameterValue := fmt.Sprint(*v.SyncMarker)
+
+		syncMarkerIsValid := false
+		for _, value := range syncMarkerValidValues {
+			if value == syncMarkerParameterValue {
+				syncMarkerIsValid = true
+			}
+		}
+
+		if !syncMarkerIsValid {
+			return errors.ParameterValueNotAllowedError{
+				ParameterName:  "SyncMarker",
+				ParameterValue: syncMarkerParameterValue,
+				AllowedValues:  syncMarkerValidValues,
+			}
 		}
 	}
 
