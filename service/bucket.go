@@ -568,6 +568,67 @@ type DeleteBucketPolicyOutput struct {
 	RequestID *string `location:"requestID"`
 }
 
+// DeleteReplication does Delete Replication information of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/replication/delete_replication.html
+func (s *Bucket) DeleteReplication() (*DeleteBucketReplicationOutput, error) {
+	return s.DeleteReplicationWithContext(context.Background())
+}
+
+// DeleteReplicationWithContext add context support for DeleteReplication
+func (s *Bucket) DeleteReplicationWithContext(ctx context.Context) (*DeleteBucketReplicationOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.DeleteReplicationRequest()
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.SendWithContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// DeleteReplicationRequest creates request and output object of DeleteBucketReplication.
+func (s *Bucket) DeleteReplicationRequest() (*request.Request, *DeleteBucketReplicationOutput, error) {
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "DELETE Bucket Replication",
+		RequestMethod: "DELETE",
+		RequestURI:    "/<bucket-name>?replication",
+		StatusCodes: []int{
+			204, // Replication deleted
+		},
+	}
+
+	x := &DeleteBucketReplicationOutput{}
+	r, err := request.New(o, nil, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// DeleteBucketReplicationOutput presents output for DeleteBucketReplication.
+type DeleteBucketReplicationOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+}
+
 // DeleteMultipleObjects does Delete multiple objects from the bucket.
 // Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/delete_multiple.html
 func (s *Bucket) DeleteMultipleObjects(input *DeleteMultipleObjectsInput) (*DeleteMultipleObjectsOutput, error) {
@@ -1221,6 +1282,70 @@ type GetBucketPolicyOutput struct {
 
 	// Bucket policy statement
 	Statement []*StatementType `json:"statement,omitempty" name:"statement" location:"elements"`
+}
+
+// GetReplication does Get Replication information of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/replication/get_replication.html
+func (s *Bucket) GetReplication() (*GetBucketReplicationOutput, error) {
+	return s.GetReplicationWithContext(context.Background())
+}
+
+// GetReplicationWithContext add context support for GetReplication
+func (s *Bucket) GetReplicationWithContext(ctx context.Context) (*GetBucketReplicationOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.GetReplicationRequest()
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.SendWithContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// GetReplicationRequest creates request and output object of GetBucketReplication.
+func (s *Bucket) GetReplicationRequest() (*request.Request, *GetBucketReplicationOutput, error) {
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "GET Bucket Replication",
+		RequestMethod: "GET",
+		RequestURI:    "/<bucket-name>?replication",
+		StatusCodes: []int{
+			200, // OK
+		},
+	}
+
+	x := &GetBucketReplicationOutput{}
+	r, err := request.New(o, nil, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// GetBucketReplicationOutput presents output for GetBucketReplication.
+type GetBucketReplicationOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+
+	// Bucket Replication rule
+	Rules []*RulesType `json:"rules,omitempty" name:"rules" location:"elements"`
 }
 
 // GetStatistics does Get statistics information of the bucket.
@@ -2378,6 +2503,99 @@ func (v *PutBucketPolicyInput) Validate() error {
 
 // PutBucketPolicyOutput presents output for PutBucketPolicy.
 type PutBucketPolicyOutput struct {
+	StatusCode *int `location:"statusCode"`
+
+	RequestID *string `location:"requestID"`
+}
+
+// PutReplication does Set Replication information of the bucket.
+// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/replication/put_replication.html
+func (s *Bucket) PutReplication(input *PutBucketReplicationInput) (*PutBucketReplicationOutput, error) {
+	return s.PutReplicationWithContext(context.Background(), input)
+}
+
+// PutReplicationWithContext add context support for PutReplication
+func (s *Bucket) PutReplicationWithContext(ctx context.Context, input *PutBucketReplicationInput) (*PutBucketReplicationOutput, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	r, x, err := s.PutReplicationRequest(input)
+
+	if err != nil {
+		return x, err
+	}
+
+	err = r.SendWithContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	requestID := r.HTTPResponse.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
+	x.RequestID = &requestID
+
+	return x, err
+}
+
+// PutReplicationRequest creates request and output object of PutBucketReplication.
+func (s *Bucket) PutReplicationRequest(input *PutBucketReplicationInput) (*request.Request, *PutBucketReplicationOutput, error) {
+
+	if input == nil {
+		input = &PutBucketReplicationInput{}
+	}
+
+	properties := *s.Properties
+
+	o := &data.Operation{
+		Config:        s.Config,
+		Properties:    &properties,
+		APIName:       "PUT Bucket Replication",
+		RequestMethod: "PUT",
+		RequestURI:    "/<bucket-name>?replication",
+		StatusCodes: []int{
+			200, // OK
+		},
+	}
+
+	x := &PutBucketReplicationOutput{}
+	r, err := request.New(o, input, x)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return r, x, nil
+}
+
+// PutBucketReplicationInput presents input for PutBucketReplication.
+type PutBucketReplicationInput struct {
+	// Bucket Replication rules
+	Rules []*RulesType `json:"rules" name:"rules" location:"elements"` // Required
+
+}
+
+// Validate validates the input for PutBucketReplication.
+func (v *PutBucketReplicationInput) Validate() error {
+
+	if len(v.Rules) == 0 {
+		return errors.ParameterRequiredError{
+			ParameterName: "Rules",
+			ParentName:    "PutBucketReplicationInput",
+		}
+	}
+
+	if len(v.Rules) > 0 {
+		for _, property := range v.Rules {
+			if err := property.Validate(); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+// PutBucketReplicationOutput presents output for PutBucketReplication.
+type PutBucketReplicationOutput struct {
 	StatusCode *int `location:"statusCode"`
 
 	RequestID *string `location:"requestID"`
