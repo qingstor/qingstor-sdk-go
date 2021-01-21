@@ -40,6 +40,8 @@ type Config struct {
 	Port     int    `yaml:"port"`
 	Protocol string `yaml:"protocol"`
 
+	Endpoint string `yaml:"endpoint"`
+
 	AdditionalUserAgent string `yaml:"additional_user_agent"`
 	DisableURICleaning  bool   `yaml:"disable_uri_cleaning"`
 
@@ -129,17 +131,19 @@ func (c *Config) Check() (err error) {
 		return
 	}
 
-	if c.Host == "" {
-		err = errors.New("server host not specified")
-		return
-	}
-	if c.Port <= 0 {
-		err = errors.New("server port not specified")
-		return
-	}
-	if c.Protocol == "" {
-		err = errors.New("server protocol not specified")
-		return
+	if c.Endpoint == "" {
+		if c.Host == "" {
+			err = errors.New("server host not specified")
+			return
+		}
+		if c.Port <= 0 {
+			err = errors.New("server port not specified")
+			return
+		}
+		if c.Protocol == "" {
+			err = errors.New("server protocol not specified")
+			return
+		}
 	}
 
 	if c.AdditionalUserAgent != "" {

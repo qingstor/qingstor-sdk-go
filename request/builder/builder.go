@@ -35,6 +35,8 @@ import (
 	"time"
 	"unicode"
 
+	goerrors "errors"
+
 	"github.com/pengsrc/go-shared/convert"
 	"github.com/qingstor/log"
 
@@ -279,8 +281,18 @@ func (qb *Builder) parseRequestURL() error {
 	zone := (*qb.parsedProperties)["zone"]
 	port := strconv.Itoa(config.Port)
 	endpoint := config.Protocol + "://" + config.Host + ":" + port
+	if config.Endpoint != "" {
+		endpoint = config.Endpoint
+	}
 	if zone != "" {
-		endpoint = config.Protocol + "://" + zone + "." + config.Host + ":" + port
+		parts := strings.Split(endpoint, "://")
+		if len(parts) != 2 {
+			return errors.NewSDKError(
+				errors.WithAction("parse endpoint in parseRequestURL"),
+				errors.WithError(goerrors.New("invalid endpoint parameter")),
+			)
+		}
+		endpoint = fmt.Sprintf("%s://%s.%s", parts[0], zone, parts[1])
 	}
 
 	requestURI := qb.operation.RequestURI
