@@ -250,12 +250,8 @@ func (c *Config) parseEndpoint() error {
 	}
 
 	c.Protocol = u.Scheme
-	parts := strings.Split(u.Host, ":")
-	if len(parts) != 2 {
-		return errors.New("invalid endpoint parameter")
-	}
-	c.Host = parts[0]
-	port, err := strconv.Atoi(parts[1])
+	c.Host = u.Hostname()
+	port, err := strconv.Atoi(u.Port())
 	if err != nil {
 		return err
 	}
