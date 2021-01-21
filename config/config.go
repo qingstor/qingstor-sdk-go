@@ -20,6 +20,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -238,25 +239,25 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 	return
 }
 
-func (c *Config) parseEndpoint() (err error) {
+func (c *Config) parseEndpoint() error {
 	if c.Endpoint == "" {
 		return nil
 	}
 
-	parts := strings.Split(c.Endpoint, "://")
-	if len(parts) != 2 {
-		return errors.New("invalid endpoint parameter")
+	u, err := url.Parse(c.Endpoint)
+	if err != nil {
+		return err
 	}
 
-	c.Protocol = parts[0]
-	parts = strings.Split(parts[1], ":")
+	c.Protocol = u.Scheme
+	parts := strings.Split(u.Host, ":")
 	if len(parts) != 2 {
 		return errors.New("invalid endpoint parameter")
 	}
 	c.Host = parts[0]
 	port, err := strconv.Atoi(parts[1])
 	if err != nil {
-		return
+		return err
 	}
 	c.Port = port
 

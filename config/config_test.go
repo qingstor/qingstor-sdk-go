@@ -102,3 +102,14 @@ func TestNew(t *testing.T) {
 	assert.Equal(t, "https", config.Protocol)
 	assert.Equal(t, "qingstor.com", config.Host)
 }
+
+func TestParseEndpoint(t *testing.T) {
+	c := Config{
+		Endpoint: "https://qingstor.com:443",
+	}
+
+	c.parseEndpoint()
+	assert.Equal(t, "https", c.Protocol)
+	assert.Equal(t, "qingstor.com", c.Host)
+	assert.Equal(t, 443, c.Port)
+}
