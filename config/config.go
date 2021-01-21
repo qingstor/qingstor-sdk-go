@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -228,8 +229,38 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 		return
 	}
 
+	err = c.parseEndpoint()
+	if err != nil {
+		return
+	}
+
 	c.InitHTTPClient()
 	return
+}
+
+func (c *Config) parseEndpoint() (err error) {
+	if c.Endpoint == "" {
+		return nil
+	}
+
+	parts := strings.Split(c.Endpoint, "://")
+	if len(parts) != 2 {
+		return errors.New("invalid endpoint parameter")
+	}
+
+	c.Protocol = parts[0]
+	parts = strings.Split(parts[1], ":")
+	if len(parts) != 2 {
+		return errors.New("invalid endpoint parameter")
+	}
+	c.Host = parts[0]
+	port, err := strconv.Atoi(parts[1])
+	if err != nil {
+		return
+	}
+	c.Port = port
+
+	return nil
 }
 
 func (c *Config) readCredentialFromEnv() (err error) {
