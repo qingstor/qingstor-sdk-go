@@ -170,6 +170,7 @@ func (c *Config) LoadDefaultConfig() (err error) {
 	}
 
 	c.InitHTTPClient()
+	c.readCredentialFromEnv()
 	return
 }
 
@@ -225,6 +226,12 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 
 	c.InitHTTPClient()
 	return
+}
+
+func (c *Config) readCredentialFromEnv() (err error) {
+	c.AccessKeyID = os.Getenv(EnvAccessKeyID)
+	c.SecretAccessKey = os.Getenv(EnvSecretAccessKey)
+	return nil
 }
 
 // InitHTTPClient : After modifying Config.HTTPSettings, you should always call this to initialize the HTTP Client.

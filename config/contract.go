@@ -42,12 +42,28 @@ log_level: warn
 
 `
 
-// DefaultConfigFile is the filename of default config file.
-const DefaultConfigFile = "~/.qingstor/config.yaml"
+const (
+	// DefaultConfigFile is the filename of default config file.
+	DefaultConfigFile = "~/.qingstor/config.yaml"
+
+	// EnvConfigPath is config environment variable.
+	EnvConfigPath = "QINGSTOR_CONFIG_PATH"
+
+	// EnvAccessKeyID is config envrionment variable.
+	EnvAccessKeyID = "QINGSTOR_ACCESS_KEY_ID"
+
+	// EnvSecretAccessKey is config envrionment variable.
+	EnvSecretAccessKey = "QINGSTOR_SECRET_ACCESS_KEY"
+)
 
 // GetUserConfigFilePath returns the user config file path.
 func GetUserConfigFilePath() string {
-	return strings.Replace(DefaultConfigFile, "~/", getHome()+"/", 1)
+	configFile := DefaultConfigFile
+	configPath := os.Getenv(EnvConfigPath)
+	if configPath != "" {
+		configFile = configPath
+	}
+	return strings.Replace(configFile, "~/", getHome()+"/", 1)
 }
 
 // InstallDefaultUserConfig will install default config file.
