@@ -58,11 +58,12 @@ const (
 
 // GetUserConfigFilePath returns the user config file path.
 func GetUserConfigFilePath() string {
-	defaultConfigFile := os.Getenv(EnvConfigPath)
-	if defaultConfigFile != "" {
-		return defaultConfigFile
+	configFile := DefaultConfigFile
+	configPath := os.Getenv(EnvConfigPath)
+	if configPath != "" {
+		configFile = configPath
 	}
-	return strings.Replace(DefaultConfigFile, "~/", getHome()+"/", 1)
+	return strings.Replace(configFile, "~/", getHome()+"/", 1)
 }
 
 // InstallDefaultUserConfig will install default config file.
