@@ -102,3 +102,30 @@ func TestNew(t *testing.T) {
 	assert.Equal(t, "https", config.Protocol)
 	assert.Equal(t, "qingstor.com", config.Host)
 }
+
+func TestParseEndpoint(t *testing.T) {
+	flagtests := []struct {
+		endpoint string
+		protocol string
+		host     string
+		port     int
+	}{
+		{"https://qingstor.com:443", "https", "qingstor.com", 443},
+		{"https://pek3b.qingstor.com:8080", "https", "pek3b.qingstor.com", 8080},
+		{"https://qingstor.com", "https", "qingstor.com", 0},
+		{"qingstor.com", "", "", 0},
+	}
+
+	for _, tt := range flagtests {
+		t.Run(tt.endpoint, func(t *testing.T) {
+			c := Config{
+				Endpoint: tt.endpoint,
+			}
+			c.parseEndpoint()
+
+			assert.Equal(t, tt.protocol, c.Protocol)
+			assert.Equal(t, tt.host, c.Host)
+			assert.Equal(t, tt.port, c.Port)
+		})
+	}
+}

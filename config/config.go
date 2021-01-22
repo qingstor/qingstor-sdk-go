@@ -20,7 +20,9 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -39,6 +41,8 @@ type Config struct {
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
 	Protocol string `yaml:"protocol"`
+
+	Endpoint string `yaml:"endpoint"`
 
 	AdditionalUserAgent string `yaml:"additional_user_agent"`
 	DisableURICleaning  bool   `yaml:"disable_uri_cleaning"`
@@ -129,17 +133,19 @@ func (c *Config) Check() (err error) {
 		return
 	}
 
-	if c.Host == "" {
-		err = errors.New("server host not specified")
-		return
-	}
-	if c.Port <= 0 {
-		err = errors.New("server port not specified")
-		return
-	}
-	if c.Protocol == "" {
-		err = errors.New("server protocol not specified")
-		return
+	if c.Endpoint == "" {
+		if c.Host == "" {
+			err = errors.New("server host not specified")
+			return
+		}
+		if c.Port <= 0 {
+			err = errors.New("server port not specified")
+			return
+		}
+		if c.Protocol == "" {
+			err = errors.New("server protocol not specified")
+			return
+		}
 	}
 
 	if c.AdditionalUserAgent != "" {
@@ -224,8 +230,35 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 		return
 	}
 
+	err = c.parseEndpoint()
+	if err != nil {
+		return
+	}
+
 	c.InitHTTPClient()
 	return
+}
+
+// FIXME usr.Parse not parse domain without scheme, eg: "qingstor.com"
+func (c *Config) parseEndpoint() error {
+	if c.Endpoint == "" {
+		return nil
+	}
+
+	u, err := url.Parse(c.Endpoint)
+	if err != nil {
+		return err
+	}
+
+	c.Protocol = u.Scheme
+	c.Host = u.Hostname()
+	port, err := strconv.Atoi(u.Port())
+	if err != nil {
+		return err
+	}
+	c.Port = port
+
+	return nil
 }
 
 func (c *Config) readCredentialFromEnv() (err error) {
