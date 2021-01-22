@@ -284,6 +284,16 @@ func (qb *Builder) parseRequestURL() error {
 	}
 
 	requestURI := qb.operation.RequestURI
+	if config.EnableVirtualHostStyle {
+		bucket, bucketKey := "", "bucket-name"
+		prefix := "/<" + bucketKey + ">"
+		if strings.HasPrefix(requestURI, prefix) {
+			requestURI = requestURI[len(prefix):]
+			bucket = (*qb.parsedProperties)[bucketKey]
+			endpoint = config.Protocol + "://" + bucket + "." + zone + "." + config.Host + ":" + port
+		}
+	}
+
 	for key, value := range *qb.parsedProperties {
 		endpoint = strings.Replace(endpoint, "<"+key+">", utils.URLQueryEscape(value), -1)
 		requestURI = strings.Replace(requestURI, "<"+key+">", utils.URLQueryEscape(value), -1)

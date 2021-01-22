@@ -171,3 +171,22 @@ func TestQingStorSigner_WriteSignatureWithCname(t *testing.T) {
 	signature := "QS ENV_ACCESS_KEY_ID:Kqc4/+6T7zfSrUPgkvswHbtL4ESch9vOVQP0nPwlkBs="
 	assert.Equal(t, signature, httpRequest.Header.Get("Authorization"))
 }
+
+func TestQingStorSinger_WriteSignatureWithVirtualStyle(t *testing.T) {
+	url := "https://bucket-name.qingstor.com/?acl"
+	httpRequest, err := http.NewRequest("GET", url, nil)
+	httpRequest.Header.Set("Date", convert.TimeToString(time.Time{}, convert.RFC822))
+	assert.Nil(t, err)
+
+	s := QingStorSigner{
+		AccessKeyID:            "ENV_ACCESS_KEY_ID",
+		SecretAccessKey:        "ENV_SECRET_ACCESS_KEY",
+		EnableVirtualHostStyle: true,
+	}
+
+	err = s.WriteSignature(httpRequest)
+	assert.Nil(t, err)
+
+	signature := "QS ENV_ACCESS_KEY_ID:y0rP8LnEGUiV/JcuCMHZC4OMRZNzKRw9w7AnqehJZW8="
+	assert.Equal(t, signature, httpRequest.Header.Get("Authorization"))
+}
