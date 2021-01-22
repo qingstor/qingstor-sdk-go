@@ -239,6 +239,7 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 	return
 }
 
+// FIXME usr.Parse not parse domain without scheme, eg: "qingstor.com"
 func (c *Config) parseEndpoint() error {
 	if c.Endpoint == "" {
 		return nil
