@@ -266,6 +266,10 @@ func (c *Config) parseEndpoint() error {
 func (c *Config) readCredentialFromEnv() (err error) {
 	c.AccessKeyID = os.Getenv(EnvAccessKeyID)
 	c.SecretAccessKey = os.Getenv(EnvSecretAccessKey)
+	c.EnableVirtualHostStyle, err = strconv.ParseBool(os.Getenv(EnvEnableVirtualHostStyle))
+	if err != nil {
+		return
+	}
 	return nil
 }
 
