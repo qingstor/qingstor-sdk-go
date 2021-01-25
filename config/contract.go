@@ -54,6 +54,9 @@ const (
 
 	// EnvSecretAccessKey is config envrionment variable.
 	EnvSecretAccessKey = "QINGSTOR_SECRET_ACCESS_KEY"
+
+	// EnvEnableVirtualHostStyle is config envrionment variable.
+	EnvEnableVirtualHostStyle = "QINGSTOR_ENABLE_VIRTUAL_HOST_STYLE"
 )
 
 // GetUserConfigFilePath returns the user config file path.
