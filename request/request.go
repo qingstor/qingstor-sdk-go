@@ -231,8 +231,9 @@ func (r *Request) build(ctx context.Context) error {
 
 func (r *Request) sign(ctx context.Context) error {
 	s := &signer.QingStorSigner{
-		AccessKeyID:     r.Operation.Config.AccessKeyID,
-		SecretAccessKey: r.Operation.Config.SecretAccessKey,
+		AccessKeyID:            r.Operation.Config.AccessKeyID,
+		SecretAccessKey:        r.Operation.Config.SecretAccessKey,
+		EnableVirtualHostStyle: r.Operation.Config.EnableVirtualHostStyle,
 	}
 	err := s.WriteSignature(r.HTTPRequest)
 	if err != nil {

@@ -34,8 +34,9 @@ import (
 
 // QingStorSigner is the http request signer for QingStor service.
 type QingStorSigner struct {
-	AccessKeyID     string
-	SecretAccessKey string
+	AccessKeyID            string
+	SecretAccessKey        string
+	EnableVirtualHostStyle bool
 }
 
 // WriteSignature calculates signature and write it to http request header.
@@ -202,6 +203,14 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (st
 	logger := log.FromContext(request.Context())
 	path := utils.URLQueryEscape(request.URL.Path)
 	query := request.URL.Query()
+
+	if qss.EnableVirtualHostStyle {
+		if path == "" {
+			path = "/"
+		}
+		_parts := strings.Split(request.Host, ".")
+		path = "/" + _parts[0] + path
+	}
 
 	keys := []string{}
 	for key := range query {

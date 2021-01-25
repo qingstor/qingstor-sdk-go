@@ -49,6 +49,8 @@ type Config struct {
 
 	LogLevel string `yaml:"log_level"`
 
+	EnableVirtualHostStyle bool `yaml:"enable_virtual_host_style"`
+
 	HTTPSettings HTTPClientSettings
 
 	Connection *http.Client
