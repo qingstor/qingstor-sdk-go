@@ -75,11 +75,9 @@ func (r *Request) SendWithContext(ctx context.Context) error {
 		return err
 	}
 
-	if r.Operation.Config.AccessKeyID != "" && r.Operation.Config.SecretAccessKey != "" {
-		err = r.SignWithContext(ctx)
-		if err != nil {
-			return err
-		}
+	err = r.SignWithContext(ctx)
+	if err != nil {
+		return err
 	}
 
 	err = r.DoWithContext(ctx)
@@ -157,9 +155,11 @@ func (r *Request) SignWithContext(ctx context.Context) error {
 		ctx = context.Background()
 	}
 
-	err := r.sign(ctx)
-	if err != nil {
-		return err
+	if r.Operation.Config.AccessKeyID != "" && r.Operation.Config.SecretAccessKey != "" {
+		err := r.sign(ctx)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
