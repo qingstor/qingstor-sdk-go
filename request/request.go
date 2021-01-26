@@ -75,9 +75,11 @@ func (r *Request) SendWithContext(ctx context.Context) error {
 		return err
 	}
 
-	err = r.SignWithContext(ctx)
-	if err != nil {
-		return err
+	if r.Operation.Config.AccessKeyID != "" && r.Operation.Config.SecretAccessKey != "" {
+		err = r.SignWithContext(ctx)
+		if err != nil {
+			return err
+		}
 	}
 
 	err = r.DoWithContext(ctx)
@@ -201,14 +203,14 @@ func (r *Request) ApplyQuerySignature(accessKeyID string, expires int, signature
 }
 
 func (r *Request) check(ctx context.Context) error {
-	if r.Operation.Config.AccessKeyID == "" {
+	if r.Operation.Config.AccessKeyID == "" && r.Operation.Config.SecretAccessKey != "" {
 		return errors.NewSDKError(
 			errors.WithAction("check request"),
 			errors.WithError(fmt.Errorf("access key not provided")),
 		)
 	}
 
-	if r.Operation.Config.SecretAccessKey == "" {
+	if r.Operation.Config.SecretAccessKey == "" && r.Operation.Config.AccessKeyID != "" {
 		return errors.NewSDKError(
 			errors.WithAction("check request"),
 			errors.WithError(fmt.Errorf("secret access key not provided")),
