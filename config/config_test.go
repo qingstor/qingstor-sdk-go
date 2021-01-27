@@ -129,3 +129,29 @@ func TestParseEndpoint(t *testing.T) {
 		})
 	}
 }
+
+func TestSupportIP(t *testing.T) {
+	// Host is ip address, enable virtual host style
+	c := Config{
+		AccessKeyID:            "AccessKeyID",
+		SecretAccessKey:        "SecretAccessKey",
+		Endpoint:               "https://192.168.0.1:443",
+		EnableVirtualHostStyle: true,
+	}
+	err := c.parseEndpoint()
+	assert.Nil(t, err)
+	err = c.Check()
+	assert.NotNil(t, err)
+
+	//
+	c = Config{
+		AccessKeyID:     "AccessKeyID",
+		SecretAccessKey: "SecretAccessKey",
+		Endpoint:        "https://2001:db8::68:443",
+		EnableDualStack: false,
+	}
+	err = c.parseEndpoint()
+	assert.Nil(t, err)
+	err = c.Check()
+	assert.NotNil(t, err)
+}
