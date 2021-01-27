@@ -287,6 +287,10 @@ func (c *Config) readCredentialFromEnv() (err error) {
 	if err != nil {
 		return
 	}
+	c.EnableDualStack, err = strconv.ParseBool(os.Getenv(EnvEnableDualStack))
+	if err != nil {
+		return
+	}
 	return nil
 }
 
