@@ -126,11 +126,11 @@ func NewDefault() (c *Config, err error) {
 
 // Check checks the configuration.
 func (c *Config) Check() (err error) {
-	if c.AccessKeyID == "" {
+	if c.AccessKeyID == "" && c.SecretAccessKey != "" {
 		err = errors.New("access key ID not specified")
 		return
 	}
-	if c.SecretAccessKey == "" {
+	if c.SecretAccessKey == "" && c.AccessKeyID != "" {
 		err = errors.New("secret access key not specified")
 		return
 	}

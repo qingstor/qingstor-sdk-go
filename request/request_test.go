@@ -134,3 +134,39 @@ func TestRequestSend(t *testing.T) {
 		assert.Equal(t, "1e588695254aa08cf7a43f612e6ce14b", e.RequestID)
 	}
 }
+
+func TestAnonymousAPICall(t *testing.T) {
+	conf, err := config.New("", "")
+	assert.Nil(t, err)
+
+	operation := &data.Operation{
+		Config: conf,
+		Properties: &SomeActionProperties{
+			A:  String("aaa"),
+			B:  String("bbb"),
+			CD: String("ccc-ddd"),
+		},
+		APIName:       "Some Action",
+		RequestMethod: "GET",
+		RequestURI:    "/<a>/<b>/<c-d>",
+		StatusCodes: []int{
+			200, // OK
+			206, // Partial content
+			304, // Not modified
+			412, // Precondition failed
+		},
+	}
+
+	output := &SomeActionOutput{}
+	r, err := New(operation, &SomeActionInput{
+		Date:            Time(time.Date(2016, 9, 1, 15, 30, 0, 0, time.UTC)),
+		IfModifiedSince: Time(time.Date(2016, 9, 1, 15, 30, 0, 0, time.UTC)),
+		Range:           String("100-"),
+		UploadID:        String("0"),
+		Count:           Int(23),
+	}, output)
+	assert.Nil(t, err)
+
+	r.SendWithContext(nil)
+	assert.Equal(t, r.HTTPRequest.Header.Get("Authorization"), "")
+}
