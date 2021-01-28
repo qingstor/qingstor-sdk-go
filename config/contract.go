@@ -57,6 +57,9 @@ const (
 
 	// EnvEnableVirtualHostStyle is config envrionment variable.
 	EnvEnableVirtualHostStyle = "QINGSTOR_ENABLE_VIRTUAL_HOST_STYLE"
+
+	// EnvEnableDualStack is config envrionment variable.
+	EnvEnableDualStack = "QINGSTOR_ENABLE_DUAL_STACK"
 )
 
 // GetUserConfigFilePath returns the user config file path.

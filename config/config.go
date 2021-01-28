@@ -19,6 +19,7 @@ package config
 import (
 	"errors"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -50,6 +51,8 @@ type Config struct {
 	LogLevel string `yaml:"log_level"`
 
 	EnableVirtualHostStyle bool `yaml:"enable_virtual_host_style"`
+
+	EnableDualStack bool `yaml:"enable_dual_stack"`
 
 	HTTPSettings HTTPClientSettings
 
@@ -160,6 +163,20 @@ func (c *Config) Check() (err error) {
 		}
 	}
 
+	ip := net.ParseIP(c.Host)
+	if c.EnableVirtualHostStyle {
+		if ip != nil {
+			err = errors.New("Host is ip, cannot virtual host style")
+			return
+		}
+	}
+
+	if !c.EnableDualStack {
+		if ip != nil && ip.To4() == nil {
+			err = errors.New("Host is IPv6 address, enable_dual_stack should be true")
+			return
+		}
+	}
 	return
 }
 
@@ -227,12 +244,12 @@ func (c *Config) LoadConfigFromContent(content []byte) (err error) {
 		return
 	}
 
-	err = c.Check()
+	err = c.parseEndpoint()
 	if err != nil {
 		return
 	}
 
-	err = c.parseEndpoint()
+	err = c.Check()
 	if err != nil {
 		return
 	}
@@ -270,6 +287,10 @@ func (c *Config) readCredentialFromEnv() (err error) {
 	if err != nil {
 		return
 	}
+	c.EnableDualStack, err = strconv.ParseBool(os.Getenv(EnvEnableDualStack))
+	if err != nil {
+		return
+	}
 	return nil
 }
 
@@ -301,7 +322,11 @@ func (c *Config) InitHTTPClient() {
 	// when the network is "tcp" and the destination is a host name
 	// with both IPv4 and IPv6 addresses. This allows a client to
 	// tolerate networks where one address family is silently broken
-	dialer.DualStack = c.HTTPSettings.DualStack
+	dialer.DualStack = c.EnableDualStack
+	if !dialer.DualStack {
+		negativeValue, _ := time.ParseDuration("-300ms")
+		dialer.FallbackDelay = negativeValue
+	}
 	c.Connection = &http.Client{
 		// We do not use the timeout in http client,
 		// because this timeout is for the whole http body read/write,
