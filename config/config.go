@@ -173,7 +173,7 @@ func (c *Config) Check() (err error) {
 
 	if !c.EnableDualStack {
 		if ip != nil && ip.To4() == nil {
-			err = errors.New("Host is IPv6 address, enable_dual_stack should false")
+			err = errors.New("Host is IPv6 address, enable_dual_stack should be true")
 			return
 		}
 	}
