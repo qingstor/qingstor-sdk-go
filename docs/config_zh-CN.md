@@ -19,9 +19,23 @@ port: 443
 protocol: 'https'
 connection_retries: 3
 
+endponit: 'https://qingstor.com:443'
+
+enable_virtual_host_styl: false # default false.
+enable_dual_stack: false # default false.
+
 # Valid log levels are "debug", "info", "warn", "error", and "fatal".
 log_level: 'warn'
 ```
+
+我们也支持设置如下环境变量：
+
+- QINGSTOR_ACCESS_KEY_ID
+- QINGSTOR_SECRET_KEH_ID
+- QINGSTOR_CONFIG_PATH
+- QINGSTOR_ENABLE_VIRTUAL_HOST_STYLE
+- QINGSTOR_ENABLE_DUAL_STACK
+
 
 ## 使用
 
