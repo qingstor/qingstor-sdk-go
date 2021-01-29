@@ -1,6 +1,28 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v4.3.0] - 2021-01-29
+
+### Added
+
+- config: Host support IPv4/IPv6 (#128)
+- Support Anonymous API Call (#126)
+- config: Add QINGSTOR_ENABLE_VIRTUAL_HOST_STYLE env variable (#125)
+- config: Add enable_virtual_host_style support (#123)
+- config: Add endpoint parameter (#121)
+- config: Support environment variables (#120)
+- Supported that bucket replication (#119)
+
+### Changed
+
+- build(deps): bump gopkg.in/yaml.v2 from 2.3.0 to 2.4.0 (#117)
+- build(deps): bump gopkg.in/yaml.v2 from 2.2.2 to 2.3.0 (#116)
+- ci: Modify ci into github actions (#115)
+
+### Fixed
+
+- util: Fix metadata validator (#114)
+
 ## [v4.2.0] - 2020-9-28
 
 ### Added
