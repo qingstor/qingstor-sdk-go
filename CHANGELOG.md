@@ -15,8 +15,6 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 ### Changed
 
-- build(deps): bump gopkg.in/yaml.v2 from 2.3.0 to 2.4.0 (#117)
-- build(deps): bump gopkg.in/yaml.v2 from 2.2.2 to 2.3.0 (#116)
 - ci: Modify ci into github actions (#115)
 
 ### Fixed
@@ -291,6 +289,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v4.3.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.2.0...v4.3.0
 [v4.2.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.2.0...v4.0.0
