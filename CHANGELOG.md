@@ -1,6 +1,26 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v4.3.0] - 2021-01-29
+
+### Added
+
+- config: Host support IPv4/IPv6 (#128)
+- Support Anonymous API Call (#126)
+- config: Add QINGSTOR_ENABLE_VIRTUAL_HOST_STYLE env variable (#125)
+- config: Add enable_virtual_host_style support (#123)
+- config: Add endpoint parameter (#121)
+- config: Support environment variables (#120)
+- Supported that bucket replication (#119)
+
+### Changed
+
+- ci: Modify ci into github actions (#115)
+
+### Fixed
+
+- util: Fix metadata validator (#114)
+
 ## [v4.2.0] - 2020-9-28
 
 ### Added
@@ -269,6 +289,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v4.3.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.2.0...v4.3.0
 [v4.2.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.0.0...v4.1.0
 [v4.0.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v3.2.0...v4.0.0
