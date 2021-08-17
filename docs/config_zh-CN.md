@@ -68,7 +68,7 @@ userConfig, _ := config.NewDefault().LoadUserConfig()
 您也可以指定文件路径来初始化 Config。
 
 ```go
-configFromFile, _ := config.NewDefault().LoadConfigFromFilepath("PATH/TO/FILE")
+configFromFile, _ := config.NewDefault().LoadConfigFromFilePath("PATH/TO/FILE")
 ```
 
 选择更换 API 服务器：

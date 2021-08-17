@@ -67,7 +67,7 @@ userConfig, _ := config.NewDefault().LoadUserConfig()
 Load configuration from config file
 
 ```go
-configFromFile, _ := config.NewDefault().LoadConfigFromFilepath("PATH/TO/FILE")
+configFromFile, _ := config.NewDefault().LoadConfigFromFilePath("PATH/TO/FILE")
 ```
 
 Change API endpoint
