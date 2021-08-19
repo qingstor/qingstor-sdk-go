@@ -18,7 +18,7 @@ func IsMetaDataValid(XQSMetaData *map[string]string) error {
 	metadataSize := 0
 
 	for k, v := range *XQSMetaData {
-		if !strings.HasPrefix(k, metadataPrefix) {
+		if !strings.HasPrefix(strings.ToLower(k), metadataPrefix) {
 			return newMetaDataInvalidError(k, v)
 		}
 
