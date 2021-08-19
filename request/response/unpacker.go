@@ -149,7 +149,7 @@ func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
 				kLower := strings.ToLower(k)
 				if strings.HasPrefix(kLower, "x-qs-meta-") {
 					if len(v) > 0 {
-						m[k] = v[0]
+						m[kLower] = v[0]
 					}
 				}
 			}
