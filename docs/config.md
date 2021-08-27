@@ -23,9 +23,6 @@ endpoint: 'https://qingstor.com:443'
 
 enable_virtual_host_style: false # default false.
 enable_dual_stack: false # default false.
-
-# Valid log levels are "debug", "info", "warn", "error", and "fatal".
-log_level: 'warn'
 ```
 
 We also support setting the following environment variables:

@@ -23,6 +23,7 @@ Go 语言版本的 QingStor 官方 SDK.
 - [配置](./docs/config_zh-CN.md)
 - [初始化服务](./docs/service_zh-CN.md)
 - [代码示例](./docs/examples_zh-CN.md)
+- [自定义日志组件](./docs/logger_zh-CN.md)
 
 查看我们的 [发布历史](https://github.com/qingstor/qingstor-sdk-go/releases) 和 [更改日志](./CHANGELOG.md) 获取最新的特性和 bug 修复。
 

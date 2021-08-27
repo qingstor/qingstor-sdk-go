@@ -23,6 +23,7 @@ Now you are ready to code. You can read the detailed guides in the list below to
 - [Configuration](./docs/config.md)
 - [Service Initialization](./docs/service.md)
 - [Code Examples](./docs/examples.md)
+- [Custom Logger](./docs/logger.md)
 
 Checkout our [releases](https://github.com/qingstor/qingstor-sdk-go/releases) and [change log](./CHANGELOG.md) for information about the latest features, bug fixes and new ideas.
 
