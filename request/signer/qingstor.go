@@ -26,8 +26,9 @@ import (
 	"strings"
 
 	"github.com/pengsrc/go-shared/convert"
-	"github.com/qingstor/log"
+	"go.uber.org/zap"
 
+	"github.com/qingstor/qingstor-sdk-go/v4/log"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
@@ -91,9 +92,9 @@ func (qss *QingStorSigner) BuildSignature(request *http.Request) (string, error)
 	signature := strings.TrimSpace(base64.StdEncoding.EncodeToString(h.Sum(nil)))
 	authorization := "QS " + qss.AccessKeyID + ":" + signature
 
-	logger.Debug(
-		log.String("qs_authorization", authorization),
-		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
+	logger.Debug("build signature",
+		zap.String("qs_authorization", authorization),
+		zap.Int64("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
 	)
 
 	return authorization, nil
@@ -117,9 +118,9 @@ func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires in
 		qss.AccessKeyID, expires, signature,
 	)
 
-	logger.Debug(
-		log.String("query_signature", query),
-		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
+	logger.Debug("build query signature",
+		zap.String("signature", query),
+		zap.Int64("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
 	)
 
 	return query, nil
@@ -147,9 +148,9 @@ func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, err
 	}
 	stringToSign += canonicalizedResource
 
-	logger.Debug(
-		log.String("string_to_sign", stringToSign),
-		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
+	logger.Debug("build string to sign",
+		zap.String("string", stringToSign),
+		zap.Int64("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
 	)
 
 	return stringToSign, nil
@@ -173,9 +174,9 @@ func (qss *QingStorSigner) BuildQueryStringToSign(request *http.Request, expires
 	}
 	stringToSign += canonicalizedResource
 
-	logger.Debug(
-		log.String("query_string_to_sign", stringToSign),
-		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
+	logger.Debug("build query string to sign",
+		zap.String("string", stringToSign),
+		zap.Int64("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
 	)
 
 	return stringToSign, nil
@@ -241,9 +242,9 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (st
 		path = path + "?" + joinedParts
 	}
 
-	logger.Debug(
-		log.String("canonicalized_resource", path),
-		log.Int("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
+	logger.Debug("canonicalized resource",
+		zap.String("path", path),
+		zap.Int64("date", convert.StringToTimestamp(request.Header.Get("Date"), convert.RFC822)),
 	)
 
 	return path, nil

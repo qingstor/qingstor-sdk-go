@@ -25,8 +25,9 @@ import (
 	"time"
 
 	"github.com/pengsrc/go-shared/convert"
-	"github.com/qingstor/log"
+	"go.uber.org/zap"
 
+	"github.com/qingstor/qingstor-sdk-go/v4/log"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/builder"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
@@ -267,11 +268,10 @@ func (r *Request) send(ctx context.Context) error {
 		r.Operation.Config.InitHTTPClient()
 	}
 
-	logger.Info(
-		log.String("title", "Sending request"),
-		log.Int("date", convert.StringToTimestamp(r.HTTPRequest.Header.Get("Date"), convert.RFC822)),
-		log.String("method", r.Operation.RequestMethod),
-		log.String("host", r.HTTPRequest.Host),
+	logger.Info("sending request",
+		zap.Int64("date", convert.StringToTimestamp(r.HTTPRequest.Header.Get("Date"), convert.RFC822)),
+		zap.String("method", r.Operation.RequestMethod),
+		zap.String("host", r.HTTPRequest.Host),
 	)
 
 	resp, err = r.Operation.Config.Connection.Do(r.HTTPRequest)

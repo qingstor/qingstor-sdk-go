@@ -5,8 +5,9 @@ import (
 	"errors"
 	"io"
 
-	"github.com/qingstor/log"
+	"go.uber.org/zap"
 
+	"github.com/qingstor/qingstor-sdk-go/v4/log"
 	"github.com/qingstor/qingstor-sdk-go/v4/service"
 )
 
@@ -36,37 +37,39 @@ func (u *Uploader) UploadWithContext(ctx context.Context, fd io.Reader, objectKe
 	logger := log.FromContext(ctx)
 	length, err := getFileSize(fd)
 	if err != nil {
-		logger.Error(log.String("get_file_size_error", err.Error()))
+		logger.Error("get file size", zap.Error(err))
 		return err
 	}
 	if length < int64(smallestPartSize) {
 		_, err := u.bucket.PutObjectWithContext(ctx, objectKey, &service.PutObjectInput{Body: fd})
 		if err != nil {
-			logger.Error(log.String("autoswitched_to_putobject_and_upload_failed", err.Error()))
+			logger.Error("auto switch to put object", zap.Error(err))
 			return err
 		}
 		return nil
 	}
 	if u.partSize < smallestPartSize {
-		logger.Error(log.String("part_size_error", "part size is too small"))
+		logger.Error("part size too small")
 		return errors.New("the part size is too small")
 	}
 
 	uploadID, err := u.init(ctx, objectKey)
 	if err != nil {
-		logger.Error(log.String("init_multipart_upload_error", err.Error()))
+		logger.Error("init multipart upload", zap.Error(err))
 		return err
 	}
 
 	partNumbers, err := u.upload(ctx, fd, uploadID, objectKey)
 	if err != nil {
-		logger.Error(log.String("upload_multipart_error", err.Error()))
+		logger.Error("upload part",
+			zap.String("upload id", *uploadID), zap.String("key", objectKey), zap.Error(err))
 		return err
 	}
 
 	err = u.complete(ctx, objectKey, uploadID, partNumbers)
 	if err != nil {
-		logger.Error(log.String("complete_upload_error", err.Error()))
+		logger.Error("complete upload",
+			zap.String("upload id", *uploadID), zap.String("key", objectKey), zap.Error(err))
 		return err
 	}
 
@@ -96,7 +99,7 @@ func (u *Uploader) upload(ctx context.Context, fd io.Reader, uploadID *string, o
 			break
 		}
 		if err != nil {
-			logger.Error(log.String("get_next_part_failed", err.Error()))
+			logger.Error("get next part", zap.Error(err))
 			return nil, err
 		}
 		_, err = u.bucket.UploadMultipartWithContext(
@@ -109,7 +112,7 @@ func (u *Uploader) upload(ctx context.Context, fd io.Reader, uploadID *string, o
 			},
 		)
 		if err != nil {
-			logger.Error(log.String("upload_multipart_failed", err.Error()))
+			logger.Error("upload part", zap.String("key", objectKey), zap.Error(err))
 			return nil, err
 		}
 		partNumbers = append(partNumbers, &service.ObjectPartType{
