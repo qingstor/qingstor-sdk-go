@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v4.4.0] - 2021-08-27
+
+### Changed
+
+- logger: Replace logger with zap.Logger (#135)
+- metadata: ToLower when receive and send (#133)
+
+### Fixed
+
+- docs: Fix typo about LoadConfigFromFilePath (#131)
+
 ## [v4.3.0] - 2021-01-29
 
 ### Added
@@ -289,6 +300,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v4.4.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.3.0...v4.4.0
 [v4.3.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.2.0...v4.3.0
 [v4.2.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.0.0...v4.1.0
