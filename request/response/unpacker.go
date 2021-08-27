@@ -29,8 +29,9 @@ import (
 	"time"
 
 	"github.com/pengsrc/go-shared/convert"
-	"github.com/qingstor/log"
+	"go.uber.org/zap"
 
+	"github.com/qingstor/qingstor-sdk-go/v4/log"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 )
@@ -64,10 +65,8 @@ func UnpackToOutput(o *data.Operation, r *http.Response, x *reflect.Value) error
 
 func (b *unpacker) unpackResponse(ctx context.Context) error {
 	// set request_id for all downstream logger
-	logger := log.FromContext(ctx).Clone().WithFields(
-		log.String("request_id",
-			b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))),
-	)
+	logger := log.FromContext(ctx).With(
+		zap.String("request_id", b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))))
 	ctx = log.ContextWithLogger(ctx, logger)
 
 	err := b.exposeStatusCode(ctx)
@@ -113,10 +112,9 @@ func (b *unpacker) exposeStatusCode(ctx context.Context) error {
 	if value.IsValid() {
 		switch value.Interface().(type) {
 		case *int:
-			logger.Info(
-				log.String("title", "QingStor response code"),
-				log.Int("status_code", int64(b.resp.StatusCode)),
-				log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
+			logger.Info("QingStor response code",
+				zap.Int("status_code", b.resp.StatusCode),
+				zap.Int64("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
 			)
 			value.Set(reflect.ValueOf(&b.resp.StatusCode))
 		}
@@ -132,10 +130,9 @@ func (b *unpacker) parseResponseHeaders(ctx context.Context) error {
 
 	requestID := b.resp.Header.Get(http.CanonicalHeaderKey("X-QS-Request-ID"))
 	logger := log.FromContext(ctx)
-	logger.Info(
-		log.String("title", "QingStor response header"),
-		log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
-		log.String("header", fmt.Sprint(b.resp.Header)),
+	logger.Info("QingStor response header",
+		zap.Int64("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
+		zap.String("header", fmt.Sprint(b.resp.Header)),
 	)
 
 	fields := b.output.Elem()
@@ -243,10 +240,9 @@ func (b *unpacker) parseResponseBody(ctx context.Context) error {
 				)
 			}
 
-			logger.Info(
-				log.String("title", "QingStor response body"),
-				log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
-				log.Bytes("body", buffer.Bytes()),
+			logger.Info("QingStor response body",
+				zap.Int64("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
+				zap.ByteString("body", buffer.Bytes()),
 			)
 
 			value.SetString(string(buffer.Bytes()))
@@ -296,10 +292,9 @@ func (b *unpacker) parseResponseElements(ctx context.Context) error {
 		return nil
 	}
 
-	logger.Info(
-		log.String("title", "QingStor response body"),
-		log.Int("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
-		log.Bytes("body", buffer.Bytes()),
+	logger.Info("QingStor response body",
+		zap.Int64("date", convert.StringToTimestamp(b.resp.Header.Get("Date"), convert.RFC822)),
+		zap.ByteString("body", buffer.Bytes()),
 	)
 
 	err := json.Unmarshal(buffer.Bytes(), b.output.Interface())
@@ -352,10 +347,7 @@ func (b *unpacker) parseError(ctx context.Context) error {
 	buffer := &bytes.Buffer{}
 	_, err := io.Copy(buffer, b.resp.Body)
 	if err != nil {
-		logger.Error(
-			log.String("action", "copy_from_error_response_body"),
-			log.String("err", err.Error()),
-		)
+		logger.Error("copy from error response", zap.Error(err))
 		return errors.NewSDKError(
 			errors.WithAction("copy from response body in parseError"),
 			errors.WithRequestID(requestID),
@@ -366,10 +358,7 @@ func (b *unpacker) parseError(ctx context.Context) error {
 
 	// close response body after copy
 	if err = b.resp.Body.Close(); err != nil {
-		logger.Error(
-			log.String("action", "close_error_response_body"),
-			log.String("err", err.Error()),
-		)
+		logger.Error("close error response body", zap.Error(err))
 		return errors.NewSDKError(
 			errors.WithAction("close response body in parseError"),
 			errors.WithRequestID(requestID),
@@ -393,10 +382,9 @@ func (b *unpacker) parseError(ctx context.Context) error {
 
 	// try to unmarshal body as qsError, if failed return unhandled error
 	if err = json.Unmarshal(buffer.Bytes(), qsError); err != nil {
-		logger.Error(
-			log.String("action", "close_error_response_body_failed"),
-			log.Bytes("body", buffer.Bytes()),
-			log.String("err", err.Error()),
+		logger.Error("close error response body",
+			zap.ByteString("body", buffer.Bytes()),
+			zap.Error(err),
 		)
 		return errors.NewSDKError(
 			errors.WithAction("unmarshal response body in parseError"),

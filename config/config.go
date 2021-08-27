@@ -27,10 +27,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/qingstor/log"
+	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
 
-	"github.com/qingstor/qingstor-sdk-go/v4/internal/pkg/logger"
 	"github.com/qingstor/qingstor-sdk-go/v4/utils"
 )
 
@@ -183,14 +182,12 @@ func (c *Config) Check() (err error) {
 // LoadDefaultConfig loads the default configuration for Config.
 // It returns error if yaml decode failed.
 func (c *Config) LoadDefaultConfig() (err error) {
-
+	logger, _ := zap.NewDevelopment()
 	c.HTTPSettings = DefaultHTTPClientSettings
 
 	err = yaml.Unmarshal([]byte(DefaultConfigFileContent), c)
 	if err != nil {
-		logger.GetLogger().Error(
-			log.String("config_parse_error", err.Error()),
-		)
+		logger.Error("load default config", zap.Error(err))
 		return
 	}
 
@@ -202,11 +199,12 @@ func (c *Config) LoadDefaultConfig() (err error) {
 // LoadUserConfig loads user configuration in ~/.qingstor/config.yaml for Config.
 // It returns error if file not found.
 func (c *Config) LoadUserConfig() (err error) {
+	logger, _ := zap.NewDevelopment()
 	_, err = os.Stat(GetUserConfigFilePath())
 	if err != nil {
-		logger.GetLogger().Warn(
-			log.String("title", "Installing default config file"),
-			log.String("path", GetUserConfigFilePath()),
+		logger.Warn("load user config",
+			zap.String("path", GetUserConfigFilePath()),
+			zap.Error(err),
 		)
 		InstallDefaultUserConfig()
 	}
@@ -217,16 +215,14 @@ func (c *Config) LoadUserConfig() (err error) {
 // LoadConfigFromFilePath loads configuration from a specified local path.
 // It returns error if file not found or yaml decode failed.
 func (c *Config) LoadConfigFromFilePath(filePath string) (err error) {
+	logger, _ := zap.NewDevelopment()
 	if strings.Index(filePath, "~/") == 0 {
 		filePath = strings.Replace(filePath, "~/", getHome()+"/", 1)
 	}
 
 	yamlString, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		logger.GetLogger().Error(
-			log.String("file_not_found", err.Error()),
-			log.String("path", filePath),
-		)
+		logger.Error("load config from", zap.String("path", filePath), zap.Error(err))
 		return err
 	}
 
@@ -236,11 +232,12 @@ func (c *Config) LoadConfigFromFilePath(filePath string) (err error) {
 // LoadConfigFromContent loads configuration from a given byte slice.
 // It returns error if yaml decode failed.
 func (c *Config) LoadConfigFromContent(content []byte) (err error) {
+	logger, _ := zap.NewDevelopment()
 	c.LoadDefaultConfig()
 
 	err = yaml.Unmarshal(content, c)
 	if err != nil {
-		logger.GetLogger().Error(log.String("config_parse_error", err.Error()))
+		logger.Error("unmarshal config", zap.Error(err))
 		return
 	}
 
