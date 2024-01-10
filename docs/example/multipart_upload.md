@@ -89,7 +89,7 @@ Start a multipart upload.
 View the uploaded segments. Try the following methods to see if all the segments have been uploaded. It will return all uploaded segmentation information.
 
 ```go
-// https://docs.qingcloud.com/qingstor/api/object/multipart/list_multipart.html
+// https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/list/
 func ListMultiParts(bucketService *service.Bucket, objectKey string, uploadID *string) ([]*service.ObjectPartType, error) {
 	output, err := bucketService.ListMultipart(
 		objectKey,
@@ -110,7 +110,7 @@ func ListMultiParts(bucketService *service.Bucket, objectKey string, uploadID *s
 ```
 
 Once all the segments have been uploaded, you can use the following method to mark the upload completion, all segments will be stitched to the object specified by objectKey.
-ETag header is not required to be set. For details, please refer to [api docs] (https://docs.qingcloud.com/qingstor/api/object/multipart/complete_multipart_upload.html).
+ETag header is not required to be set. For details, please refer to [api docs] (https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/complete/).
 
 ```go
 func CompleteMultiParts(bucketService *service.Bucket, filepath string, objectKey string, uploadID *string, parts []*service.ObjectPartType) {

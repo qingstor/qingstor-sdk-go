@@ -14,7 +14,6 @@ Each API function take an Input struct and return an Output struct. The Input st
         - [PUT Bucket ACL](example/put_bucket_acl.md)
         - [GET Bucket ACL](./example/get_bucket_acl.md)
     - Bucket Policy
-        - [Bucket Policy Condition](https://docs.qingcloud.com/qingstor/api/bucket/policy/policy_condition.html)
         - [PUT Bucket Policy](./example/put_bucket_policy.md)
         - [GET Bucket Policy](./example/get_bucket_policy.md)
         - [DELETE Bucket Policy](./example/delete_bucket_policy.md)
@@ -56,5 +55,3 @@ Each API function take an Input struct and return an Output struct. The Input st
     - [Encryption](example/encryption.md)
     - Data Process
         - [Image Process](./example/image_process.md)
-        - [Third Party Data](https://docs.qingcloud.com/qingstor/data_process/third_party/)
-            - [Tupu Porn](https://docs.qingcloud.com/qingstor/data_process/third_party/tupu_porn.html)

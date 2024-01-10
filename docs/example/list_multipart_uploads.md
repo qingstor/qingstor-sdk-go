@@ -4,13 +4,13 @@ Get a list of ongoing multipart upload objects. When an object has the segment u
 
 Similar to the GET Bucket (List Objects) interface, the user can specify the segment upload that is being performed under a directory by passing the prefix, delimiter request parameter. The list is sorted from small to large in alphanumeric order of object names. If there are multiple segments uploaded by the same-named object, only one part of the page is truncated, and the next page-turning can be obtained by upload_id_marker parameter to obtain the segment upload after the upload_id is sorted by creation time.
 
-If the user only wants to get the segment that an object has uploaded, please refer to [API Docs] (https://docs.qingcloud.com/qingstor/api/object/multipart/list_multipart.html#object-storage-api-list -multipart).
+If the user only wants to get the segment that an object has uploaded, please refer to [API Docs] (https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/list/).
 
 ## Request Parameters
 
 You can add some filter options when list multipart uploads.
 
-You can set options below in ListMultipartUploadsInput. See controlled [API Docs](https://docs.qingcloud.com/qingstor/api/bucket/list_multipart_uploads.html).
+You can set options below in ListMultipartUploadsInput. See controlled [API Docs](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/list/).
 
 |  Parameter name  |  Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Required |
 | :--------------: | :-----: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------: |

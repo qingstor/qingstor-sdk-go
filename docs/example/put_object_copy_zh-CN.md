@@ -32,7 +32,7 @@ var qingStor, _ = service.Init(conf)
 	}
 ```
 
-请注意 PutObjectInput 中 field 不是都必须设置的，具体可以参考[官方 API 文档](https://docs.qingcloud.com/qingstor/api/object/copy)。
+请注意 PutObjectInput 中 field 不是都必须设置的，具体可以参考[官方 API 文档](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/copy/)。
 
 然后调用 PutObject 方法拷贝对象。objectKey 设置拷贝后的 filepath（位于当前 bucket 中）。
 

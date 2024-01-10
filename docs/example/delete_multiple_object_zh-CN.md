@@ -40,7 +40,7 @@ var qingStor, _ = service.Init(conf)
 	}
 ```
 
-请注意 DeleteMultipleObjectsInput 中的 field 不是都必须设置的，具体可以参考[官方 API 文档](https://docs.qingcloud.com/qingstor/api/bucket/delete_multiple)。
+请注意 DeleteMultipleObjectsInput 中的 field 不是都必须设置的，具体可以参考[官方 API 文档](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/basic_opt/delete_multiple/)。
 
 然后调用 DeleteMultipleObjects 方法删除对象。objectKey 设置要删除的对象的 filepath（位于当前 bucket 中）。
 

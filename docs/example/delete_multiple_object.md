@@ -40,7 +40,7 @@ Then set the input parameters used by the DeleteObject method (stored in DeleteM
 	}
 ```
 
-Please note that not all fields in DeleteMultipleObjectsInput required to be set. For details, please refer to [Official API Documentation](https://docs.qingcloud.com/qingstor/api/bucket/delete_multiple).
+Please note that not all fields in DeleteMultipleObjectsInput required to be set. For details, please refer to [Official API Documentation](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/basic_opt/delete_multiple/).
 
 Then call the DeleteMultipleObjects method to delete the object. objectKey Sets the filepath of the object to be deleted (in the current bucket).
 
