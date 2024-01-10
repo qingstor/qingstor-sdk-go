@@ -40,7 +40,7 @@ var _ config.Config
 var _ utils.Conn
 
 // AbortMultipartUpload does Abort multipart upload.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/abort_multipart_upload.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/abort/
 func (s *Bucket) AbortMultipartUpload(objectKey string, input *AbortMultipartUploadInput) (*AbortMultipartUploadOutput, error) {
 	return s.AbortMultipartUploadWithContext(context.Background(), objectKey, input)
 }
@@ -127,7 +127,7 @@ type AbortMultipartUploadOutput struct {
 }
 
 // AppendObject does Append the Object.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/append.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/append/
 func (s *Bucket) AppendObject(objectKey string, input *AppendObjectInput) (*AppendObjectOutput, error) {
 	return s.AppendObjectWithContext(context.Background(), objectKey, input)
 }
@@ -242,7 +242,7 @@ type AppendObjectOutput struct {
 }
 
 // CompleteMultipartUpload does Complete multipart upload.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/complete_multipart_upload.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/complete/
 func (s *Bucket) CompleteMultipartUpload(objectKey string, input *CompleteMultipartUploadInput) (*CompleteMultipartUploadOutput, error) {
 	return s.CompleteMultipartUploadWithContext(context.Background(), objectKey, input)
 }
@@ -359,7 +359,7 @@ type CompleteMultipartUploadOutput struct {
 }
 
 // DeleteObject does Delete the object.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/delete.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/delete/
 func (s *Bucket) DeleteObject(objectKey string) (*DeleteObjectOutput, error) {
 	return s.DeleteObjectWithContext(context.Background(), objectKey)
 }
@@ -422,7 +422,7 @@ type DeleteObjectOutput struct {
 }
 
 // GetObject does Retrieve the object.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/get.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/get/
 func (s *Bucket) GetObject(objectKey string, input *GetObjectInput) (*GetObjectOutput, error) {
 	return s.GetObjectWithContext(context.Background(), objectKey, input)
 }
@@ -568,7 +568,7 @@ func (o *GetObjectOutput) Close() (err error) {
 }
 
 // HeadObject does Check whether the object exists and available.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/head.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/head/
 func (s *Bucket) HeadObject(objectKey string, input *HeadObjectInput) (*HeadObjectOutput, error) {
 	return s.HeadObjectWithContext(context.Background(), objectKey, input)
 }
@@ -677,7 +677,7 @@ type HeadObjectOutput struct {
 }
 
 // ImageProcess does Image process with the action on the object
-// Documentation URL: https://docs.qingcloud.com/qingstor/data_process/image_process/index.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/image_process/
 func (s *Bucket) ImageProcess(objectKey string, input *ImageProcessInput) (*ImageProcessOutput, error) {
 	return s.ImageProcessWithContext(context.Background(), objectKey, input)
 }
@@ -793,7 +793,7 @@ func (o *ImageProcessOutput) Close() (err error) {
 }
 
 // InitiateMultipartUpload does Initial multipart upload on the object.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/initiate_multipart_upload.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/initiate/
 func (s *Bucket) InitiateMultipartUpload(objectKey string, input *InitiateMultipartUploadInput) (*InitiateMultipartUploadOutput, error) {
 	return s.InitiateMultipartUploadWithContext(context.Background(), objectKey, input)
 }
@@ -920,7 +920,7 @@ type InitiateMultipartUploadOutput struct {
 }
 
 // ListMultipart does List object parts.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/list_multipart.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/list/
 func (s *Bucket) ListMultipart(objectKey string, input *ListMultipartInput) (*ListMultipartOutput, error) {
 	return s.ListMultipartWithContext(context.Background(), objectKey, input)
 }
@@ -1016,7 +1016,7 @@ type ListMultipartOutput struct {
 }
 
 // OptionsObject does Check whether the object accepts a origin with method and header.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/options.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/options_object/
 func (s *Bucket) OptionsObject(objectKey string, input *OptionsObjectInput) (*OptionsObjectOutput, error) {
 	return s.OptionsObjectWithContext(context.Background(), objectKey, input)
 }
@@ -1127,7 +1127,7 @@ type OptionsObjectOutput struct {
 }
 
 // PutObject does Upload the object.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/put.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/put/
 func (s *Bucket) PutObject(objectKey string, input *PutObjectInput) (*PutObjectOutput, error) {
 	return s.PutObjectWithContext(context.Background(), objectKey, input)
 }
@@ -1307,7 +1307,7 @@ type PutObjectOutput struct {
 }
 
 // UploadMultipart does Upload object multipart.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/object/multipart/upload_multipart.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/upload/
 func (s *Bucket) UploadMultipart(objectKey string, input *UploadMultipartInput) (*UploadMultipartOutput, error) {
 	return s.UploadMultipartWithContext(context.Background(), objectKey, input)
 }

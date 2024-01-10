@@ -14,7 +14,7 @@
 
 > 目前不支持对加密过后的图片进行处理，单张图片最大为 10M 。
 
-具体文档说明参考 [API Docs](https://docs.qingcloud.com/qingstor/data_process/image_process) 。
+具体文档说明参考 [API Docs](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/image_process/) 。
 
 ## 代码片段
 

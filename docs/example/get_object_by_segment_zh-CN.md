@@ -22,7 +22,7 @@ var qingStor, _ = service.Init(conf)
 	bucketService, _ := qingStor.Bucket(bucketName, zoneName)
 ```
 
-请注意 GetObjectInput 中 field 不是必须设置的，这里必须手动设置的参数是 Range 参数。具体可以参考[官方 API 文档](https://docs.qingcloud.com/qingstor/api/object/get)。
+请注意 GetObjectInput 中 field 不是必须设置的，这里必须手动设置的参数是 Range 参数。具体可以参考[官方 API 文档](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/get/)。
 
 然后调用 GetObject 方法下载对象，将 5M 设置为分段大小。objectKey 设置要获取的对象的 filepath（位于当前 bucket 中）。
 

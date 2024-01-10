@@ -57,7 +57,7 @@ func (s *Service) Bucket(bucketName string, zone string) (*Bucket, error) {
 }
 
 // Delete does Delete a bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/delete.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/basic_opt/delete/
 func (s *Bucket) Delete() (*DeleteBucketOutput, error) {
 	return s.DeleteWithContext(context.Background())
 }
@@ -118,7 +118,7 @@ type DeleteBucketOutput struct {
 }
 
 // DeleteCNAME does Delete bucket CNAME setting of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cname/delete_cname.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/cname/delete_cname/
 func (s *Bucket) DeleteCNAME(input *DeleteBucketCNAMEInput) (*DeleteBucketCNAMEOutput, error) {
 	return s.DeleteCNAMEWithContext(context.Background(), input)
 }
@@ -203,7 +203,7 @@ type DeleteBucketCNAMEOutput struct {
 }
 
 // DeleteCORS does Delete CORS information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/delete_cors.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/cors/delete_cors/
 func (s *Bucket) DeleteCORS() (*DeleteBucketCORSOutput, error) {
 	return s.DeleteCORSWithContext(context.Background())
 }
@@ -264,7 +264,7 @@ type DeleteBucketCORSOutput struct {
 }
 
 // DeleteExternalMirror does Delete external mirror of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/external_mirror/delete_external_mirror.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/external_mirror/delete_external_mirror/
 func (s *Bucket) DeleteExternalMirror() (*DeleteBucketExternalMirrorOutput, error) {
 	return s.DeleteExternalMirrorWithContext(context.Background())
 }
@@ -325,7 +325,7 @@ type DeleteBucketExternalMirrorOutput struct {
 }
 
 // DeleteLifecycle does Delete Lifecycle information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/lifecycle/delete_lifecycle.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/lifecycle/delete_lifecycle/
 func (s *Bucket) DeleteLifecycle() (*DeleteBucketLifecycleOutput, error) {
 	return s.DeleteLifecycleWithContext(context.Background())
 }
@@ -386,7 +386,7 @@ type DeleteBucketLifecycleOutput struct {
 }
 
 // DeleteLogging does Delete bucket logging setting of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/delete_logging.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/logging/delete_logging/
 func (s *Bucket) DeleteLogging() (*DeleteBucketLoggingOutput, error) {
 	return s.DeleteLoggingWithContext(context.Background())
 }
@@ -447,7 +447,7 @@ type DeleteBucketLoggingOutput struct {
 }
 
 // DeleteNotification does Delete Notification information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/notification/delete_notification.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/notification/delete_notification/
 func (s *Bucket) DeleteNotification() (*DeleteBucketNotificationOutput, error) {
 	return s.DeleteNotificationWithContext(context.Background())
 }
@@ -508,7 +508,7 @@ type DeleteBucketNotificationOutput struct {
 }
 
 // DeletePolicy does Delete policy information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/policy/delete_policy.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/policy/delete_policy/
 func (s *Bucket) DeletePolicy() (*DeleteBucketPolicyOutput, error) {
 	return s.DeletePolicyWithContext(context.Background())
 }
@@ -569,7 +569,7 @@ type DeleteBucketPolicyOutput struct {
 }
 
 // DeleteReplication does Delete Replication information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/replication/delete_replication.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/replication/delete_replication/
 func (s *Bucket) DeleteReplication() (*DeleteBucketReplicationOutput, error) {
 	return s.DeleteReplicationWithContext(context.Background())
 }
@@ -630,7 +630,7 @@ type DeleteBucketReplicationOutput struct {
 }
 
 // DeleteMultipleObjects does Delete multiple objects from the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/delete_multiple.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/basic_opt/delete_multiple/
 func (s *Bucket) DeleteMultipleObjects(input *DeleteMultipleObjectsInput) (*DeleteMultipleObjectsOutput, error) {
 	return s.DeleteMultipleObjectsWithContext(context.Background(), input)
 }
@@ -730,7 +730,7 @@ type DeleteMultipleObjectsOutput struct {
 }
 
 // GetACL does Get ACL information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/get_acl.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/acl/get_acl/
 func (s *Bucket) GetACL() (*GetBucketACLOutput, error) {
 	return s.GetACLWithContext(context.Background())
 }
@@ -796,7 +796,7 @@ type GetBucketACLOutput struct {
 }
 
 // GetCNAME does Get bucket CNAME setting of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cname/get_cname.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/cname/get_cname/
 func (s *Bucket) GetCNAME(input *GetBucketCNAMEInput) (*GetBucketCNAMEOutput, error) {
 	return s.GetCNAMEWithContext(context.Background(), input)
 }
@@ -899,7 +899,7 @@ type GetBucketCNAMEOutput struct {
 }
 
 // GetCORS does Get CORS information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/get_cors.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/cors/get_cors/
 func (s *Bucket) GetCORS() (*GetBucketCORSOutput, error) {
 	return s.GetCORSWithContext(context.Background())
 }
@@ -963,7 +963,7 @@ type GetBucketCORSOutput struct {
 }
 
 // GetExternalMirror does Get external mirror of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/external_mirror/get_external_mirror.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/external_mirror/get_external_mirror/
 func (s *Bucket) GetExternalMirror() (*GetBucketExternalMirrorOutput, error) {
 	return s.GetExternalMirrorWithContext(context.Background())
 }
@@ -1027,7 +1027,7 @@ type GetBucketExternalMirrorOutput struct {
 }
 
 // GetLifecycle does Get Lifecycle information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/lifecycle/get_lifecycle.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/lifecycle/get_lifecycle/
 func (s *Bucket) GetLifecycle() (*GetBucketLifecycleOutput, error) {
 	return s.GetLifecycleWithContext(context.Background())
 }
@@ -1091,7 +1091,7 @@ type GetBucketLifecycleOutput struct {
 }
 
 // GetLogging does Get bucket logging setting of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/get_logging.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/logging/get_logging/
 func (s *Bucket) GetLogging() (*GetBucketLoggingOutput, error) {
 	return s.GetLoggingWithContext(context.Background())
 }
@@ -1157,7 +1157,7 @@ type GetBucketLoggingOutput struct {
 }
 
 // GetNotification does Get Notification information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/notification/get_notification.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/notification/get_notification/
 func (s *Bucket) GetNotification() (*GetBucketNotificationOutput, error) {
 	return s.GetNotificationWithContext(context.Background())
 }
@@ -1221,7 +1221,7 @@ type GetBucketNotificationOutput struct {
 }
 
 // GetPolicy does Get policy information of the bucket.
-// Documentation URL: https://https://docs.qingcloud.com/qingstor/api/bucket/policy/get_policy.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/policy/get_policy/
 func (s *Bucket) GetPolicy() (*GetBucketPolicyOutput, error) {
 	return s.GetPolicyWithContext(context.Background())
 }
@@ -1285,7 +1285,7 @@ type GetBucketPolicyOutput struct {
 }
 
 // GetReplication does Get Replication information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/replication/get_replication.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/replication/get_replication/
 func (s *Bucket) GetReplication() (*GetBucketReplicationOutput, error) {
 	return s.GetReplicationWithContext(context.Background())
 }
@@ -1349,7 +1349,7 @@ type GetBucketReplicationOutput struct {
 }
 
 // GetStatistics does Get statistics information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/get_stats.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/basic_opt/get_stats/
 func (s *Bucket) GetStatistics() (*GetBucketStatisticsOutput, error) {
 	return s.GetStatisticsWithContext(context.Background())
 }
@@ -1426,7 +1426,7 @@ type GetBucketStatisticsOutput struct {
 }
 
 // Head does Check whether the bucket exists and available.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/head.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/basic_opt/head/
 func (s *Bucket) Head() (*HeadBucketOutput, error) {
 	return s.HeadWithContext(context.Background())
 }
@@ -1487,7 +1487,7 @@ type HeadBucketOutput struct {
 }
 
 // ListMultipartUploads does List multipart uploads in the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/list_multipart_uploads.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/list/
 func (s *Bucket) ListMultipartUploads(input *ListMultipartUploadsInput) (*ListMultipartUploadsOutput, error) {
 	return s.ListMultipartUploadsWithContext(context.Background(), input)
 }
@@ -1593,7 +1593,7 @@ type ListMultipartUploadsOutput struct {
 }
 
 // ListObjects does Retrieve the object list in a bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/get.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/basic_opt/get/
 func (s *Bucket) ListObjects(input *ListObjectsInput) (*ListObjectsOutput, error) {
 	return s.ListObjectsWithContext(context.Background(), input)
 }
@@ -1697,7 +1697,7 @@ type ListObjectsOutput struct {
 }
 
 // Put does Create a new bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/put.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/basic_opt/put/
 func (s *Bucket) Put() (*PutBucketOutput, error) {
 	return s.PutWithContext(context.Background())
 }
@@ -1758,7 +1758,7 @@ type PutBucketOutput struct {
 }
 
 // PutACL does Set ACL information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/put_acl.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/acl/put_acl/
 func (s *Bucket) PutACL(input *PutBucketACLInput) (*PutBucketACLOutput, error) {
 	return s.PutACLWithContext(context.Background(), input)
 }
@@ -1851,7 +1851,7 @@ type PutBucketACLOutput struct {
 }
 
 // PutCNAME does Set bucket CNAME of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cname/put_cname.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/cname/put_cname/
 func (s *Bucket) PutCNAME(input *PutBucketCNAMEInput) (*PutBucketCNAMEOutput, error) {
 	return s.PutCNAMEWithContext(context.Background(), input)
 }
@@ -1958,7 +1958,7 @@ type PutBucketCNAMEOutput struct {
 }
 
 // PutCORS does Set CORS information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/cors/put_cors.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/cors/put_cors/
 func (s *Bucket) PutCORS(input *PutBucketCORSInput) (*PutBucketCORSOutput, error) {
 	return s.PutCORSWithContext(context.Background(), input)
 }
@@ -2051,7 +2051,7 @@ type PutBucketCORSOutput struct {
 }
 
 // PutExternalMirror does Set external mirror of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/external_mirror/put_external_mirror.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/external_mirror/put_external_mirror/
 func (s *Bucket) PutExternalMirror(input *PutBucketExternalMirrorInput) (*PutBucketExternalMirrorOutput, error) {
 	return s.PutExternalMirrorWithContext(context.Background(), input)
 }
@@ -2136,7 +2136,7 @@ type PutBucketExternalMirrorOutput struct {
 }
 
 // PutLifecycle does Set Lifecycle information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/lifecycle/put_lifecycle.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/lifecycle/put_lifecycle/
 func (s *Bucket) PutLifecycle(input *PutBucketLifecycleInput) (*PutBucketLifecycleOutput, error) {
 	return s.PutLifecycleWithContext(context.Background(), input)
 }
@@ -2229,7 +2229,7 @@ type PutBucketLifecycleOutput struct {
 }
 
 // PutLogging does Set bucket logging of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/logging/put_logging.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/logging/put_logging/
 func (s *Bucket) PutLogging(input *PutBucketLoggingInput) (*PutBucketLoggingOutput, error) {
 	return s.PutLoggingWithContext(context.Background(), input)
 }
@@ -2323,7 +2323,7 @@ type PutBucketLoggingOutput struct {
 }
 
 // PutNotification does Set Notification information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/notification/put_notification.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/notification/put_notification/
 func (s *Bucket) PutNotification(input *PutBucketNotificationInput) (*PutBucketNotificationOutput, error) {
 	return s.PutNotificationWithContext(context.Background(), input)
 }
@@ -2416,7 +2416,7 @@ type PutBucketNotificationOutput struct {
 }
 
 // PutPolicy does Set policy information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/policy/put_policy.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/policy/put_policy/
 func (s *Bucket) PutPolicy(input *PutBucketPolicyInput) (*PutBucketPolicyOutput, error) {
 	return s.PutPolicyWithContext(context.Background(), input)
 }
@@ -2509,7 +2509,7 @@ type PutBucketPolicyOutput struct {
 }
 
 // PutReplication does Set Replication information of the bucket.
-// Documentation URL: https://docs.qingcloud.com/qingstor/api/bucket/replication/put_replication.html
+// Documentation URL: https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/replication/put_replication/
 func (s *Bucket) PutReplication(input *PutBucketReplicationInput) (*PutBucketReplicationOutput, error) {
 	return s.PutReplicationWithContext(context.Background(), input)
 }

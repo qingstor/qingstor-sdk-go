@@ -14,7 +14,7 @@ Currently supported image formats are:
 
 > Currently, the encrypted picture is not supported. The maximum size of a single picture is 10M.
 
-Please see [QingStor Image API](https://docs.qingcloud.com/qingstor/data_process/image_process).
+Please see [QingStor Image API](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/image_process/).
 
 ## Usage
 

@@ -28,7 +28,7 @@ var qingStor, _ = service.Init(conf)
 	input := &service.HeadObjectInput{}
 ```
 
-请注意 HeadObjectInput 中 field 不是必须设置的，具体可以参考[官方 API 文档](https://docs.qingcloud.com/qingstor/api/object/head)。
+请注意 HeadObjectInput 中 field 不是必须设置的，具体可以参考[官方 API 文档](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/head/)。
 
 然后调用 HeadObject 方法获取对象元信息，测试是否可以被访问。objectKey 设置要获取的对象的 filepath（位于当前 bucket 中）。
 

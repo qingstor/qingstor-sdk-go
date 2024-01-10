@@ -88,7 +88,7 @@ func getPartsCount(path string, chunkSize int) (parts int, size int) {
 查看已上传的分段。可以尝试访问以下方法查看是否所有的分段都已上传完成。它将返回所有的已上传分段信息。
 
 ```go
-// https://docs.qingcloud.com/qingstor/api/object/multipart/list_multipart.html
+// https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/list/
 func ListMultiParts(bucketService *service.Bucket, objectKey string, uploadID *string) ([]*service.ObjectPartType, error) {
 	output, err := bucketService.ListMultipart(
 		objectKey,
@@ -109,7 +109,7 @@ func ListMultiParts(bucketService *service.Bucket, objectKey string, uploadID *s
 ```
 
 当所有分段都已经上传完毕后，您可以使用下面的方法来标记上传完成，所有分段将拼接为 objectKey 指定的对象。
-ETag 信息不是必须设置，具体可以参考 [api docs](https://docs.qingcloud.com/qingstor/api/object/multipart/complete_multipart_upload.html)。
+ETag 信息不是必须设置，具体可以参考 [api docs](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/multipart/complete/)。
 
 ```go
 func CompleteMultiParts(bucketService *service.Bucket, filepath string, objectKey string, uploadID *string, parts []*service.ObjectPartType) {

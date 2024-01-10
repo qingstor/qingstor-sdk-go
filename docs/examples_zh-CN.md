@@ -15,7 +15,6 @@ Input 对象由请求参数, 请求头和请求体构成, Output 对象包含 HT
         - [PUT Bucket ACL](example/put_bucket_acl_zh-CN.md)
         - [GET Bucket ACL](./example/get_bucket_acl_zh-CN.md)
     - 授权策略(Bucket Policy)
-        - [策略生效条件(Bucket Policy Condition)](https://docs.qingcloud.com/qingstor/api/bucket/policy/policy_condition.html)
         - [PUT Bucket Policy](./example/put_bucket_policy_zh-CN.md)
         - [GET Bucket Policy](./example/get_bucket_policy_zh-CN.md)
         - [DELETE Bucket Policy](./example/delete_bucket_policy_zh-CN.md)
@@ -57,6 +56,4 @@ Input 对象由请求参数, 请求头和请求体构成, Output 对象包含 HT
     - [数据加密](example/encryption_zh-CN.md)
     - 数据处理
         - [图片处理](./example/image_process_zh-CN.md)
-        - [第三方数据处理](https://docs.qingcloud.com/qingstor/data_process/third_party/)
-            - [图普科技鉴黄服务](https://docs.qingcloud.com/qingstor/data_process/third_party/tupu_porn.html)
 

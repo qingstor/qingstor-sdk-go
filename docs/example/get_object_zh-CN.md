@@ -28,7 +28,7 @@ var qingStor, _ = service.Init(conf)
 	input := &service.GetObjectInput{}
 ```
 
-请注意 GetObjectInput 中 field 不是必须设置的，具体可以参考[官方 API 文档](https://docs.qingcloud.com/qingstor/api/object/get)。
+请注意 GetObjectInput 中 field 不是必须设置的，具体可以参考[官方 API 文档](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/get/)。
 
 然后调用 GetObject 方法下载对象。objectKey 设置要获取的对象的 filepath（位于当前 bucket 中）。
 

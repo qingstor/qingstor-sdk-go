@@ -22,7 +22,7 @@ zoneName := "pek3b"
 bucketService, _ := qingStor.Bucket(bucketName, zoneName)
 ```
 
-Please note that the field in GetObjectInput is not necessarily required to be set. The parameter that must be set manually here is the Range parameter. For details, please refer to [Official API Documentation](https://docs.qingcloud.com/qingstor/api/object/get).
+Please note that the field in GetObjectInput is not necessarily required to be set. The parameter that must be set manually here is the Range parameter. For details, please refer to [Official API Documentation](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/get/).
 
 Then call the GetObject method to download the object and set 5M as the segment size. objectKey sets the filepath of the object to be fetched (in the current bucket).
 

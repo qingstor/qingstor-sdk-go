@@ -32,7 +32,7 @@ Then set the input parameters used by the PutObject method (core parameter: XQSM
 	}
 ```
 
-Please note that not all fields in PutObjectInput required to be set. For details, please refer to [Official API Documentation](https://docs.qingcloud.com/qingstor/api/object/move).
+Please note that not all fields in PutObjectInput required to be set. For details, please refer to [Official API Documentation](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/move/).
 
 Then call the PutObject method to move the object. objectKey Sets the filepath after put (in the current bucket).
 

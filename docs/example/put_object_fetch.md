@@ -32,7 +32,7 @@ Then set the input parameters used by the PutObject method (core parameter: XQSF
 	}
 ```
 
-Please note that not all fields in PutObjectInput required to be set. For details, please refer to [Official API Documentation](https://docs.qingcloud.com/qingstor/api/object/fetch).
+Please note that not all fields in PutObjectInput required to be set. For details, please refer to [Official API Documentation](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/fetch/).
 
 Then call the PutObject method to fetch object. objectKey Sets the filepath after put (in the current bucket).
 

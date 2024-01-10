@@ -32,7 +32,7 @@ var qingStor, _ = service.Init(conf)
 	}
 ```
 
-请注意 PutObjectInput 中的 field 不是都必须设置的，具体可以参考[官方 API 文档](https://docs.qingcloud.com/qingstor/api/object/fetch)。
+请注意 PutObjectInput 中的 field 不是都必须设置的，具体可以参考[官方 API 文档](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/fetch/)。
 
 然后调用 PutObject 方法 fetch 对象。objectKey 设置 put 后的 filepath（位于当前 bucket 中）。
 

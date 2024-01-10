@@ -10,7 +10,7 @@
 | Access-Control-Request-Method  | String | 跨源请求的 HTTP method 。                      |   Yes    |
 | Access-Control-Request-Headers | String | 跨源请求中的 HTTP headers (逗号分割的字符串)。 |    No    |
 
-访问 [API Docs](https://docs.qingcloud.com/qingstor/api/object/options.html) 以查看更多关于请求头的信息。
+访问 [API Docs](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/options_object/) 以查看更多关于请求头的信息。
 
 ### 响应头(Response Headers)
 
@@ -22,7 +22,7 @@
 | Access-Control-Allow-Headers  | String | 跨源请求中可以被允许发送的 HTTP headers (逗号分割的字符串)。                                   |
 | Access-Control-Expose-Headers | String | 跨源请求的响应中,客户端（如 JavaScript Client） 可以获取到的 HTTP headers (逗号分割的字符串)。 |
 
-访问 [API Docs](https://docs.qingcloud.com/qingstor/api/object/options.html) 以查看更多关于响应头的信息。
+访问 [API Docs](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/options_object/) 以查看更多关于响应头的信息。
 
 ## 代码片段
 
@@ -58,7 +58,7 @@ var qingStor, _ = service.Init(conf)
 	}
 ```
 
-请注意 OptionsObjectInput 中 field 不是都必须设置的，具体可以参考[官方 API 文档](https://docs.qingcloud.com/qingstor/api/object/options)。
+请注意 OptionsObjectInput 中 field 不是都必须设置的，具体可以参考[官方 API 文档](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/options_object/)。
 
 然后调用 OptionsObject 方法下载对象。objectKey 设置要 options 的对象的 filepath（位于当前 bucket 中）。
 

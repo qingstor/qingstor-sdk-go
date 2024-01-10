@@ -28,7 +28,7 @@ Then set the input parameters used by the GetObject method (using GetObjectInput
 	input := &service.GetObjectInput{}
 ```
 
-Please note that the field in GetObjectInput is not necessarily required to be set. For details, please refer to [Official API Documentation](https://docs.qingcloud.com/qingstor/api/object/get).
+Please note that the field in GetObjectInput is not necessarily required to be set. For details, please refer to [Official API Documentation](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/get/).
 
 Then call the GetObject method to download the object. objectKey Sets the filepath of the object to be fetched (in the current bucket).
 

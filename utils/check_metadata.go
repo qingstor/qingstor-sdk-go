@@ -13,7 +13,7 @@ var metadataPrefix = "x-qs-meta-"
 var validKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_."
 
 // IsMetaDataValid check whether the metadata-KV follows rule in API document
-// https://docs.qingcloud.com/qingstor/api/common/metadata.html#%E5%AF%B9%E8%87%AA%E5%AE%9A%E4%B9%89%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E9%99%90%E5%88%B6
+// https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/metadata/#%E5%AF%B9%E8%87%AA%E5%AE%9A%E4%B9%89%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E9%99%90%E5%88%B6
 func IsMetaDataValid(XQSMetaData *map[string]string) error {
 	metadataSize := 0
 
@@ -56,7 +56,7 @@ func newMetaDataInvalidError(key, value string) error {
 	return errors.ParameterValueNotAllowedError{
 		ParameterName:  "XQSMetaData",
 		ParameterValue: "map[" + key + "]=" + value,
-		AllowedValues:  []string{"https://docs.qingcloud.com/qingstor/api/common/metadata.html"},
+		AllowedValues:  []string{"https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/metadata/"},
 	}
 }
 
@@ -64,6 +64,6 @@ func newMetaDataTooLargeError(size int) error {
 	return errors.ParameterValueNotAllowedError{
 		ParameterName:  "XQSMetaData size too large",
 		ParameterValue: strconv.Itoa(size),
-		AllowedValues:  []string{"https://docs.qingcloud.com/qingstor/api/common/metadata.html"},
+		AllowedValues:  []string{"https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/metadata/"},
 	}
 }

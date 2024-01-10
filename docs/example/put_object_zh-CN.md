@@ -44,7 +44,7 @@ var qingStor, _ = service.Init(conf)
 	}
 ```
 
-请注意 PutObjectInput 中 field 不是都必须设置的，具体可以参考[官方 API 文档](https://docs.qingcloud.com/qingstor/api/object/put)。
+请注意 PutObjectInput 中 field 不是都必须设置的，具体可以参考[官方 API 文档](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/put/)。
 
 然后调用 PutObject 方法上传对象。objectKey 设置上传后的 filepath。
 

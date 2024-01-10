@@ -168,7 +168,7 @@ func TestUnpackHTTPRequestWithError(t *testing.T) {
 	  "code": "bad_request",
 	  "message": "Invalid argument(s) or invalid argument value(s)",
 	  "request_id": "aa08cf7a43f611e5886952542e6ce14b",
-	  "url": "http://docs.qingcloud.com/object_storage/api/bucket/get.html"
+	  "url": "https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/bucket/basic_opt/get/"
 	}`
 	httpResponse.Body = ioutil.NopCloser(bytes.NewReader([]byte(responseString)))
 	httpResponse.ContentLength = int64(len(responseString))

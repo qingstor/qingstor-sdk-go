@@ -44,7 +44,7 @@ Then set the input parameters that the PutObject method might use.
 	}
 ```
 
-Please note that not all fields in PutObjectInput required to be set. For details, please refer to [Official API Documentation](https://docs.qingcloud.com/qingstor/api/object/put).
+Please note that not all fields in PutObjectInput required to be set. For details, please refer to [Official API Documentation](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/put/).
 
 Then call the PutObject method to upload the object. objectKey Sets the filepath after uploading.
 

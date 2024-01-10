@@ -28,7 +28,7 @@ Then set the input parameters used by the GetObjectRequest method (stored in Get
     input := &service.GetObjectInput{}
 ```
 
-Please note that the field in GetObjectInput is not required to be set. For details, please refer to [Official API Documentation](https://docs.qingcloud.com/qingstor/api/object/get).
+Please note that the field in GetObjectInput is not required to be set. For details, please refer to [Official API Documentation](https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/object/basic_opt/get/).
 
 Then you can get the signature address of the object. objectKey Sets the filepath of the object to be fetched (in the current bucket).
 
