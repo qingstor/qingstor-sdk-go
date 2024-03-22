@@ -325,6 +325,8 @@ func (b *unpacker) isResponseRight() bool {
 	return flag
 }
 
+func chunked(te []string) bool { return len(te) > 0 && te[0] == "chunked" }
+
 func (b *unpacker) parseError(ctx context.Context) error {
 	if b.isResponseRight() {
 		return nil
@@ -340,7 +342,7 @@ func (b *unpacker) parseError(ctx context.Context) error {
 
 	// QingStor nginx could refuse user's request directly and only return status code.
 	// We should handle this and return qsError directly.
-	if b.resp.ContentLength <= 0 {
+	if b.resp.ContentLength <= 0 && !chunked(b.resp.TransferEncoding) {
 		return qsError
 	}
 
