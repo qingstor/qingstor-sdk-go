@@ -9,8 +9,14 @@ import (
 
 var metadataPrefix = "x-qs-meta-"
 
-// validKeyChars contains all valid key char: (a-z, A-Z, -, _, .)
-var validKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_."
+// isSafeChar check if rune in the allowed range:
+// (a-z, A-Z, 0-9, -, _, .)
+func isSafeChar(c rune) bool {
+	return (c >= 'a' && c <= 'z') ||
+		(c >= 'A' && c <= 'Z') ||
+		(c >= '0' && c <= '9') ||
+		c == '-' || c == '.' || c == '_'
+}
 
 // IsMetaDataValid check whether the metadata-KV follows rule in API document
 // https://docsv4.qingcloud.com/user_guide/storage/object_storage/api/metadata/#%E5%AF%B9%E8%87%AA%E5%AE%9A%E4%B9%89%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E9%99%90%E5%88%B6
@@ -22,9 +28,9 @@ func IsMetaDataValid(XQSMetaData *map[string]string) error {
 			return newMetaDataInvalidError(k, v)
 		}
 
-		// check key (a-z, A-Z, -, _, .)
+		// check key
 		for _, c := range k {
-			if !strings.ContainsRune(validKeyChars, c) {
+			if !isSafeChar(c) {
 				return newMetaDataInvalidError(k, v)
 			}
 		}
