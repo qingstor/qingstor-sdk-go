@@ -98,6 +98,8 @@ func randomPrintableString(size int) string {
 }
 
 func randomKeyString(size int) string {
+	// validKeyChars contains all valid key char: (a-z, A-Z, 0-9, -, _, .)
+	var validKeyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_."
 	var s strings.Builder
 	for i := 0; i < size; i++ {
 		pos := r.Intn(len(validKeyChars))
