@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to QingStor SDK for Go will be documented in this file.
 
+## [v4.4.1] - 2025-07-23
+
+### Fixed
+
+- metadata: Fix incorrect validation (#149)
+
 ## [v4.4.0] - 2021-08-27
 
 ### Changed
@@ -40,7 +46,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 ### Fixed
 
-- Fix error was abandoned when unpack (#110) 
+- Fix error was abandoned when unpack (#110)
 
 ## [v4.1.0] - 2020-8-6
 
@@ -300,6 +306,7 @@ All notable changes to QingStor SDK for Go will be documented in this file.
 
 - QingStor SDK for the Go programming language.
 
+[v4.4.1]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.4.0...v4.4.1
 [v4.4.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.3.0...v4.4.0
 [v4.3.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.2.0...v4.3.0
 [v4.2.0]: https://github.com/qingstor/qingstor-sdk-go/compare/v4.1.0...v4.2.0
