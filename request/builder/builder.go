@@ -38,7 +38,7 @@ import (
 	"github.com/pengsrc/go-shared/convert"
 	"go.uber.org/zap"
 
-	"github.com/qingstor/qingstor-sdk-go/v4"
+	sdk "github.com/qingstor/qingstor-sdk-go/v4"
 	"github.com/qingstor/qingstor-sdk-go/v4/log"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
@@ -59,40 +59,41 @@ type Builder struct {
 }
 
 // BuildHTTPRequest builds http request with an operation and an input.
-func (qb *Builder) BuildHTTPRequest(ctx context.Context, o *data.Operation, i *reflect.Value) (*http.Request, error) {
+func (qb *Builder) BuildHTTPRequest(ctx context.Context, o *data.Operation, i *reflect.Value) (req *http.Request, bucket string, err error) {
 	logger := log.FromContext(ctx)
 	qb.operation = o
 	qb.input = i
 
-	err := qb.parse()
+	var retBucket string
+	retBucket, err = qb.parse()
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	httpRequest, err := http.NewRequestWithContext(ctx, qb.operation.RequestMethod,
+	req, err = http.NewRequestWithContext(ctx, qb.operation.RequestMethod,
 		qb.parsedURL, qb.parsedBody)
 	if err != nil {
-		return nil, errors.NewSDKError(
+		return nil, "", errors.NewSDKError(
 			errors.WithAction("close response body in parseError"),
 			errors.WithError(err),
 		)
 	}
 
-	err = qb.setupHeaders(httpRequest)
+	err = qb.setupHeaders(req)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	timestamp := convert.StringToTimestamp(httpRequest.Header.Get("Date"), convert.RFC822)
+	timestamp := convert.StringToTimestamp(req.Header.Get("Date"), convert.RFC822)
 
 	logger.Info("Built QingStor request",
 		zap.Int64("date", timestamp),
-		zap.String("url", httpRequest.URL.String()),
+		zap.String("url", req.URL.String()),
 	)
 
 	logger.Info("QingStor request headers",
 		zap.Int64("date", timestamp),
-		zap.String("header", fmt.Sprint(httpRequest.Header)),
+		zap.String("header", fmt.Sprint(req.Header)),
 	)
 
 	if qb.parsedBodyString != "" {
@@ -102,28 +103,28 @@ func (qb *Builder) BuildHTTPRequest(ctx context.Context, o *data.Operation, i *r
 		)
 	}
 
-	return httpRequest, nil
+	return req, retBucket, nil
 }
 
-func (qb *Builder) parse() error {
-	err := qb.parseRequestQueryAndHeaders()
+func (qb *Builder) parse() (retBucket string, err error) {
+	err = qb.parseRequestQueryAndHeaders()
 	if err != nil {
-		return err
+		return
 	}
 	err = qb.parseRequestBody()
 	if err != nil {
-		return err
+		return
 	}
 	err = qb.parseRequestProperties()
 	if err != nil {
-		return err
+		return
 	}
-	err = qb.parseRequestURL()
+	retBucket, err = qb.parseRequestURL()
 	if err != nil {
-		return err
+		return
 	}
 
-	return nil
+	return retBucket, nil
 }
 
 func (qb *Builder) parseRequestBody() error {
@@ -271,30 +272,57 @@ func (qb *Builder) parseRequestQueryAndHeaders() error {
 	return nil
 }
 
-func (qb *Builder) parseRequestURL() error {
+func (qb *Builder) calcFinalEndpoint(zone, bucket string) string {
 	config := qb.operation.Config
 
-	zone := (*qb.parsedProperties)["zone"]
-	port := strconv.Itoa(config.Port)
-	endpoint := config.Protocol + "://" + config.Host + ":" + port
-	if zone != "" {
-		endpoint = config.Protocol + "://" + zone + "." + config.Host + ":" + port
-	}
-
-	requestURI := qb.operation.RequestURI
+	var sb strings.Builder
+	sb.WriteString(config.Protocol)
+	sb.WriteString("://")
 	if config.EnableVirtualHostStyle {
-		bucket, bucketKey := "", "bucket-name"
-		prefix := "/<" + bucketKey + ">"
-		if strings.HasPrefix(requestURI, prefix) {
-			requestURI = requestURI[len(prefix):]
-			bucket = (*qb.parsedProperties)[bucketKey]
-			endpoint = config.Protocol + "://" + bucket + "." + zone + "." + config.Host + ":" + port
+		if bucket != "" {
+			sb.WriteString(bucket)
+			sb.WriteByte('.')
 		}
 	}
+	if zone != "" {
+		sb.WriteString(zone)
+		sb.WriteByte('.')
+	}
+	sb.WriteString(config.Host)
+	if config.Port > 0 {
+		sb.WriteByte(':')
+		sb.WriteString(strconv.Itoa(config.Port))
+	}
+	return sb.String()
+}
+
+func (qb *Builder) parseRequestURL() (retBucket string, _ error) {
+	const bucketKey = "bucket-name"
+
+	config := qb.operation.Config
+	pathMode := !config.EnableVirtualHostStyle
+
+	var (
+		zone       = (*qb.parsedProperties)["zone"]
+		bucket     = (*qb.parsedProperties)[bucketKey]
+		requestURI = qb.operation.RequestURI
+	)
+
+	bucketPrefix := "/<" + bucketKey + ">"
+	if strings.HasPrefix(requestURI, bucketPrefix) {
+		if bucket == "" {
+			return "", errors.NewSDKError(errors.
+				WithAction("missing bucket in parseRequestURL"))
+		}
+		retBucket = bucket
+		if !pathMode {
+			requestURI = strings.TrimPrefix(requestURI, bucketPrefix)
+		}
+	}
+	endpoint := qb.calcFinalEndpoint(zone, bucket)
 
 	for key, value := range *qb.parsedProperties {
-		endpoint = strings.Replace(endpoint, "<"+key+">", utils.URLQueryEscape(value), -1)
-		requestURI = strings.Replace(requestURI, "<"+key+">", utils.URLQueryEscape(value), -1)
+		requestURI = strings.ReplaceAll(requestURI, "<"+key+">", utils.URLQueryEscape(value))
 	}
 	if !config.DisableURICleaning {
 		requestURI = regexp.MustCompile(`/+`).ReplaceAllString(requestURI, "/")
@@ -302,7 +330,7 @@ func (qb *Builder) parseRequestURL() error {
 
 	requestURL, err := url.Parse(endpoint + requestURI)
 	if err != nil {
-		return errors.NewSDKError(
+		return "", errors.NewSDKError(
 			errors.WithAction("parse url in parseRequestURL"),
 			errors.WithError(err),
 		)
@@ -317,7 +345,7 @@ func (qb *Builder) parseRequestURL() error {
 	}
 
 	qb.parsedURL = requestURL.String()
-	return nil
+	return retBucket, nil
 }
 
 func (qb *Builder) setupHeaders(httpRequest *http.Request) error {
