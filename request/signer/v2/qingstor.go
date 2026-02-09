@@ -14,10 +14,6 @@
 // | limitations under the License.
 // +-------------------------------------------------------------------------
 
-// Deprecated, use [github.com/qingstor/qingstor-sdk-go/v4/signer/v2] instead.
-//
-// package signer is not implemented robustly, it has some problem when
-// calculate virtual-host style signature.
 package signer
 
 import (
@@ -38,18 +34,17 @@ import (
 )
 
 // QingStorSigner is the http request signer for QingStor service.
-//
-// Deprecated, use [github.com/qingstor/qingstor-sdk-go/v4/signer/v2.QingStorSigner] instead.
 type QingStorSigner struct {
-	AccessKeyID            string
-	SecretAccessKey        string
-	EnableVirtualHostStyle bool
+	AccessKeyID     string
+	SecretAccessKey string
 }
 
 // WriteSignature calculates signature and write it to http request header.
 //
-// Deprecated: see package docs.
-func (qss *QingStorSigner) WriteSignature(request *http.Request) error {
+// About how to build CanonicalReq, see:
+//  1. [CanonicalReqByPath]
+//  2. [CanonicalReqByVhost]
+func (qss *QingStorSigner) WriteSignature(request CanonicalReq) error {
 	authorization, err := qss.BuildSignature(request)
 	if err != nil {
 		return err
@@ -62,8 +57,10 @@ func (qss *QingStorSigner) WriteSignature(request *http.Request) error {
 
 // WriteQuerySignature calculates signature and write it to http request url.
 //
-// Deprecated: see package docs.
-func (qss *QingStorSigner) WriteQuerySignature(request *http.Request, expires int) error {
+// About how to build CanonicalReq, see:
+//  1. [CanonicalReqByPath]
+//  2. [CanonicalReqByVhost]
+func (qss *QingStorSigner) WriteQuerySignature(request CanonicalReq, expires int) error {
 	query, err := qss.BuildQuerySignature(request, expires)
 	if err != nil {
 		return err
@@ -89,14 +86,13 @@ func (qss *QingStorSigner) WriteQuerySignature(request *http.Request, expires in
 }
 
 // BuildSignature calculates the signature string.
-//
-// Deprecated: see package docs.
-func (qss *QingStorSigner) BuildSignature(request *http.Request) (string, error) {
+func (qss *QingStorSigner) BuildSignature(request CanonicalReq) (string, error) {
 	logger := log.FromContext(request.Context())
 	stringToSign, err := qss.BuildStringToSign(request)
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("str_to: ", stringToSign)
 
 	h := hmac.New(sha256.New, []byte(qss.SecretAccessKey))
 	h.Write([]byte(stringToSign))
@@ -113,9 +109,7 @@ func (qss *QingStorSigner) BuildSignature(request *http.Request) (string, error)
 }
 
 // BuildQuerySignature calculates the signature string for query.
-//
-// Deprecated: see package docs.
-func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires int) (string, error) {
+func (qss *QingStorSigner) BuildQuerySignature(request CanonicalReq, expires int) (string, error) {
 	logger := log.FromContext(request.Context())
 	stringToSign, err := qss.BuildQueryStringToSign(request, expires)
 	if err != nil {
@@ -141,9 +135,7 @@ func (qss *QingStorSigner) BuildQuerySignature(request *http.Request, expires in
 }
 
 // BuildStringToSign build the string to sign.
-//
-// Deprecated: see package docs.
-func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, error) {
+func (qss *QingStorSigner) BuildStringToSign(request CanonicalReq) (string, error) {
 	logger := log.FromContext(request.Context())
 	date := request.Header.Get("Date")
 	if request.Header.Get("X-QS-Date") != "" {
@@ -173,9 +165,7 @@ func (qss *QingStorSigner) BuildStringToSign(request *http.Request) (string, err
 }
 
 // BuildQueryStringToSign build the string to sign for query.
-//
-// Deprecated: see package docs.
-func (qss *QingStorSigner) BuildQueryStringToSign(request *http.Request, expires int) (string, error) {
+func (qss *QingStorSigner) BuildQueryStringToSign(request CanonicalReq, expires int) (string, error) {
 	logger := log.FromContext(request.Context())
 	stringToSign := fmt.Sprintf(
 		"%s\n%s\n%s\n%d\n",
@@ -200,7 +190,7 @@ func (qss *QingStorSigner) BuildQueryStringToSign(request *http.Request, expires
 	return stringToSign, nil
 }
 
-func (qss *QingStorSigner) buildCanonicalizedHeaders(request *http.Request) string {
+func (qss *QingStorSigner) buildCanonicalizedHeaders(request CanonicalReq) string {
 	keys := []string{}
 	for key := range request.Header {
 		if strings.HasPrefix(strings.ToLower(key), "x-qs-") {
@@ -218,19 +208,12 @@ func (qss *QingStorSigner) buildCanonicalizedHeaders(request *http.Request) stri
 	return canonicalizedHeaders
 }
 
-func (qss *QingStorSigner) buildCanonicalizedResource(request *http.Request) (string, error) {
+func (qss *QingStorSigner) buildCanonicalizedResource(request CanonicalReq) (string, error) {
 	logger := log.FromContext(request.Context())
-	path := utils.URLQueryEscape(request.URL.Path)
+
+	path := request.CanonicalURI
+	fmt.Println("path: ", path)
 	query := request.URL.Query()
-
-	if qss.EnableVirtualHostStyle {
-		if path == "" {
-			path = "/"
-		}
-		_parts := strings.Split(request.Host, ".")
-		path = "/" + _parts[0] + path
-	}
-
 	keys := []string{}
 	for key := range query {
 		keys = append(keys, key)
@@ -287,9 +270,9 @@ func (qss *QingStorSigner) queryToSign(key string) bool {
 		"stats":                        true,
 		"upload_id":                    true,
 		"uploads":                      true,
-		"versioning":			true,
-		"version_id":			true,
-		"versions":			true,
+		"versioning":                   true,
+		"version_id":                   true,
+		"versions":                     true,
 		"response-expires":             true,
 		"response-cache-control":       true,
 		"response-content-type":        true,
@@ -299,4 +282,49 @@ func (qss *QingStorSigner) queryToSign(key string) bool {
 	}
 
 	return keysMap[key]
+}
+
+type CanonicalReq struct {
+	*http.Request
+	CanonicalURI string
+}
+
+// CanonicalReqByPath build CanonicalReq by assume the request url is path-style.
+//
+// It's your responsibility to ensure the request argument is built in path-style
+func CanonicalReqByPath(req *http.Request) CanonicalReq {
+	// resource path
+	resPath := utils.URLQueryEscape(req.URL.Path)
+	if resPath == "" {
+		resPath = "/"
+	}
+	return CanonicalReq{
+		Request:      req,
+		CanonicalURI: resPath,
+	}
+}
+
+// CanonicalReqByVhost build CanonicalReq by assume the request url is vhost-style.
+//
+// It's your responsibility to ensure the request argument is built in vhost-style.
+//
+// bucket should be provided if request url requires bucket.
+// e.g.:
+//  1. list-buckets don't need bucket
+//  2. bucket-level and object-level api all needs bucket.
+func CanonicalReqByVhost(req *http.Request, bucket string) CanonicalReq {
+	// resource path
+	resPath := utils.URLQueryEscape(req.URL.Path)
+	if resPath == "" {
+		resPath = "/"
+	}
+
+	if bucket != "" {
+		resPath = "/" + bucket + resPath
+	}
+
+	return CanonicalReq{
+		Request:      req,
+		CanonicalURI: resPath,
+	}
 }

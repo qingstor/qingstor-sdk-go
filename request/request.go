@@ -32,7 +32,7 @@ import (
 	"github.com/qingstor/qingstor-sdk-go/v4/request/data"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/errors"
 	"github.com/qingstor/qingstor-sdk-go/v4/request/response"
-	"github.com/qingstor/qingstor-sdk-go/v4/request/signer"
+	"github.com/qingstor/qingstor-sdk-go/v4/request/signer/v2"
 )
 
 // A Request can build, sign, send and unpack API request.
@@ -41,7 +41,8 @@ type Request struct {
 	Input     *reflect.Value
 	Output    *reflect.Value
 
-	HTTPRequest  *http.Request
+	HTTPRequest signer.CanonicalReq
+
 	HTTPResponse *http.Response
 }
 
@@ -223,20 +224,25 @@ func (r *Request) check(ctx context.Context) error {
 
 func (r *Request) build(ctx context.Context) error {
 	b := &builder.Builder{}
-	httpRequest, err := b.BuildHTTPRequest(ctx, r.Operation, r.Input)
+	req, retBucket, err := b.BuildHTTPRequest(ctx, r.Operation, r.Input)
 	if err != nil {
 		return err
 	}
 
-	r.HTTPRequest = httpRequest
+	pathMode := !r.Operation.Config.EnableVirtualHostStyle
+	if pathMode {
+		r.HTTPRequest = signer.CanonicalReqByPath(req)
+	} else {
+		r.HTTPRequest = signer.CanonicalReqByVhost(req, retBucket)
+	}
+
 	return nil
 }
 
 func (r *Request) sign(ctx context.Context) error {
 	s := &signer.QingStorSigner{
-		AccessKeyID:            r.Operation.Config.AccessKeyID,
-		SecretAccessKey:        r.Operation.Config.SecretAccessKey,
-		EnableVirtualHostStyle: r.Operation.Config.EnableVirtualHostStyle,
+		AccessKeyID:     r.Operation.Config.AccessKeyID,
+		SecretAccessKey: r.Operation.Config.SecretAccessKey,
 	}
 	err := s.WriteSignature(r.HTTPRequest)
 	if err != nil {
@@ -274,7 +280,7 @@ func (r *Request) send(ctx context.Context) error {
 		zap.String("host", r.HTTPRequest.Host),
 	)
 
-	resp, err = r.Operation.Config.Connection.Do(r.HTTPRequest)
+	resp, err = r.Operation.Config.Connection.Do(r.HTTPRequest.Request)
 	if err != nil {
 		return errors.NewSDKError(
 			errors.WithAction("do request in send"),
