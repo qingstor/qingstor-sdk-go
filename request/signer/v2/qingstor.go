@@ -92,7 +92,6 @@ func (qss *QingStorSigner) BuildSignature(request CanonicalReq) (string, error) 
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("str_to: ", stringToSign)
 
 	h := hmac.New(sha256.New, []byte(qss.SecretAccessKey))
 	h.Write([]byte(stringToSign))
@@ -212,7 +211,6 @@ func (qss *QingStorSigner) buildCanonicalizedResource(request CanonicalReq) (str
 	logger := log.FromContext(request.Context())
 
 	path := request.CanonicalURI
-	fmt.Println("path: ", path)
 	query := request.URL.Query()
 	keys := []string{}
 	for key := range query {
